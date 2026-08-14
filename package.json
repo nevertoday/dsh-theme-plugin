@@ -10,6 +10,9 @@
   },
   "homepage": "https://github.com/nevertoday/dsh-theme-plugin#readme",
   "bugs": "https://github.com/nevertoday/dsh-theme-plugin/issues",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
+  },
   "main": "lib/index.js",
   "exports": {
     ".": "./lib/index.js",
