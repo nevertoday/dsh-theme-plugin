@@ -21,16 +21,32 @@
 
 ## Requirements
 
-- Node.js 18+ and pnpm (or npm)
-- A DeepSeek Harness install with a `web` profile (`dsh --profile web`)
-- `@deepseek-ai/*` packages are **optional, type-only peer dependencies** — the build works without them
+- **Node.js 18+** and **pnpm** (or npm).
+- **DeepSeek Harness** — the `dsh` CLI (package `@deepseek-ai/dsh`), booted with a `web` profile. Not installed yet?
+
+  ```sh
+  npm i -g @deepseek-ai/dsh
+  dsh --profile web          # first boot creates the profile (default: ~/.dsh/profiles/web)
+  ```
+
+- `@deepseek-ai/*` packages are **optional, type-only peer dependencies** — the build works without them.
 
 ## Install
 
-### 1. Build
+Three commands: **build the plugin, register it with your web profile, boot and pick a theme**.
 
 ```sh
-cd dsh-theme-plugin
+cd /path/to/dsh-theme-plugin
+pnpm install && pnpm build                                  # ① build lib/client.js (browser bundle)
+dsh plugin --profile web add -w /path/to/dsh-theme-plugin   # ② register with the web profile
+dsh --profile web                                           # ③ boot the harness
+# open http://127.0.0.1:3080/ → Settings → Traditional Colors
+```
+
+### ① Build
+
+```sh
+cd /path/to/dsh-theme-plugin
 pnpm install          # @deepseek-ai/* are optional peers; failures do not block the build
 pnpm build            # tsdown → lib/index.js (host half) + lib/client.js (browser bundle)
 ```
@@ -48,26 +64,32 @@ The browser artifact **must** begin with:
 window.__ModuleLoader__.load({ id: "dsh-theme-zhongguo", factory: (require) => {
 ```
 
-The `id` must equal the package name — the harness validates it against the graph row id after loading.
+The `id` must equal the package name — the harness validates it against the graph row id after loading. **This is why `lib/` is committed to the repository**: the loader reads `lib/client.js` straight from the linked plugin directory, so the file has to exist before the plugin is registered.
 
-### 2. Register with a profile (the official third-party channel)
+### ② Register with the web profile
 
-The package declares both `dsh.bundle` (its `cordis.patch.yml`, which inserts its own row into the composed cordis tree) and `dsh.client` (a `platform: web` browser manifest):
+`dsh plugin add` runs `pnpm add <path>` inside the profile directory and then **auto-appends the package to the profile's `dsh.profile.bundles` layer list** — any installed package that declares `dsh.bundle` (this one does, via its `cordis.patch.yml`) joins the composed tree with no manual editing:
 
 ```sh
 # -w is required when the profile directory is a pnpm workspace root
 # (otherwise pnpm reports ERR_PNPM_ADDING_TO_ROOT)
 dsh plugin --profile web add -w /absolute/path/to/dsh-theme-plugin
+```
 
-dsh --profile web --dump-config     # expect a "# == dsh-theme-zhongguo" layer with a theme-zhongguo row
-dsh --profile web                   # then open http://127.0.0.1:3080/
+The profile now holds a `link:` dependency pointing at your checkout, so `lib/client.js` is served straight from this directory.
+
+Verify the registration:
+
+```sh
+dsh --profile web --dump-config   # expect a "# == dsh-theme-zhongguo" layer with a theme-zhongguo row
+dsh --profile web                 # boot; the browser console logs "registered 96/96 themes (48 light / 48 dark)"
 ```
 
 From a harness source checkout, prefix the same commands with `pnpm` (`pnpm dsh plugin …`) after running `pnpm run build` at the repo root.
 
 Uninstall: `dsh plugin --profile web remove dsh-theme-zhongguo`
 
-### 3. Pick a theme
+### ③ Pick a theme
 
 The built-in Appearance row lists only Light / Dark / System — it reads its own `THEME_PREFERENCES` and does not enumerate the theme registry, so registered third-party themes have no entry point there. This plugin ships its own picker instead.
 
@@ -84,6 +106,18 @@ http://127.0.0.1:3080/#theme=tenghuang-light    # 藤黄 light — ochre paper g
 Changing the hash switches themes live, without a reload.
 
 > **Your pick is remembered, but not in `settings.yaml`.** Third-party theme ids are never written to the harness's durable preference — that is `ui-theme` behavior. Instead the plugin remembers your choice in this browser's `localStorage` and re-applies it on the next load; "Back to built-in theme" forgets it. Set `remember: false` to opt out. See [Configuration](#configuration).
+
+### Updating the plugin
+
+The profile links the plugin directory rather than copying it, so an update is just:
+
+```sh
+cd /path/to/dsh-theme-plugin
+git pull && pnpm install && pnpm build   # new lib/client.js lands in the profile automatically
+dsh --profile web                        # boot — no re-registration needed
+```
+
+Re-running `dsh plugin --profile web add -w …` is harmless; it only reconciles the bundle list.
 
 ## Configuration
 

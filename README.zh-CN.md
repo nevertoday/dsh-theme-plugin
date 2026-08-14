@@ -21,16 +21,32 @@
 
 ## 前置要求
 
-- Node.js 18+ 与 pnpm（或 npm）
-- 一个带 `web` profile 的 DeepSeek Harness 安装（`dsh --profile web`）
-- `@deepseek-ai/*` 是**可选的 type-only peerDependencies** —— 装不上不影响构建
+- **Node.js 18+** 与 **pnpm**（或 npm）。
+- **DeepSeek Harness** —— `dsh` CLI（包名 `@deepseek-ai/dsh`），带 `web` profile。还没装？
+
+  ```sh
+  npm i -g @deepseek-ai/dsh
+  dsh --profile web          # 首次启动会创建 profile（默认在 ~/.dsh/profiles/web）
+  ```
+
+- `@deepseek-ai/*` 是**可选的 type-only peerDependencies** —— 装不上不影响构建。
 
 ## 安装
 
-### 1. 构建
+三步：**构建插件 → 挂到你的 web profile → 启动并选主题**。
 
 ```sh
-cd dsh-theme-plugin
+cd /path/to/dsh-theme-plugin
+pnpm install && pnpm build                                  # ① 构建 lib/client.js（浏览器包）
+dsh plugin --profile web add -w /path/to/dsh-theme-plugin   # ② 挂到 web profile
+dsh --profile web                                           # ③ 启动 harness
+# 浏览器打开 http://127.0.0.1:3080/ → 设置 → 传统色主题
+```
+
+### ① 构建
+
+```sh
+cd /path/to/dsh-theme-plugin
 pnpm install          # @deepseek-ai/* 为 optional peer，装不上不影响构建
 pnpm build            # tsdown → lib/index.js（host 半）+ lib/client.js（浏览器包）
 ```
@@ -48,25 +64,31 @@ node scripts/build-esbuild.mjs      # 或 pnpm build:esbuild
 window.__ModuleLoader__.load({ id: "dsh-theme-zhongguo", factory: (require) => {
 ```
 
-`id` 必须等于包名 —— 这是 harness 装载后要校验的图行 id。
+`id` 必须等于包名 —— 这是 harness 装载后要校验的图行 id。**这也正是 `lib/` 要提交进仓库的原因**：装载器直接读链接目录里的 `lib/client.js`，文件得先存在才能挂载插件。
 
-### 2. 挂到 profile（官方外部插件通道）
+### ② 挂到 web profile
 
-本包在 `package.json` 里同时声明 `dsh.bundle`（`cordis.patch.yml`，向组合树插入自己的行）和 `dsh.client`（`platform: web` 浏览器清单）：
+`dsh plugin add` 会在 profile 目录里跑 `pnpm add <路径>`，然后**自动把包名并入 profile 的 `dsh.profile.bundles` 层列表** —— 凡是装进来且声明了 `dsh.bundle`（本包通过 `cordis.patch.yml` 声明）的包都会进组合树，无需手改：
 
 ```sh
 # profile 目录是 pnpm 工作区根时需要 -w（否则 pnpm 报 ERR_PNPM_ADDING_TO_ROOT）
 dsh plugin --profile web add -w /绝对路径/dsh-theme-plugin
+```
 
-dsh --profile web --dump-config     # 应看到 "# == dsh-theme-zhongguo" 图层，含 theme-zhongguo 行
-dsh --profile web                   # 启动后打开 http://127.0.0.1:3080/
+装完后 profile 里是一条指向你 checkout 的 `link:` 依赖，`lib/client.js` 直接从这个目录被伺服。
+
+验证是否挂上：
+
+```sh
+dsh --profile web --dump-config   # 应看到 "# == dsh-theme-zhongguo" 图层，含 theme-zhongguo 行
+dsh --profile web                 # 启动后浏览器控制台应出现 "registered 96/96 themes (48 light / 48 dark)"
 ```
 
 源码 checkout 下同样的命令加 `pnpm` 前缀（`pnpm dsh plugin …`），并先在 harness 仓库根 `pnpm run build`。
 
 卸载：`dsh plugin --profile web remove dsh-theme-zhongguo`
 
-### 3. 选主题
+### ③ 选主题
 
 内置 Appearance 行只列 Light / Dark / System —— 它读的是自己的 `THEME_PREFERENCES`，不枚举主题注册表，所以第三方主题在那里**根本不出现**。本插件因此自带一个选择页。
 
@@ -83,6 +105,18 @@ http://127.0.0.1:3080/#theme=tenghuang-light    # 藤黄·亮（陈宣赭纸 + �
 改 hash 即时切换，无需刷新。
 
 > **选择会被记住，但不是记在 `settings.yaml` 里。** 第三方主题 id 进不了 harness 的持久化偏好 —— 那是 `ui-theme` 的行为，插件改不了。插件改为把选择记进本浏览器的 `localStorage`，下次打开自动套回来；点「恢复内置主题」即忘掉。不想要就把 `remember` 设成 `false`。见[配置](#配置)。
+
+### 更新插件
+
+profile 里是**目录链接**而不是拷贝，所以更新只需：
+
+```sh
+cd /path/to/dsh-theme-plugin
+git pull && pnpm install && pnpm build   # 新的 lib/client.js 自动生效
+dsh --profile web                        # 启动即可，无需重新挂载
+```
+
+重复跑 `dsh plugin --profile web add -w …` 也无害 —— 它只是重新对账层列表。
 
 ## 配置
 
