@@ -19,14 +19,14 @@ const built = existsSync(BUNDLE)
 interface Registered { id: string; colorScheme: string; tokens: Record<string, string> }
 
 /** 装一次 bundle，返回它注册了什么。 */
-function loadBundle(hash = '') {
+function loadBundle(hash = '', seedStorage: Record<string, string> = {}) {
   const registered: Registered[] = []
   const payloadKeys: string[][] = []
   const setThemeCalls: string[] = []
   const slots: { def: Record<string, unknown>; component: unknown }[] = []
   const disposers: (() => void)[] = []
   const listeners = new Map<string, ((...args: unknown[]) => void)[]>()
-  const stored = new Map<string, string>()
+  const stored = new Map<string, string>(Object.entries(seedStorage))
   let loadedId: string | undefined
   let preference = 'system'
   let ground = 'rgb(255,255,255)'
@@ -166,6 +166,26 @@ test('#theme= 深链在启动时生效，并被记住', { skip: !built && 'lib/c
   world.teardown()
 })
 
+test('启动时从 localStorage 恢复上次选择（"选完刷新就复原"的回归锁）', { skip: !built && 'lib/client.js 未构建' }, () => {
+  const world = loadBundle('', { 'dsh:theme-zhongguo:theme': 'daizi-dark' })
+  world.plugin.apply!(world.ctx)
+
+  assert.ok(world.setThemeCalls.includes('daizi-dark'), '刷新后没有恢复记住的主题')
+  assert.equal(world.stored.get('dsh:theme-zhongguo:theme'), 'daizi-dark', '恢复过程把记忆改掉了')
+  world.teardown()
+})
+
+test('启动恢复期间迟到的 adopt() 不会清掉记忆', { skip: !built && 'lib/client.js 未构建' }, () => {
+  const world = loadBundle('', { 'dsh:theme-zhongguo:theme': 'daizi-dark' })
+  world.plugin.apply!(world.ctx)
+  // settings 作用域读回持久化偏好，盖掉我们 —— 这一刻我们的主题还没在 DOM 里出现过
+  world.emit('theme/change', { preference: 'dark' })
+
+  assert.equal(world.stored.get('dsh:theme-zhongguo:theme'), 'daizi-dark',
+    '启动竞态里的 adopt 被当成了用户意图，记忆被销毁 —— 用户会看到"刷新一次永久复原"')
+  world.teardown()
+})
+
 test('remember: false 时不写 localStorage', { skip: !built && 'lib/client.js 未构建' }, () => {
   const world = loadBundle('#theme=zhuqing-light')
   world.plugin.apply!(world.ctx, { remember: false })
@@ -181,6 +201,21 @@ test('hashSelector: false 时深链被忽略', { skip: !built && 'lib/client.js 
 
   assert.deepEqual(world.setThemeCalls, [])
   world.teardown()
+})
+
+test('平台模块留在外部：页面里只能有一份 React', { skip: !built && 'lib/client.js 未构建' }, () => {
+  const src = readFileSync(BUNDLE, 'utf8')
+
+  // 这两条 require 是"我们没有自带 React"的正面证据。
+  assert.match(src, /require\("react"\)/, 'react 没有被 require —— 它被打进产物了')
+  assert.match(src, /require\("react\/jsx-runtime"\)/, 'jsx-runtime 没有被 require')
+
+  // 反面证据：React 自己的错误文案只会出现在 React 源码里。第二份 React 进了页面，
+  // 槽里组件的每个 hook 都会炸（Cannot read properties of null (reading 'useState')），
+  // 而产物只大 60KB —— 肉眼几乎看不出来，所以这条断言是唯一的防线。
+  for (const marker of ['Invalid hook call', 'ReactCurrentDispatcher', '__SECRET_INTERNALS']) {
+    assert.ok(!src.includes(marker), `产物里含 React 源码标记 ${JSON.stringify(marker)}`)
+  }
 })
 
 test('ctx.theme 缺席时降级为 no-op，而不是 boot 期抛错', { skip: !built && 'lib/client.js 未构建' }, () => {
