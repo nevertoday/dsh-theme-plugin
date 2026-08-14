@@ -45,6 +45,13 @@ http://127.0.0.1:3080/#theme=qunqing-dark       # 群青·暗
 
 改 hash 即时切换。选择按**浏览器**记住（`localStorage`），不写进 `settings.yaml`，换设备不跟随。
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/settings-light.png" alt="设置 → 传统色主题，竹青·亮：48 个锚色按纸家族分组，每行是色块 + 色名 + 印色点" width="49%">
+  <img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/settings-dark.png" alt="同一个面板在朱红·暗下：面板自身也随主题变色，因为它只引用 --dsw-* 令牌" width="49%">
+</p>
+
+面板自己也随主题变色 —— 它的样式只引用 `--dsw-*` 令牌，所以它同时是这套主题的演示。
+
 ## 设计哲学：纸 · 帘 · 印
 
 中国画不先上颜色，先备纸，再罩染，最后落款。这套主题按同一道工序施工，三个字对应三层实现。

@@ -45,6 +45,13 @@ http://127.0.0.1:3080/#theme=qunqing-dark       # 群青 dark
 
 Changing the hash switches themes live. Your pick is remembered per browser (`localStorage`), not in `settings.yaml` — it does not follow you across devices.
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/settings-light.png" alt="Settings → Traditional Colors on 竹青 light: 48 anchors grouped by paper family, each row a swatch, a name, and a seal dot" width="49%">
+  <img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/settings-dark.png" alt="The same panel on 朱红 dark: it is themed by the pack itself, because its styles only reference --dsw-* tokens" width="49%">
+</p>
+
+The panel is themed by the pack itself — its styles reference nothing but `--dsw-*` tokens, so it doubles as a demo of the theme you are picking.
+
 ## Design: Paper · Veil · Seal
 
 Chinese painting does not start with color. It starts with preparing the paper, then washes over it, and signs last. These themes are built in the same order, and the three characters map onto three implementation layers.
