@@ -15,3 +15,6 @@ preview/
 # 注意：lib/ 有意**不**忽略。`dsh plugin --profile web add <本目录>` 装的是这个
 # 目录本身，装载器直接读 lib/client.js；而 package.json 的 files 白名单一旦
 # 存在，.gitignore 里的条目在某些 npm 版本下会把 lib/ 一起从 tarball 里剔掉。
+# 只用 pnpm（README 的安装流程、.npmrc 的 auto-install-peers 都是按 pnpm 写的）。
+# 两份 lockfile 并存时，npm 那份会悄悄漂移成没人验证过的依赖图。
+package-lock.json
