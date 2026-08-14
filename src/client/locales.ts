@@ -10,7 +10,9 @@
 
 export const zh = {
   nav: '传统色主题',
-  intro: '纸 · 帘 · 印 —— 底色克制，气泡认人，一枚印点睛。',
+  // 「一枚印点睛」是旧律的说法：焦点原本是一枚与锚色相距中位 109° 的配伍印。
+  // 改为一色到底后，点睛的是锚色本人，印退成导航条上那一抹余痕。
+  intro: '纸 · 帘 · 印 —— 底色克制，帘上认色，落款收锋。',
   scheme: '明暗切换',
   light: '亮',
   dark: '暗',
@@ -23,13 +25,16 @@ export const zh = {
   empty: '没有匹配的色名。',
   count: '{n} / {total} 套主题',
   rowLabel: '{name}，{family}纸，{seal}印',
+  curated: '精选',
+  curatedNote: '四种纸各有代表',
+  chipLabel: '纸 / 帘 / 焦点的实际颜色',
   remembered: '选择记在本浏览器里，刷新后自动恢复；「恢复内置主题」交还给内置偏好。',
   notPersisted: '第三方主题只在当前页面生效，刷新后回到内置偏好。',
 } as const
 
 export const en: Record<keyof typeof zh, string> = {
   nav: 'Traditional Colors',
-  intro: 'Paper · Veil · Seal — a restrained ground, bubbles that name the color, one seal for focus.',
+  intro: 'Paper · Veil · Seal — a restrained ground, bubbles that name the color, the seal kept to a signature.',
   scheme: 'Color scheme',
   light: 'Light',
   dark: 'Dark',
@@ -42,6 +47,9 @@ export const en: Record<keyof typeof zh, string> = {
   empty: 'No color name matches.',
   count: '{n} / {total} themes',
   rowLabel: '{name}, {family} paper, {seal} seal',
+  curated: 'Curated',
+  curatedNote: 'one from each paper',
+  chipLabel: 'Actual paper / veil / focus colors',
   remembered: 'Your choice is remembered in this browser and restored on reload; "back to built-in theme" hands the page back.',
   notPersisted: 'Third-party themes apply to this page only; a reload returns to the built-in preference.',
 }
