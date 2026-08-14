@@ -6,7 +6,7 @@ Chinese traditional colors as a **DeepSeek Harness theme pack** — 48 anchors �
 
 ## Install
 
-Requirements: Node.js 18+, pnpm, and the `dsh` CLI (`@deepseek-ai/dsh`) with a `web` profile (first boot creates it at `~/.dsh/profiles/web`).
+Requirements: Node.js 20+ (`engines` in `package.json`; `pnpm test` runs `.ts` directly and needs 23.6+), pnpm, and the `dsh` CLI (`@deepseek-ai/dsh`) with a `web` profile (first boot creates it at `~/.dsh/profiles/web`).
 
 ```sh
 git clone https://github.com/nevertoday/dsh-theme-plugin
@@ -16,9 +16,9 @@ dsh plugin --profile web add -w .                         # ② register ('.' = 
 dsh --profile web                                         # ③ boot → open http://127.0.0.1:3080/
 ```
 
-- **①** `pnpm build` needs `tsdown`; fallback: `npm i -D esbuild && node scripts/build-esbuild.mjs`.
-- **②** `-w` is required because the profile directory is a pnpm workspace root. `add` anchors relative specs like `.` to the directory you run it from. It links the directory (`link:` dependency) and auto-appends the package to `dsh.profile.bundles`; the loader reads `lib/client.js` straight from the repo, which is why `lib/` is committed.
-- **Verify:** `dsh --profile web --dump-config` shows a `theme-zhongguo` row; the browser console logs `registered 96/96 themes`.
+- **①** `pnpm install` already builds once through its `prepare` script; the explicit `pnpm build` is a safety net (and required if you install with `--ignore-scripts`). It needs `tsdown`; fallback `node scripts/build-esbuild.mjs` (esbuild is already a devDependency). The repo ships an `.npmrc` with `auto-install-peers=false` — **without it pnpm ≥ 9 cannot install**: it tries to fetch the `@deepseek-ai/*` peers (even though all are marked optional), and the `latest` of `dsh-client-runtime` depends on a package that was never published to npm, so the install dies with `ERR_PNPM_FETCH_404`.
+- **②** `-w` is required because the profile directory is a pnpm workspace root. `add` anchors relative specs like `.` to the directory you run it from. It links the directory (`link:` dependency) and auto-appends the package to `dsh.profile.bundles`; the loader reads `lib/client.js` straight from your working copy — step ① creates that file, so committing `lib/` is **not** required (committing it is fine too; the cost is 553KB of output plus a 790KB sourcemap showing up as changes after every install).
+- **Verify:** `dsh --profile web --dump-config` shows a `theme-zhongguo` row; the browser console logs `registered 96/96 themes`. Without booting the harness at all: `pnpm check` (2208 contrast rows plus invariants) and `pnpm test` (23 behavioral assertions, including a load-time lock on `lib/client.js`).
 - **Update:** `git pull && pnpm install && pnpm build`, then boot — no re-registration needed.
 - **Uninstall:** `dsh plugin --profile web remove dsh-theme-zhongguo`
 
