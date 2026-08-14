@@ -126,7 +126,7 @@ test('产物的闭包工厂 id 等于包名（harness 装载后要校验这一�
   assert.deepEqual(world.plugin.inject, ['theme', 'slots', 'locale'])
 })
 
-test('注册 96 套主题，每套只传 ThemeDefinition 的三个字段 × 89 个令牌', { skip: !built && 'lib/client.js 未构建' }, () => {
+test('注册 96 套主题，每套只传 ThemeDefinition 的三个字段 × 93 个令牌', { skip: !built && 'lib/client.js 未构建' }, () => {
   const world = loadBundle()
   world.plugin.apply!(world.ctx)
 
@@ -137,9 +137,16 @@ test('注册 96 套主题，每套只传 ThemeDefinition 的三个字段 × 89 �
   for (const keys of world.payloadKeys) {
     assert.deepEqual([...keys].sort(), ['colorScheme', 'id', 'tokens'], '注册载荷混进了 provenance 字段')
   }
+  const SHADOWS = ['--dsw-shadow-lv1', '--dsw-shadow-lv1-blur', '--dsw-shadow-lv2', '--dsw-shadow-lv3']
   for (const t of world.registered) {
-    assert.equal(Object.keys(t.tokens).length, 89, `${t.id} 的令牌数不是 89`)
+    // 89 个词表 + 4 个阴影（阴影那族不带 alias-/specific- 前缀，见 src/shadows.ts）
+    assert.equal(Object.keys(t.tokens).length, 93, `${t.id} 的令牌数不是 93`)
     assert.ok(Object.keys(t.tokens).every(k => k.startsWith('--dsw-')), `${t.id} 有非 --dsw-* 令牌`)
+    for (const name of SHADOWS) {
+      const value = t.tokens[name]
+      assert.ok(value !== undefined, `${t.id} 缺 ${name}`)
+      assert.ok(!value.includes('rgba(0, 0, 0'), `${t.id} 的 ${name} 还是中性黑 —— 暖纸上会读成脏灰`)
+    }
   }
   world.teardown()
 })
