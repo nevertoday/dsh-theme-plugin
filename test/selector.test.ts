@@ -19,7 +19,8 @@ const GROUNDS: Record<string, string> = {
 /** 内置偏好写在页面上的底色 —— 谁都没生效时 appliedGround() 就是它。 */
 const BUILTIN_GROUND = 'rgb(255,255,255)'
 
-function makeWorld() {
+function makeWorld(opts: { paintSticks?: boolean } = {}) {
+  const paintSticks = opts.paintSticks ?? true
   let applied = BUILTIN_GROUND
   let clock = 1_000
   let nextTimer = 1
@@ -28,12 +29,23 @@ function makeWorld() {
   const warnings: string[] = []
   let userActive = false
 
+  /** 直写 DOM。paintSticks=false 时模拟"外部总在撤掉我们写的令牌"。 */
+  const paint = (id: string | undefined): void => {
+    if (!paintSticks) return
+    applied = id === undefined || !(id in GROUNDS) ? BUILTIN_GROUND : GROUNDS[id]
+  }
+
   const deps: SelectorDeps = {
     isKnown: id => id in GROUNDS,
     expectedGround: id => GROUNDS[id],
     appliedGround: () => applied,
-    // 关键：setTheme 默认**不**改 applied —— 模拟 presenter 还没把它写进 DOM。
+    // 关键：setTheme 默认**不**改 applied —— 模拟服务偏好与 DOM 是两条路。
     setTheme: id => { calls.push(id) },
+    paint,
+    // 真实实现是 queueMicrotask(paint)；测试里没有任务边界，直接等同 paint，
+    // 锁的就是"任务结束时 DOM 必须是我们的"。
+    repaint: paint,
+    retract: () => { paint(undefined) },
     userActiveWithin: () => userActive,
     now: () => clock,
     setTimer: (fn, ms) => { const id = nextTimer++; timers.set(id, { at: clock + ms, fn }); return id },
@@ -43,14 +55,18 @@ function makeWorld() {
 
   return {
     deps, calls, warnings,
-    /** 只数发给某个 id 的 setTheme（forceSet 会先切一次 fallback 逼出跃迁）。 */
+    /** 只数发给某个 id 的 setTheme（forceSet 现在每次只发一次）。 */
     callsFor(id: string): number { return calls.filter(c => c === id).length },
     /** 还挂着的定时器数量 —— 重叠重试链与卸载泄漏都靠它取证。 */
     get pending(): number { return timers.size },
     /** 模拟用户刚刚点过 / 按过键。 */
     setUserActive(v: boolean): void { userActive = v },
-    /** presenter 终于把某套主题写进了 DOM。 */
+    /** 模拟 presenter 又画了一次（覆盖我们直写的 DOM）。 */
     present(id: string): void { applied = GROUNDS[id] },
+    /** 模拟 presenter 把 body 画成了内置主题（撤掉我们的令牌）。 */
+    presentBuiltin(): void { applied = BUILTIN_GROUND },
+    /** 当前页面上的底色（直写后的效果）。 */
+    get applied(): string { return applied },
     /**
      * 时间前进 ms。逐个定时器推进（clock 停在每个到期时刻再跑它），否则
      * 回调里新排的退避会因为 clock 已经跳到终点而永远轮不到 —— 那样测出来的
@@ -84,28 +100,25 @@ test('认不出的 id 被拒绝并告警，而不是静默吞掉', () => {
   assert.match(world.warnings[0], /unknown theme id/)
 })
 
-test('选中后持续断言，直到 presenter 真的把它写进 DOM', () => {
+test('选中后立即把主题直写进 DOM，无需等 presenter 重绘', () => {
   const world = makeWorld()
   const selector = selectorFor(world)
 
   assert.equal(selector.choose('zhuqing-light'), true)
-  assert.deepEqual(world.calls, ['zhuqing-light'])      // 立即写一次
+  assert.deepEqual(world.calls, ['zhuqing-light'])      // 服务发一次
+  assert.equal(world.applied, GROUNDS['zhuqing-light'], '直写没有立刻生效 —— 页面会先画内置色')
 
-  world.advance(150)
-  assert.equal(world.callsFor('zhuqing-light'), 2)       // DOM 里还没有 → 再写
-
-  world.present('zhuqing-light')                         // presenter 落地
-  world.advance(1_000)
-  assert.equal(world.callsFor('zhuqing-light'), 2)       // 不再多写
-  assert.equal(world.pending, 0)                         // 也不再挂定时器
+  world.advance(150)                                    // 重试链自检：已经是我们的了
+  assert.equal(world.callsFor('zhuqing-light'), 1, 'DOM 已生效还继续重发')
+  assert.equal(world.pending, 0)                        // 也不再挂定时器
 })
 
-test('presenter 一直不落地时，重试有上限且会告警收场', () => {
-  const world = makeWorld()
+test('外部一直撤掉我们的直写时，重试有上限且会告警收场', () => {
+  const world = makeWorld({ paintSticks: false })       // 敌意环境：直写总被盖掉
   selectorFor(world).choose('zhuqing-light')
 
   world.advance(60_000)
-  assert.equal(world.callsFor('zhuqing-light'), 8)       // maxAttempts 默认 8
+  assert.equal(world.callsFor('zhuqing-light'), 8)      // maxAttempts 默认 8
   assert.equal(world.pending, 0)
   assert.equal(world.warnings.filter(w => /did not reach the DOM/.test(w)).length, 1)
 })
@@ -183,6 +196,21 @@ test('偏好被改走时不看瞬时 DOM —— presenter 重绘是异步的', (
   assert.equal(selector.desired, 'zhuqing-light')
 })
 
+test('adopt 把 DOM 画成内置色后，onPreference 同一次调用里就画回我们的主题', () => {
+  const world = makeWorld()
+  const selector = selectorFor(world, { settleGraceMs: 3_000 })
+
+  selector.choose('zhuqing-light')
+  world.advance(200)                                     // 生效
+
+  world.presentBuiltin()                                 // presenter 先于我们的监听器画了内置浅色
+  selector.onPreference('system')                        // 紧跟着的 adopt()
+
+  assert.equal(world.applied, GROUNDS['zhuqing-light'],
+    '让页面停在中间态 —— 刷新后就是那几下可见的闪动')
+  assert.equal(selector.desired, 'zhuqing-light')
+})
+
 test('生效过、且过了宽限期，才认定是用户意图（可以清记忆）', () => {
   const world = makeWorld()
   const selector = selectorFor(world, { settleGraceMs: 3_000 })
@@ -251,8 +279,8 @@ test('重新断言的额度不会随时间补满（抢夺不能长期驻留）',
   const selector = selectorFor(world, { maxAttempts: 1, maxReasserts: 5 })
 
   selector.choose('zhuqing-light')                       // 1 次
-  // 20 次而不是 10：forceSet 的中间态会让紧接着的同值事件被忽略一次，
-  // 所以要多喂几轮才能把额度真的用完并触发收场告警。
+  // 不再有 forceSet 的 fallback 中间态，每轮 onPreference 都计数，
+  // 所以额度 5 次就是 5 次，喂 20 轮也只有前 5 轮会动作。
   for (let i = 0; i < 20; i++) selector.onPreference('dark')
 
   assert.equal(world.callsFor('zhuqing-light'), 6, '额度被补满了：1 次选择 + 最多 5 次重新断言')

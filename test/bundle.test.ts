@@ -82,9 +82,17 @@ function loadBundle(hash = '', seedStorage: Record<string, string> = {}) {
     removeItem: (k: string) => { stored.delete(k) },
   }
   g.document = {
+    documentElement: {
+      style: { setProperty() {}, removeProperty() {} },
+    },
     body: {
-      style: { getPropertyValue: (name: string) => (name === '--dsw-alias-bg-base' ? ground : '') },
-      hasAttribute: () => false,
+      style: {
+        getPropertyValue: (name: string) => (name === '--dsw-alias-bg-base' ? ground : ''),
+        // 直写是 no-op：stub 的 DOM 永远不会「落地」，重试链保持活跃，
+        // 由 teardown() 统一清掉 —— 这也顺带断言 dispose 真的清了定时器。
+        setProperty() {}, removeProperty() {},
+      },
+      setAttribute() {}, removeAttribute() {}, hasAttribute: () => false,
     },
   }
 
