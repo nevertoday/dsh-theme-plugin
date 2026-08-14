@@ -113,7 +113,7 @@ function loadBundle(hash = '') {
 
 test('产物的闭包工厂 id 等于包名（harness 装载后要校验这一行）', { skip: !built && 'lib/client.js 未构建' }, () => {
   const world = loadBundle()
-  assert.equal(world.id, 'dsh-theme-zhongguo')
+  assert.equal(world.id, 'dsh-theme-plugin')
   assert.equal(world.plugin.name, 'theme-zhongguo')
   assert.deepEqual(world.plugin.inject, ['theme', 'slots', 'locale'])
 })
@@ -162,7 +162,7 @@ test('#theme= 深链在启动时生效，并被记住', { skip: !built && 'lib/c
   world.plugin.apply!(world.ctx)
 
   assert.ok(world.setThemeCalls.includes('zhuqing-light'), '深链没有在启动时套用')
-  assert.equal(world.stored.get('dsh-theme-zhongguo:theme'), 'zhuqing-light')
+  assert.equal(world.stored.get('dsh:theme-zhongguo:theme'), 'zhuqing-light')
   world.teardown()
 })
 
