@@ -1,0 +1,17 @@
+node_modules/
+
+# macOS
+.DS_Store
+
+# 一次性产物 / 报告
+*.tgz
+*.log
+review-report.html
+coverage/
+
+# 本地预览页（不纳入版本控制）
+preview/
+
+# 注意：lib/ 有意**不**忽略。`dsh plugin --profile web add <本目录>` 装的是这个
+# 目录本身，装载器直接读 lib/client.js；而 package.json 的 files 白名单一旦
+# 存在，.gitignore 里的条目在某些 npm 版本下会把 lib/ 一起从 tarball 里剔掉。

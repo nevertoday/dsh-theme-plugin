@@ -1,0 +1,81 @@
+{
+  "name": "dsh-theme-zhongguo",
+  "version": "0.1.0",
+  "description": "中国传统色 DeepSeek Harness 主题包 · Chinese traditional color themes for DeepSeek Harness",
+  "type": "module",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./lib/client.js",
+    "./package.json": "./package.json"
+  },
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "dsh-plugin",
+    "theme",
+    "design-tokens",
+    "chinese-traditional-colors",
+    "wcag"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "files": [
+    "lib",
+    "scripts",
+    "src/themes.generated.js",
+    "src/themes.generated.d.ts",
+    "cordis.patch.yml",
+    "LICENSE"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-theme",
+        "@deepseek-ai/dsh-client-ui-settings",
+        "@deepseek-ai/dsh-client-locale"
+      ],
+      "immediately": true
+    }
+  },
+  "scripts": {
+    "generate": "node scripts/generate-themes.mjs",
+    "check": "node scripts/check-contrast.mjs",
+    "test": "node --test test/*.test.ts",
+    "build": "tsdown",
+    "build:esbuild": "node scripts/build-esbuild.mjs",
+    "prepare": "tsdown || node scripts/build-esbuild.mjs"
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.2",
+    "pinyin-pro": "^3.28.0",
+    "tsdown": "^0.11.0",
+    "typescript": "^5.6.0"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "*",
+    "@deepseek-ai/schemastery": "*",
+    "@deepseek-ai/dsh-client-runtime": "*",
+    "@deepseek-ai/dsh-client-ui-theme": "*"
+  },
+  "peerDependenciesMeta": {
+    "@deepseek-ai/cordis": {
+      "optional": true
+    },
+    "@deepseek-ai/schemastery": {
+      "optional": true
+    },
+    "@deepseek-ai/dsh-client-runtime": {
+      "optional": true
+    },
+    "@deepseek-ai/dsh-client-ui-theme": {
+      "optional": true
+    }
+  }
+}

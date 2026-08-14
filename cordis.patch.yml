@@ -1,0 +1,5 @@
+# Bundle layer: inserts this plugin's own row into the composed cordis tree.
+# `name` is the package specifier; it must resolve from the profile directory.
+- insert:
+    - id: theme-zhongguo
+      name: dsh-theme-zhongguo
