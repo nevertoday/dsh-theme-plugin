@@ -20,7 +20,7 @@ dsh --profile web                                         # ③ 启动 → 打�
 - **②** 必须带 `-w`（profile 目录是 pnpm 工作区根）。`add` 会把 `.` 这类相对路径锚定到执行命令的目录；以 `link:` 目录链接挂载并自动并入 `dsh.profile.bundles`；装载器直接读工作副本里的 `lib/client.js` —— 那个文件由步骤 ① 生成，所以**不必**提交（提交也可以，代价是每次安装后 553KB 产物 + 790KB sourcemap 都会显示为改动）。
 - **验证**：`dsh --profile web --dump-config` 应出现 `theme-zhongguo` 行；浏览器控制台打印 `registered 96/96 themes`。不启动 harness 也能验：`pnpm check`（2208 行对比度 + 不变量）与 `pnpm test`（23 条行为断言，含对 `lib/client.js` 的装载锁）。
 - **更新**：`git pull && pnpm install && pnpm build` 后重启即可，无需重新挂载。
-- **卸载**：`dsh plugin --profile web remove dsh-theme-zhongguo`
+- **卸载**：`dsh plugin --profile web remove dsh-theme-plugin`
 
 ## 使用
 

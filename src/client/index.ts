@@ -16,11 +16,17 @@ export const inject = ['theme', 'slots', 'locale']
 
 /** Locale namespace owning this plugin's settings-page copy. */
 const NS = 'settings.theme-zhongguo'
-/** Where a remembered selection lives. Per-browser, per-origin. */
-const STORE_KEY = 'dsh-theme-zhongguo:theme'
+/**
+ * Where a remembered selection lives. Per-browser, per-origin.
+ *
+ * Keyed on the *plugin* name (`theme-zhongguo`), not the npm package name:
+ * renaming the package must not orphan everyone's remembered pick. The `dsh:`
+ * prefix keeps it out of the way of the harness's own origin-wide keys.
+ */
+const STORE_KEY = 'dsh:theme-zhongguo:theme'
 
-const log = (message: string): void => { console.info(`[dsh-theme-zhongguo] ${message}`) }
-const warn = (message: string): void => { console.warn(`[dsh-theme-zhongguo] ${message}`) }
+const log = (message: string): void => { console.info(`[dsh-theme-plugin] ${message}`) }
+const warn = (message: string): void => { console.warn(`[dsh-theme-plugin] ${message}`) }
 
 export function apply(ctx: ClientContext, rawConfig?: unknown): void {
   // The client graph may or may not forward the cordis.yml config to a browser

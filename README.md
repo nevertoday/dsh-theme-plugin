@@ -20,7 +20,7 @@ dsh --profile web                                         # ③ boot → open ht
 - **②** `-w` is required because the profile directory is a pnpm workspace root. `add` anchors relative specs like `.` to the directory you run it from. It links the directory (`link:` dependency) and auto-appends the package to `dsh.profile.bundles`; the loader reads `lib/client.js` straight from your working copy — step ① creates that file, so committing `lib/` is **not** required (committing it is fine too; the cost is 553KB of output plus a 790KB sourcemap showing up as changes after every install).
 - **Verify:** `dsh --profile web --dump-config` shows a `theme-zhongguo` row; the browser console logs `registered 96/96 themes`. Without booting the harness at all: `pnpm check` (2208 contrast rows plus invariants) and `pnpm test` (23 behavioral assertions, including a load-time lock on `lib/client.js`).
 - **Update:** `git pull && pnpm install && pnpm build`, then boot — no re-registration needed.
-- **Uninstall:** `dsh plugin --profile web remove dsh-theme-zhongguo`
+- **Uninstall:** `dsh plugin --profile web remove dsh-theme-plugin`
 
 ## Usage
 

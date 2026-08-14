@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
-const id = 'dsh-theme-zhongguo'
+const id = 'dsh-theme-plugin'
 
 // Platform externals: modules the page's own table already holds, so a plugin
 // bundle must `require` them at runtime instead of bundling its own copy

@@ -4,7 +4,7 @@ import { defineConfig } from 'tsdown'
 // `clientBundle(...)`) is repo-internal and NOT published to npm, so this
 // config replicates its output shape verbatim (per research-integration.md §6):
 // cjs/browser closure-factory whose id MUST equal the package name.
-const id = 'dsh-theme-zhongguo'
+const id = 'dsh-theme-plugin'
 
 export default defineConfig([
   { // host half

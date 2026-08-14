@@ -2,4 +2,4 @@
 # `name` is the package specifier; it must resolve from the profile directory.
 - insert:
     - id: theme-zhongguo
-      name: dsh-theme-zhongguo
+      name: dsh-theme-plugin
