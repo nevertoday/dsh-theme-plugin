@@ -245,6 +245,8 @@ export function apply(ctx: ClientContext, rawConfig?: unknown): void {
     familyNote: row.familyNote,
     sealName: row.sealName,
     sealHex: row.sealHex,
+    sealWhy: row.sealWhy,
+    sealRel: row.sealRel,
     curated: row.curated,
     // 色卡画的是**这套主题实际交付的三段**，不是满彩度的锚色原值。
     // 原先每行画 anchorHex：点「朱红」看见的是朱砂，装上却是一张淡色纸 ——

@@ -28,6 +28,10 @@ export interface ThemeRow {
   familyNote: string
   sealName: string
   sealHex: string
+  /** 印的出处：策展印 / 关系集印 / 同族深印。 */
+  sealWhy: string
+  /** 印取自哪个和声关系槽，如 `temperatureContrast[0]`。 */
+  sealRel: string
   /** 是否属于 12 锚 / 24 套的精选（由生成器推导，见 §11.5）。 */
   curated: boolean
   /** 这套主题**实际交付**的三段：纸、帘、焦点。色卡画它们，不画锚色原值。 */
@@ -55,6 +59,22 @@ type Props = ThemeSectionInjected & { t: (key: string) => string }
 
 /** 纸家族的固定顺序：与生成器的家族表同序，避免每次渲染顺序漂移。 */
 const FAMILY_ORDER = ['素绢', '熟宣', '赭纸', '雪青']
+
+/* 和声关系槽 → 可读的说法。`sealRel` 形如 `temperatureContrast[0]`，是代码标识，
+ * 不该直接给人看；而这枚印「为什么是它」正是这套配色最见功夫的地方 ——
+ * 印退出主按钮之后，这份策展就只剩这里能交代了，所以它必须说得清楚。 */
+const REL_LABEL: Record<string, string> = {
+  temperatureContrast: 'relTemp',
+  complementary: 'relComp',
+  splitComplementary: 'relSplit',
+  triadic: 'relTriad',
+  analogous: 'relAnalog',
+  accent: 'relAccent',
+  darker: 'relDarker',
+  same: 'relSame',
+  self: 'relSelf',
+}
+const relKeyOf = (rel: string): string | undefined => REL_LABEL[rel.replace(/\[\d+\]$/, '')]
 
 const TOKEN = {
   fg: 'var(--dsw-alias-label-primary)',
@@ -179,6 +199,10 @@ export function ThemeSection({
               <span style={{ color: TOKEN.fg3 }} aria-hidden="true">|</span>
               <span>{t('seal')} · {currentRow.sealName}</span>
               <Swatch hex={currentRow.sealHex} size={11} />
+              <span style={{ color: TOKEN.fg3 }}>
+                {currentRow.sealWhy}
+                {relKeyOf(currentRow.sealRel) !== undefined && ` · ${t(relKeyOf(currentRow.sealRel)!)}`}
+              </span>
             </div>
           </div>
         </section>

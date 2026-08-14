@@ -624,7 +624,7 @@ function buildTheme(anchorRec, mode) {
      * 纸一降到 0.970，间距就从 0.030 塌到 0.012，侧栏在画布上直接消失（实测 1.03:1）。
      * 纸要可调，帘就必须跟着纸走。偏移量同时按目标区间放大：
      * 侧栏/纸 1.12–1.20，帘/纸 1.25–1.45。 */
-    const DL = { sidebar: 0.052, hover: 0.082, active: 0.108, bubble: 0.070, bubHi: 0.125 };
+    const DL = { sidebar: 0.052, hover: 0.082, active: 0.108, bubble: 0.090, bubHi: 0.125 };
     let sidebar = veil(fam.bgL - DL.sidebar, { useP: 0.25, tint: fam.veil, floorC: 0.95 * B('sidebar') });
     sidebar = fitSurface(sidebar, FG, 4.5);
     let navHover = veil(fam.bgL - DL.hover, { useP: 0.25, tint: fam.veil, floorC: 0.95 * B('hover') });
@@ -640,9 +640,13 @@ function buildTheme(anchorRec, mode) {
     const bubFloor = Math.max(Math.min(0.075, anchorC / 1.75), 0.95 * B('bubble'));
     let bubble = veilAtFloor(fam.bgL - DL.bubble, { useP: 0, tint: fam.veil * 1.25 }, bubFloor, -1);
     bubble = fitSurface(bubble, FG, 4.5);       // §6#2：动表面不动文字
-    // 与纸的可见边界：下限 1.25（原 1.04 等于「可以看不见」），上限 1.45（帘是罩染，不是色块）。
+    // 与纸的可见边界：下限 1.25（原 1.04 等于「可以看不见」），上限 1.55。
+    // 上限与 DL.bubble 是一对：参数扫描显示 (0.090, 1.55) 比原先的 (0.070, 1.45)
+    // 三项全优 —— 名册 98→100、彩度触底 16→14、帘彩度中位微升。再往深走就亏了：
+    // 帘一深，最大面彩度就涨，焦点的 FOCUS_C_RATIO 闸门会把大批锚色刷下去
+    // （DL=0.150 时触底降到 2，但名册从 98 掉到 78 —— 拿 20 个锚换 4% 彩度，不划算）。
     for (let i = 0; i < 40 && contrast(bubble, BG) < 1.25; i++) bubble = atL(bubble, clamp(Lof(bubble) - 0.004, 0.02, 0.995));
-    for (let i = 0; i < 40 && contrast(bubble, BG) > 1.45; i++) bubble = atL(bubble, clamp(Lof(bubble) + 0.004, 0.02, 0.995));
+    for (let i = 0; i < 40 && contrast(bubble, BG) > 1.55; i++) bubble = atL(bubble, clamp(Lof(bubble) + 0.004, 0.02, 0.995));
     if (chromaOf(bubble) < bubFloor - 1e-9) degraded.push('bubbleChroma');
     let bubHi = veilAtFloor(fam.bgL - DL.bubHi, { useP: 0, tint: fam.veil * 1.35 }, Math.max(Math.min(0.075, anchorC / 1.75), 0.95 * B('highlight')), -1);
     bubHi = fitSurface(bubHi, FG, 4.5);
@@ -703,8 +707,17 @@ function buildTheme(anchorRec, mode) {
      * LINK 留给真正的链接文字与 business 状态，那里异色是对的。 */
     T[P('button-info-fill')] = rgbStr(ens(atL(anchorRec.hex, 0.55), BG, 3.0, 'button-info-fill'));
     T[P('button-info-hover')] = rgbStr(atL(anchorRec.hex, 0.45));
-    T[P('state-business-primary')] = rgbStr(LNK);
-    T[P('state-business-tertiary')] = rgbStr(atL(LINK, 0.945, 0.35));
+    /* state-business 跟锚色，不跟 LINK。
+     *
+     * 它画的是「预览版」这类徽章。判据是：颜色有没有在你读到文字之前就传递信息？
+     * error/success/warn 有 —— 红色先报警，文字后确认，所以它们必须稳定，也确实
+     * 稳定（族内就近取，色相锁在 27°/145°/80° 附近）。business 没有：徽章的意思
+     * 全在那三个字里，颜色不承担语义，也没有跨产品约定可守。
+     * 而它原先跟 LINK（冷暖对冲的关系色），实测三个主题三个颜色（橙/蓝/绿）——
+     * 既不是稳定语义，也不跟主题，两头不靠。跟锚色至少是一致的。
+     * 链接色（brand-primary-new-color…）保持 LNK 不动：蓝链接是真有约定的。 */
+    T[P('state-business-primary')] = rgbStr(ens(atL(anchorRec.hex, 0.52), BG, 4.5, 'state-business-primary'));
+    T[P('state-business-tertiary')] = rgbStr(atL(anchorRec.hex, 0.945, 0.35));
     T[P('button-primary-dimmed')] = rgbStr(N(100));
     T[P('button-contrast-fill')] = rgbStr(N(700));
 
@@ -821,7 +834,7 @@ function buildTheme(anchorRec, mode) {
     // 与亮模式同一条区间：下限 1.25（原 1.04 等于「可以看不见」），上限 1.45
     // （帘是罩染，不是色块 —— 藤黄·暗 实测到过 1.77，明显是一块贴上去的黄）。
     for (let i = 0; i < 40 && contrast(bubble, BG) < 1.25; i++) bubble = atL(bubble, clamp(Lof(bubble) + 0.004, 0.02, 0.995));
-    for (let i = 0; i < 40 && contrast(bubble, BG) > 1.45; i++) bubble = atL(bubble, clamp(Lof(bubble) - 0.004, 0.02, 0.995));
+    for (let i = 0; i < 40 && contrast(bubble, BG) > 1.55; i++) bubble = atL(bubble, clamp(Lof(bubble) - 0.004, 0.02, 0.995));
     if (chromaOf(bubble) < bubFloor - 1e-9) degraded.push('bubbleChroma');
     let bubHi = veilAtFloor(NB_L[750], { useP: 0, tint: vt * 1.35 }, Math.max(Math.min(0.075, anchorC / 1.75), 0.95 * B('highlight')), 1);
     bubHi = fitSurface(bubHi, FG, 4.5);
@@ -871,8 +884,9 @@ function buildTheme(anchorRec, mode) {
     // 同亮模式：发送键是锚色本人（见亮模式分支的说明）。
     T[P('button-info-fill')] = rgbStr(ens(atL(anchorRec.hex, 0.72), BG, 3.0, 'button-info-fill'));
     T[P('button-info-hover')] = rgbStr(atL(anchorRec.hex, 0.82));
-    T[P('state-business-primary')] = rgbStr(LNK);
-    T[P('state-business-tertiary')] = rgbStr(atL(LINK, 0.38, 0.6));
+    // 同亮模式：business 跟锚色，链接仍走 LNK。
+    T[P('state-business-primary')] = rgbStr(ens(atL(anchorRec.hex, 0.72), BG, 4.5, 'state-business-primary'));
+    T[P('state-business-tertiary')] = rgbStr(atL(anchorRec.hex, 0.38, 0.6));
     T[P('button-primary-dimmed')] = rgbStr(N(750));
     T[P('button-contrast-fill')] = rgbStr(N(50));
 
@@ -982,11 +996,15 @@ function checkMatrix(tokens, mode) {
   // 不变量：帘的彩度不得跌破 0.045（R1，「帘比现状更淡」是断言不是希望）
   const cb = window.ZH_COLOR_CORE.chromaOf(g(S('bubble')));
   if (cb < 0.045 - 1e-9) fails.push(`C(bubble) = ${cb.toFixed(4)} < 0.045`);
-  // 不变量：印色彩度必须显著高于最大面（唯一焦点可测，非修辞）
-  const cSeal = window.ZH_COLOR_CORE.chromaOf(g(P('button-primary-fill')));
+  /* 不变量：焦点彩度必须显著高于最大面（唯一焦点可测，非修辞）。
+   * 两个槽都要查 —— button-info-fill 是真实应用里的发送键。只查 primary 的话，
+   * 生成器会放行一批 check-contrast.mjs 随后要拒的锚，两边判据打架。 */
   const cBig = Math.max(...[P('bg-base'), P('bg-layer-1'), S('sidebar-fill'), S('bubble')]
     .map(k => window.ZH_COLOR_CORE.chromaOf(g(k))));
-  if (cSeal < cBig * FOCUS_C_RATIO) fails.push(`焦点彩度 ${cSeal.toFixed(4)} < 最大面 ${cBig.toFixed(4)} × ${FOCUS_C_RATIO}`);
+  for (const k of [P('button-primary-fill'), P('button-info-fill')]) {
+    const cf = window.ZH_COLOR_CORE.chromaOf(g(k));
+    if (cf < cBig * FOCUS_C_RATIO) fails.push(`${k} 彩度 ${cf.toFixed(4)} < 最大面 ${cBig.toFixed(4)} × ${FOCUS_C_RATIO}`);
+  }
   // 不变量：亮模式层次方向（现状四同值白的回归护栏）
   if (mode === 'light') {
     const Ls = ['bg-base', 'bg-layer-1', 'bg-layer-2', 'bg-layer-3'].map(k => Lof(g(P(k))));
