@@ -137,9 +137,11 @@ export function apply(ctx: ClientContext, rawConfig?: unknown): void {
   ctx.on('theme/change', (snapshot: { preference: string }) => {
     const before = selector.desired
     selector.onPreference(snapshot.preference)
-    // 让位了（用户在别处选了别的）就把记住的选择一起清掉 —— 否则下次刷新
-    // 会把用户刚刚放弃的主题又端回来。
-    if (before !== undefined && selector.desired === undefined) store.clear()
+    // 只有"判定了用户意图"的让位才清记忆。启动竞态里放弃**绝不能清** ——
+    // 一次迟到的 adopt() 会顺手销毁用户记住的选择，表现就是"选完刷新永久复原"。
+    if (before !== undefined && selector.desired === undefined && selector.yieldedToUser) {
+      store.clear()
+    }
   })
 
   ctx.effect(() => {
@@ -183,6 +185,17 @@ export function apply(ctx: ClientContext, rawConfig?: unknown): void {
 
   ctx.effect(() => ctx.locale.register(NS, { zh, en }), 'theme-zhongguo: settings copy')
   const tr = ctx.locale.bind(NS)
+  // 自带一层报错面：宿主的 SlotErrorBoundary 只在 componentDidCatch 里 console.error
+  // 一次，而它的 crash face 是粘住的 —— 等我们发现面板空白再去挂监听已经太晚。
+  // 这一层把渲染失败变成一条带栈的、认得出是谁的日志。
+  const Section = (props: Parameters<typeof ThemeSection>[0]): ReturnType<typeof ThemeSection> => {
+    try {
+      return ThemeSection(props)
+    } catch (err) {
+      console.error('[dsh-theme-plugin] settings section render failed:', err)
+      throw err
+    }
+  }
   ctx.slots.inject('settings.section', () => ctx.slots.register({
     name: 'settings.section',
     id: 'theme-zhongguo',
@@ -201,5 +214,5 @@ export function apply(ctx: ClientContext, rawConfig?: unknown): void {
       select,
       reset,
     }),
-  }, ThemeSection))
+  }, Section))
 }

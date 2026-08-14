@@ -1,6 +1,6 @@
 {
   "name": "dsh-theme-plugin",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "中国传统色 DeepSeek Harness 主题包 · Chinese traditional color themes for DeepSeek Harness",
   "type": "module",
   "license": "MIT",
@@ -70,15 +70,11 @@
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": "*",
-    "@deepseek-ai/schemastery": "*",
     "@deepseek-ai/dsh-client-runtime": "*",
     "@deepseek-ai/dsh-client-ui-theme": "*"
   },
   "peerDependenciesMeta": {
     "@deepseek-ai/cordis": {
-      "optional": true
-    },
-    "@deepseek-ai/schemastery": {
       "optional": true
     },
     "@deepseek-ai/dsh-client-runtime": {

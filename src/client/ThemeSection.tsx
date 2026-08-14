@@ -120,6 +120,18 @@ export function ThemeSection({
   const shown = groups.reduce((n, g) => n + g.items.length, 0)
   const currentRow = rows.find(r => r.id === preference)
 
+  /**
+   * 明暗分段不只是筛列表 —— 当前正用着某套主题时，点「暗」就该立刻变暗。
+   * 只筛不切的话，用户看到的是"点了没反应"（而且选中行还会从列表里消失）。
+   * 当前用的是内置主题时没有可对应的孪生 id，那就只筛。
+   */
+  const switchScheme = (next: 'light' | 'dark'): void => {
+    setScheme(next)
+    if (currentRow === undefined || currentRow.colorScheme === next) return
+    const twin = rows.find(r => r.pinyin === currentRow.pinyin && r.colorScheme === next)
+    if (twin !== undefined) select(twin.id)
+  }
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 18, color: TOKEN.fg }}>
       <style>{CSS}</style>
@@ -169,7 +181,7 @@ export function ThemeSection({
               type="button"
               className="dshtz-seg-btn"
               aria-pressed={scheme === s}
-              onClick={() => { setScheme(s) }}
+              onClick={() => { switchScheme(s) }}
               style={{ border: 0, cursor: 'pointer', font: 'inherit', fontSize: 12.5, padding: '5px 16px' }}
             >
               {t(s)}
@@ -189,8 +201,9 @@ export function ThemeSection({
             border: `1px solid ${TOKEN.line}`,
           }}
         />
+        {/* 显示"当前筛出的 / 全库"两个数：只写筛出的那个会被读成"这个包只有 48 套"。 */}
         <span aria-live="polite" style={{ fontSize: 11.5, color: TOKEN.fg3 }}>
-          {fill(t('count'), { n: shown })}
+          {fill(t('count'), { n: shown, total: rows.length })}
         </span>
         <button
           type="button"

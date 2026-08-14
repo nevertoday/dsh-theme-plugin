@@ -8,18 +8,8 @@ import path from 'node:path'
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const id = 'dsh-theme-plugin'
 
-// Platform externals: modules the page's own table already holds, so a plugin
-// bundle must `require` them at runtime instead of bundling its own copy
-// (a second React would break hooks outright). This list was read off a live
-// page — `Object.keys(window.__DSH_MODULES__.seed)` — rather than copied from
-// the shell's platform.ts, so it reflects what the running app actually seeds.
-const external = [
-  'react', 'react/jsx-runtime', 'react-dom', 'react-dom/client',
-  '@deepseek-ai/cordis',
-  '@deepseek-ai/dsh-client-ui-slots',
-  '@deepseek-ai/dsh-client-web-react',
-  '@deepseek-ai/dsh-client-ui-primitives',
-]
+// Platform externals live in one place now — tsdown uses the same list.
+import { PLATFORM_EXTERNALS as external } from './platform-externals.mjs'
 
 // Host half: esm, node. `packages: 'external'` keeps framework imports
 // (@deepseek-ai/schemastery, for the config schema) unresolved at build time —

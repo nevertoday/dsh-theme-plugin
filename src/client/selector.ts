@@ -38,11 +38,17 @@ export interface SelectorDeps {
 export interface SelectorOptions {
   /** 接手之前页面的偏好 —— reset() 要交还的就是它。 */
   initialPreference?: string
-  /** 距 apply() 多久之内，偏好被改仍算启动竞态而不是用户意图。 */
+  /**
+   * 启动阶段的硬上限：我们的主题**一次都还没生效过**之前，偏好被改一律算竞态。
+   * 实机上 adopt() 可能晚到 5 秒以外，所以这个值要宽 —— 反正它只在"从没生效过"
+   * 的前提下有效，用户不可能在这个阶段放弃一个他没见过的主题。
+   */
   bootRaceMs?: number
+  /** 刚生效 / 刚被选中之后的宽限期：这段时间内被覆盖仍算迟到的 adopt()。 */
+  settleGraceMs?: number
   /** 单次选择的 DOM 自验证重试上限。 */
   maxAttempts?: number
-  /** 启动窗口内被覆盖后重新断言的次数上限（不会随时间补额度）。 */
+  /** 被覆盖后重新断言的次数上限（只有明确选择才补额度）。 */
   maxReasserts?: number
   /** 退避基数：第 n 次重试等待 retryStepMs × n。 */
   retryStepMs?: number
@@ -59,11 +65,18 @@ export interface ThemeSelector {
   readonly desired: string | undefined
   /** 回退目标：最近一次观察到的、不属于本插件的偏好。 */
   readonly fallback: string
+  /**
+   * 最近一次 desired 归零，是不是因为**判定了用户意图**（而不是启动竞态里放弃）。
+   * 调用方靠它决定要不要把"记住的选择"也清掉 —— 启动阶段的让位绝不能清，
+   * 否则一次迟到的 adopt() 会顺手销毁用户的记忆（刷新一次就永久复原）。
+   */
+  readonly yieldedToUser: boolean
   dispose(): void
 }
 
 export function createThemeSelector(deps: SelectorDeps, options: SelectorOptions = {}): ThemeSelector {
-  const bootRaceMs = options.bootRaceMs ?? 5_000
+  const bootRaceMs = options.bootRaceMs ?? 15_000
+  const settleGraceMs = options.settleGraceMs ?? 3_000
   const maxAttempts = options.maxAttempts ?? 8
   const maxReasserts = options.maxReasserts ?? 5
   const retryStepMs = options.retryStepMs ?? 150
@@ -74,6 +87,22 @@ export function createThemeSelector(deps: SelectorDeps, options: SelectorOptions
   let timer: TimerHandle | undefined
   let reasserts = 0
   let gaveUp = false
+  let yieldedToUser = false
+  /** 我们的主题是否曾经真的出现在 DOM 里（不是"我们请求过"）。 */
+  let settled = false
+  let settledAt = 0
+  let chosenAt = startedAt
+
+  /**
+   * 现在被别人改掉偏好，还算不算"不是用户干的"。
+   * 三种情形都算：还没生效过且在启动上限内 / 刚刚被选中 / 刚刚生效。
+   */
+  function withinGrace(t: number): boolean {
+    if (!settled && t - startedAt <= bootRaceMs) return true
+    if (t - chosenAt <= settleGraceMs) return true
+    if (settled && t - settledAt <= settleGraceMs) return true
+    return false
+  }
 
   /** 单飞：任何入口先掐掉挂起的那条链，否则两条链会并行且句柄互相覆盖。 */
   function cancel(): void {
@@ -88,7 +117,10 @@ export function createThemeSelector(deps: SelectorDeps, options: SelectorOptions
     if (desired === undefined) return
     const want = deps.expectedGround(desired)
     if (want === undefined) return
-    if (deps.appliedGround() === want) return           // presenter 已经写进去了
+    if (deps.appliedGround() === want) {                // presenter 已经写进去了
+      if (!settled) { settled = true; settledAt = deps.now() }
+      return
+    }
     if (attempt >= maxAttempts) {
       deps.warn(`${desired} did not reach the DOM after ${attempt} tries`)
       return
@@ -100,6 +132,7 @@ export function createThemeSelector(deps: SelectorDeps, options: SelectorOptions
   return {
     get desired(): string | undefined { return desired },
     get fallback(): string { return fallback },
+    get yieldedToUser(): boolean { return yieldedToUser },
 
     choose(id: string): boolean {
       if (!deps.isKnown(id)) {
@@ -111,12 +144,17 @@ export function createThemeSelector(deps: SelectorDeps, options: SelectorOptions
       // 就等于额度永远用不完，抢夺会长期驻留 —— 那是这个文件存在的原因之一。
       reasserts = 0
       gaveUp = false
+      yieldedToUser = false
+      settled = false                                   // 新主题还没生效过
+      chosenAt = deps.now()
       ensureApplied(0)
       return true
     },
 
     reset(): void {
       desired = undefined
+      yieldedToUser = true                             // 用户主动交还，记忆也该忘掉
+      settled = false
       cancel()
       deps.setTheme(fallback)
     },
@@ -127,8 +165,9 @@ export function createThemeSelector(deps: SelectorDeps, options: SelectorOptions
       if (!deps.isKnown(preference)) fallback = preference
       if (desired === undefined) return
       if (preference === desired) return
-      if (deps.now() - startedAt > bootRaceMs) {
+      if (!withinGrace(deps.now())) {
         desired = undefined                            // 用户主权：让位，不再抢
+        yieldedToUser = true
         cancel()
         return
       }

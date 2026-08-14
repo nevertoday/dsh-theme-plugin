@@ -145,6 +145,48 @@ test('启动窗口内被覆盖：重新断言（这才是竞态防护该做的�
   assert.equal(world.calls.length, 2, '启动窗口内没有重新断言')
 })
 
+test('迟到的 adopt()（还没生效过）仍然重新断言 —— "选完刷新就复原"的回归锁', () => {
+  const world = makeWorld()
+  const selector = selectorFor(world, { maxAttempts: 1, bootRaceMs: 15_000 })
+
+  selector.choose('zhuqing-light')                       // 刷新后从 localStorage 读回
+  assert.equal(world.calls.length, 1)
+
+  world.advance(8_000)                                   // adopt() 晚到 8 秒（早于旧的 5 秒窗口就会误判）
+  selector.onPreference('dark')
+
+  assert.equal(selector.desired, 'zhuqing-light', '还没生效过就让位了 —— 用户会看到刷新后复原')
+  assert.equal(selector.yieldedToUser, false, '这不是用户意图，不该清掉记住的选择')
+  assert.ok(world.calls.length > 1, '没有重新断言')
+})
+
+test('生效过、且过了宽限期，才认定是用户意图（可以清记忆）', () => {
+  const world = makeWorld()
+  const selector = selectorFor(world, { settleGraceMs: 3_000 })
+
+  selector.choose('zhuqing-light')
+  world.present('zhuqing-light')
+  world.advance(200)                                     // 让重试链自检到"已生效"
+  world.advance(10_000)                                  // 宽限期过
+
+  selector.onPreference('light')
+  assert.equal(selector.desired, undefined)
+  assert.equal(selector.yieldedToUser, true)
+})
+
+test('刚生效就被覆盖（宽限期内）：仍然算迟到的 adopt，不清记忆', () => {
+  const world = makeWorld()
+  const selector = selectorFor(world, { settleGraceMs: 3_000, maxAttempts: 1 })
+
+  selector.choose('zhuqing-light')
+  world.present('zhuqing-light')
+  world.advance(200)
+  selector.onPreference('dark')                          // 紧跟着一次 adopt
+
+  assert.equal(selector.desired, 'zhuqing-light')
+  assert.equal(selector.yieldedToUser, false)
+})
+
 test('启动窗口过后用户改偏好：让位，不再抢', () => {
   const world = makeWorld()
   const selector = selectorFor(world, { bootRaceMs: 5_000 })
