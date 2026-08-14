@@ -6,7 +6,7 @@
 
 ## 安装
 
-要求：Node.js 18+、pnpm、`dsh` CLI（`@deepseek-ai/dsh`）且带 `web` profile（首次启动自动创建于 `~/.dsh/profiles/web`）。
+要求：Node.js 20+（`package.json` 的 `engines`；`pnpm test` 直跑 `.ts` 另需 23.6+）、pnpm、`dsh` CLI（`@deepseek-ai/dsh`）且带 `web` profile（首次启动自动创建于 `~/.dsh/profiles/web`）。
 
 ```sh
 git clone https://github.com/nevertoday/dsh-theme-plugin
@@ -16,9 +16,9 @@ dsh plugin --profile web add -w .                         # ② 挂载（'.' 即
 dsh --profile web                                         # ③ 启动 → 打开 http://127.0.0.1:3080/
 ```
 
-- **①** `pnpm build` 需要 tsdown；备胎：`npm i -D esbuild && node scripts/build-esbuild.mjs`。
-- **②** 必须带 `-w`（profile 目录是 pnpm 工作区根）。`add` 会把 `.` 这类相对路径锚定到执行命令的目录；以 `link:` 目录链接挂载并自动并入 `dsh.profile.bundles`；装载器直接读仓库里的 `lib/client.js` —— 所以 `lib/` 要提交。
-- **验证**：`dsh --profile web --dump-config` 应出现 `theme-zhongguo` 行；浏览器控制台打印 `registered 96/96 themes`。
+- **①** `pnpm install` 的 `prepare` 已经构建过一次，后面的 `pnpm build` 是显式的保险（用 `--ignore-scripts` 安装时它就成了必需）。需要 tsdown；备胎 `node scripts/build-esbuild.mjs`（esbuild 已在 devDependencies 里）。仓库带一份 `.npmrc`（`auto-install-peers=false`）—— **缺了它 pnpm ≥ 9 装不上**：它会去装 `@deepseek-ai/*` peer（即便都标了 optional），而 `dsh-client-runtime` 的 latest 依赖一个未发布到 npm 的包，安装会以 `ERR_PNPM_FETCH_404` 失败。
+- **②** 必须带 `-w`（profile 目录是 pnpm 工作区根）。`add` 会把 `.` 这类相对路径锚定到执行命令的目录；以 `link:` 目录链接挂载并自动并入 `dsh.profile.bundles`；装载器直接读工作副本里的 `lib/client.js` —— 那个文件由步骤 ① 生成，所以**不必**提交（提交也可以，代价是每次安装后 553KB 产物 + 790KB sourcemap 都会显示为改动）。
+- **验证**：`dsh --profile web --dump-config` 应出现 `theme-zhongguo` 行；浏览器控制台打印 `registered 96/96 themes`。不启动 harness 也能验：`pnpm check`（2208 行对比度 + 不变量）与 `pnpm test`（23 条行为断言，含对 `lib/client.js` 的装载锁）。
 - **更新**：`git pull && pnpm install && pnpm build` 后重启即可，无需重新挂载。
 - **卸载**：`dsh plugin --profile web remove dsh-theme-zhongguo`
 
