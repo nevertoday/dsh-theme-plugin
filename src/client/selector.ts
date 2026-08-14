@@ -29,6 +29,12 @@ export interface SelectorDeps {
   /** 页面此刻真的写着的 `--dsw-alias-bg-base`。 */
   appliedGround(): string
   setTheme(id: string): void
+  /**
+   * 最近 ms 毫秒内用户有没有真的动过手（点击/按键）。
+   * 这是区分「用户在内置 Appearance 行点了 Light」和「框架又 adopt 了一次持久化
+   * 偏好」的唯一可靠信号 —— 两者在事件层面长得一模一样，但前者必然紧跟一次点击。
+   */
+  userActiveWithin(ms: number): boolean
   now(): number
   setTimer(fn: () => void, ms: number): TimerHandle
   clearTimer(handle: TimerHandle): void
@@ -46,6 +52,8 @@ export interface SelectorOptions {
   bootRaceMs?: number
   /** 刚生效 / 刚被选中之后的宽限期：这段时间内被覆盖仍算迟到的 adopt()。 */
   settleGraceMs?: number
+  /** 偏好被改走前多久算「用户刚动过手」。 */
+  userIntentMs?: number
   /** 单次选择的 DOM 自验证重试上限。 */
   maxAttempts?: number
   /** 被覆盖后重新断言的次数上限（只有明确选择才补额度）。 */
@@ -77,6 +85,7 @@ export interface ThemeSelector {
 export function createThemeSelector(deps: SelectorDeps, options: SelectorOptions = {}): ThemeSelector {
   const bootRaceMs = options.bootRaceMs ?? 15_000
   const settleGraceMs = options.settleGraceMs ?? 3_000
+  const userIntentMs = options.userIntentMs ?? 2_000
   const maxAttempts = options.maxAttempts ?? 8
   const maxReasserts = options.maxReasserts ?? 5
   const retryStepMs = options.retryStepMs ?? 150
@@ -92,6 +101,8 @@ export function createThemeSelector(deps: SelectorDeps, options: SelectorOptions
   let settled = false
   let settledAt = 0
   let chosenAt = startedAt
+  /** 只忽略「紧接着的那一个」事件：forceSet 的中间态。 */
+  let suppress: string | undefined
 
   /**
    * 现在被别人改掉偏好，还算不算"不是用户干的"。
@@ -102,6 +113,25 @@ export function createThemeSelector(deps: SelectorDeps, options: SelectorOptions
     if (t - chosenAt <= settleGraceMs) return true
     if (settled && t - settledAt <= settleGraceMs) return true
     return false
+  }
+
+  /**
+   * 逼出一次真实的状态跃迁再设成我们要的。
+   *
+   * ui-theme 的 setTheme 对**同一个 id** 会去重：不发 theme/change、presenter 也
+   * 不重绘。而启动时我们的 id 早就写进服务了，presenter 却按 settings 读回的内置
+   * 偏好作画 —— 两边劈叉之后，重发同一个 id 是纯空转（实测 8 次重试全无事件）。
+   * 所以先切到 fallback 再切回来。启动阶段 presenter 还没画东西，看不到闪一下。
+   *
+   * 中间那次会引发一个 theme/change，suppress 让它只被忽略这一次，
+   * 免得和我们自己的重新断言打乒乓、把额度瞬间烧完。
+   */
+  function forceSet(id: string): void {
+    if (fallback !== id) {
+      suppress = fallback
+      deps.setTheme(fallback)
+    }
+    deps.setTheme(id)
   }
 
   /** 单飞：任何入口先掐掉挂起的那条链，否则两条链会并行且句柄互相覆盖。 */
@@ -119,14 +149,34 @@ export function createThemeSelector(deps: SelectorDeps, options: SelectorOptions
     if (want === undefined) return
     if (deps.appliedGround() === want) {                // presenter 已经写进去了
       if (!settled) { settled = true; settledAt = deps.now() }
+      // 赢了一次就把额度还回来：长会话里 adopt 可能来很多轮（重连、设置同步），
+      // 全局只给 5 次会被耗尽。settle 意味着 DOM 里就是我们的，不可能形成循环。
+      reasserts = 0
+      gaveUp = false
       return
     }
     if (attempt >= maxAttempts) {
       deps.warn(`${desired} did not reach the DOM after ${attempt} tries`)
       return
     }
-    deps.setTheme(desired)
+    if (attempt === 0) deps.setTheme(desired)
+    else forceSet(desired)                              // 重发同一个 id 会被去重
     timer = deps.setTimer(() => { ensureApplied(attempt + 1) }, retryStepMs * (attempt + 1))
+  }
+
+  /**
+   * 偏好刚被别人改走时用这个，而不是 ensureApplied。
+   *
+   * 理由：presenter 的重绘是**异步**的。事件到达的那一刻，body 上往往还是我们的
+   * 底色，ensureApplied 会据此判定"已经生效"并直接返回（还会把 settled 置上），
+   * 等重绘落地就再没人来纠正了 —— 实机现象就是"刷新后主题不恢复，而且一条告警
+   * 都没有"。服务偏好是"接下来会画什么"的权威，所以这里不看 DOM，直接重发。
+   */
+  function reassert(): void {
+    cancel()
+    if (desired === undefined) return
+    forceSet(desired)
+    timer = deps.setTimer(() => { ensureApplied(1) }, retryStepMs)
   }
 
   return {
@@ -160,12 +210,15 @@ export function createThemeSelector(deps: SelectorDeps, options: SelectorOptions
     },
 
     onPreference(preference: string): void {
+      const suppressed = suppress
+      suppress = undefined
+      if (suppressed !== undefined && preference === suppressed) return   // forceSet 的中间态
       // 别人的偏好值就是我们的回退目标 —— 我们要对抗的那次 adopt()，
       // 恰好也是我们唯一能学到「持久化偏好到底是什么」的机会。
       if (!deps.isKnown(preference)) fallback = preference
       if (desired === undefined) return
       if (preference === desired) return
-      if (!withinGrace(deps.now())) {
+      if (!withinGrace(deps.now()) && deps.userActiveWithin(userIntentMs)) {
         desired = undefined                            // 用户主权：让位，不再抢
         yieldedToUser = true
         cancel()
@@ -179,7 +232,7 @@ export function createThemeSelector(deps: SelectorDeps, options: SelectorOptions
         return
       }
       reasserts++
-      ensureApplied(0)
+      reassert()
     },
 
     dispose(): void {

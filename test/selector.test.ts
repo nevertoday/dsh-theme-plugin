@@ -26,6 +26,7 @@ function makeWorld() {
   const timers = new Map<number, { at: number; fn: () => void }>()
   const calls: string[] = []
   const warnings: string[] = []
+  let userActive = false
 
   const deps: SelectorDeps = {
     isKnown: id => id in GROUNDS,
@@ -33,6 +34,7 @@ function makeWorld() {
     appliedGround: () => applied,
     // 关键：setTheme 默认**不**改 applied —— 模拟 presenter 还没把它写进 DOM。
     setTheme: id => { calls.push(id) },
+    userActiveWithin: () => userActive,
     now: () => clock,
     setTimer: (fn, ms) => { const id = nextTimer++; timers.set(id, { at: clock + ms, fn }); return id },
     clearTimer: handle => { timers.delete(handle as number) },
@@ -41,8 +43,12 @@ function makeWorld() {
 
   return {
     deps, calls, warnings,
+    /** 只数发给某个 id 的 setTheme（forceSet 会先切一次 fallback 逼出跃迁）。 */
+    callsFor(id: string): number { return calls.filter(c => c === id).length },
     /** 还挂着的定时器数量 —— 重叠重试链与卸载泄漏都靠它取证。 */
     get pending(): number { return timers.size },
+    /** 模拟用户刚刚点过 / 按过键。 */
+    setUserActive(v: boolean): void { userActive = v },
     /** presenter 终于把某套主题写进了 DOM。 */
     present(id: string): void { applied = GROUNDS[id] },
     /**
@@ -86,11 +92,11 @@ test('选中后持续断言，直到 presenter 真的把它写进 DOM', () => {
   assert.deepEqual(world.calls, ['zhuqing-light'])      // 立即写一次
 
   world.advance(150)
-  assert.equal(world.calls.length, 2)                    // DOM 里还没有 → 再写
+  assert.equal(world.callsFor('zhuqing-light'), 2)       // DOM 里还没有 → 再写
 
   world.present('zhuqing-light')                         // presenter 落地
   world.advance(1_000)
-  assert.equal(world.calls.length, 2)                    // 不再多写
+  assert.equal(world.callsFor('zhuqing-light'), 2)       // 不再多写
   assert.equal(world.pending, 0)                         // 也不再挂定时器
 })
 
@@ -99,7 +105,7 @@ test('presenter 一直不落地时，重试有上限且会告警收场', () => {
   selectorFor(world).choose('zhuqing-light')
 
   world.advance(60_000)
-  assert.equal(world.calls.length, 8)                    // maxAttempts 默认 8
+  assert.equal(world.callsFor('zhuqing-light'), 8)       // maxAttempts 默认 8
   assert.equal(world.pending, 0)
   assert.equal(world.warnings.filter(w => /did not reach the DOM/.test(w)).length, 1)
 })
@@ -138,11 +144,11 @@ test('启动窗口内被覆盖：重新断言（这才是竞态防护该做的�
   const selector = selectorFor(world, { maxAttempts: 1 })
 
   selector.choose('zhuqing-light')
-  assert.equal(world.calls.length, 1)
+  assert.equal(world.callsFor('zhuqing-light'), 1)
 
   selector.onPreference('dark')                          // settings 读回持久化偏好，盖掉我们
   assert.equal(selector.desired, 'zhuqing-light')
-  assert.equal(world.calls.length, 2, '启动窗口内没有重新断言')
+  assert.equal(world.callsFor('zhuqing-light'), 2, '启动窗口内没有重新断言')
 })
 
 test('迟到的 adopt()（还没生效过）仍然重新断言 —— "选完刷新就复原"的回归锁', () => {
@@ -160,6 +166,23 @@ test('迟到的 adopt()（还没生效过）仍然重新断言 —— "选完刷
   assert.ok(world.calls.length > 1, '没有重新断言')
 })
 
+test('偏好被改走时不看瞬时 DOM —— presenter 重绘是异步的', () => {
+  const world = makeWorld()
+  const selector = selectorFor(world, { maxAttempts: 1 })
+
+  selector.choose('zhuqing-light')
+  world.present('zhuqing-light')                         // DOM 里已经是我们的了
+  world.advance(200)                                     // 重试链自检到"已生效"
+  const before = world.calls.length
+
+  // adopt() 把偏好改走，但 presenter 还没重绘 —— 此刻 DOM 仍然显示我们的底色。
+  selector.onPreference('system')
+
+  assert.ok(world.calls.length > before,
+    '因为瞬时 DOM 还是我们的就没有重新断言 —— 重绘落地后主题会静默消失')
+  assert.equal(selector.desired, 'zhuqing-light')
+})
+
 test('生效过、且过了宽限期，才认定是用户意图（可以清记忆）', () => {
   const world = makeWorld()
   const selector = selectorFor(world, { settleGraceMs: 3_000 })
@@ -169,9 +192,27 @@ test('生效过、且过了宽限期，才认定是用户意图（可以清记�
   world.advance(200)                                     // 让重试链自检到"已生效"
   world.advance(10_000)                                  // 宽限期过
 
+  world.setUserActive(true)                              // 用户真的点了内置 Appearance 行
   selector.onPreference('light')
   assert.equal(selector.desired, undefined)
   assert.equal(selector.yieldedToUser, true)
+})
+
+test('宽限期外、但用户没动过手：那是框架又 adopt 了一次 —— 不让位、不清记忆', () => {
+  const world = makeWorld()
+  const selector = selectorFor(world, { settleGraceMs: 3_000, maxAttempts: 1 })
+
+  selector.choose('zhuqing-light')
+  world.present('zhuqing-light')
+  world.advance(200)                                     // 生效
+  world.advance(60_000)                                  // 很久以后（重连 / 设置同步都会再 adopt 一次）
+  const before = world.callsFor('zhuqing-light')
+
+  selector.onPreference('system')                        // userActive 默认 false
+
+  assert.equal(selector.desired, 'zhuqing-light', '把框架的 adopt 当成用户意图了')
+  assert.equal(selector.yieldedToUser, false, '这会顺手清掉用户记住的选择')
+  assert.ok(world.callsFor('zhuqing-light') > before, '没有重新断言')
 })
 
 test('刚生效就被覆盖（宽限期内）：仍然算迟到的 adopt，不清记忆', () => {
@@ -196,6 +237,7 @@ test('启动窗口过后用户改偏好：让位，不再抢', () => {
   world.advance(30_000)                                  // 启动窗口早过了
   const before = world.calls.length
 
+  world.setUserActive(true)                              // 关键：用户真的动过手
   selector.onPreference('light')                         // 用户在内置 Appearance 行点了 Light
   assert.equal(selector.desired, undefined, '插件仍想抢回自己的主题')
   assert.equal(world.pending, 0)
@@ -209,9 +251,11 @@ test('重新断言的额度不会随时间补满（抢夺不能长期驻留）',
   const selector = selectorFor(world, { maxAttempts: 1, maxReasserts: 5 })
 
   selector.choose('zhuqing-light')                       // 1 次
-  for (let i = 0; i < 10; i++) selector.onPreference('dark')
+  // 20 次而不是 10：forceSet 的中间态会让紧接着的同值事件被忽略一次，
+  // 所以要多喂几轮才能把额度真的用完并触发收场告警。
+  for (let i = 0; i < 20; i++) selector.onPreference('dark')
 
-  assert.equal(world.calls.length, 6, '额度被补满了：1 次选择 + 最多 5 次重新断言')
+  assert.equal(world.callsFor('zhuqing-light'), 6, '额度被补满了：1 次选择 + 最多 5 次重新断言')
   assert.equal(world.warnings.filter(w => /gave up re-asserting/.test(w)).length, 1)
 })
 

@@ -104,6 +104,20 @@ export function apply(ctx: ClientContext, rawConfig?: unknown): void {
     },
   }
 
+  // 用户最近一次真实交互的时刻。区分"用户在内置 Appearance 行点了 Light"和
+  // "框架又 adopt 了一次持久化偏好"只能靠这个 —— 两者的 theme/change 一模一样。
+  let lastInputAt = 0
+  const noteInput = (): void => { lastInputAt = Date.now() }
+  ctx.effect(() => {
+    const opts = { capture: true, passive: true } as const
+    addEventListener('pointerdown', noteInput, opts)
+    addEventListener('keydown', noteInput, opts)
+    return () => {
+      removeEventListener('pointerdown', noteInput, opts)
+      removeEventListener('keydown', noteInput, opts)
+    }
+  }, 'theme-zhongguo: user-activity probe')
+
   const selector = createThemeSelector({
     isKnown: id => ids.has(id),
     expectedGround: id => grounds.get(id),
@@ -113,6 +127,7 @@ export function apply(ctx: ClientContext, rawConfig?: unknown): void {
     setTheme: (id) => {
       try { ctx.theme.setTheme(id) } catch (err) { warn(`setTheme(${id}) failed: ${String(err)}`) }
     },
+    userActiveWithin: ms => Date.now() - lastInputAt <= ms,
     now: () => Date.now(),
     setTimer: (fn, ms) => setTimeout(fn, ms),
     clearTimer: (handle) => { clearTimeout(handle as ReturnType<typeof setTimeout>) },
