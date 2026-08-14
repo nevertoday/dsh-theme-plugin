@@ -58,8 +58,8 @@ http://127.0.0.1:3080/#theme=qunqing-dark       # 群青 dark
 Changing the hash switches themes live. Your pick is remembered per browser (`localStorage`), not in `settings.yaml` — it does not follow you across devices.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/settings-light.png" alt="Settings → Traditional Colors on 竹青 light: the curated shortlist first, then every anchor grouped by paper family; each row shows the theme's actual paper / veil / focus" width="49%">
-  <img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/settings-dark.png" alt="The same panel on 藤黄 dark: it is themed by the pack itself, because its styles only reference --dsw-* tokens" width="49%">
+  <img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/panel-light.png" alt="Settings → Traditional Colors on 竹青 light: the curated shortlist first, then every anchor grouped by paper family; each row shows the theme's actual paper / veil / focus" width="49%">
+  <img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/panel-dark.png" alt="The same panel on 藤黄 dark: it is themed by the pack itself, because its styles only reference --dsw-* tokens" width="49%">
 </p>
 <p align="center">
   <sub>Each row's chip is the theme's <b>real</b> paper, veil and focus — not the anchor swatch at full chroma.
