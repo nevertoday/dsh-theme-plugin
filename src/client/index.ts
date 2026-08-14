@@ -118,7 +118,43 @@ export function apply(ctx: ClientContext, rawConfig?: unknown): void {
     }
   }, 'theme-zhongguo: user-activity probe')
 
-  const selector = createThemeSelector({
+  // 直接写 DOM 的令牌绘制 —— 不依赖 presenter 的重绘往返。
+  //
+  // 为什么需要它：settings scope 启动时会多次 adopt() 内置偏好，每次 emit
+  // theme/change、presenter 同步把 body 重画成内置主题；插件再重新断言又画回来。
+  // 中间态如果在任务边界上落了一帧，就是可见的闪动（实机刷新实测来回 5 次）。
+  // 这里在**同一个任务里**就把我们的令牌写进 body，任务末尾（浏览器绘制前）再
+  // 补一次，于是无论监听器顺序如何，画出来的始终是我们的主题。
+  //
+  // paintedTokens 记我们写过的名字：换主题/复位/让位时先撤掉，免得 presenter 只
+  // 撤它自己写的那份、把我们残留的令牌留在 body 上（内置主题不写 --dsw-alias-*，
+  // 残留的会盖住内置底色）。
+  let paintedTokens: string[] = []
+  const paintTheme = (id: string | undefined): void => {
+    const body = document.body
+    if (!body) return
+    for (const name of paintedTokens) body.style.removeProperty(name)
+    paintedTokens = []
+    if (id === undefined) return
+    const theme = THEMES.find(t => t.id === id)
+    if (!theme) return
+    document.documentElement.style.colorScheme = theme.colorScheme
+    if (theme.colorScheme === 'dark') body.setAttribute('data-ds-dark-theme', '')
+    else body.removeAttribute('data-ds-dark-theme')
+    for (const [name, value] of Object.entries(theme.tokens)) {
+      body.style.setProperty(name, value)
+      paintedTokens.push(name)
+    }
+  }
+  // 任务结束、浏览器绘制前再补一次。同一次 theme/change 里 presenter 的监听器
+  // 若注册在我们后面，它同步画完会盖掉我们的同步绘制；microtask 排在所有同步
+  // 监听器之后、浏览器绘制之前，能稳定赢回来。desired 变了就不画（防过期）。
+  const repaintTheme = (id: string): void => {
+    queueMicrotask(() => { if (selector.desired === id) paintTheme(id) })
+  }
+
+  let selector: ReturnType<typeof createThemeSelector>
+  selector = createThemeSelector({
     isKnown: id => ids.has(id),
     expectedGround: id => grounds.get(id),
     // presenter 真正写入的地方就是这里 —— 服务快照会说谎（它记的是我们请求的值），
@@ -127,6 +163,9 @@ export function apply(ctx: ClientContext, rawConfig?: unknown): void {
     setTheme: (id) => {
       try { ctx.theme.setTheme(id) } catch (err) { warn(`setTheme(${id}) failed: ${String(err)}`) }
     },
+    paint: paintTheme,
+    repaint: repaintTheme,
+    retract: () => { paintTheme() },
     userActiveWithin: ms => Date.now() - lastInputAt <= ms,
     now: () => Date.now(),
     setTimer: (fn, ms) => setTimeout(fn, ms),

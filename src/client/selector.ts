@@ -8,8 +8,10 @@
  * 抢用户的操作：
  *
  *   **启动竞态** —— ui-layout 的 presenter 按自己的时机挂载，settings 作用域随后
- *   读回持久化偏好并 adopt()，两者都可能覆盖 apply() 期间发出的 setTheme。所以要
- *   对着 presenter 真正写入的 DOM 自验证，未生效则有界退避重试。
+ *   读回持久化偏好并 adopt()，两者都可能覆盖 apply() 期间发出的 setTheme。所以要么
+ *   对 presenter 真正写入的 DOM 自验证、未生效则有界退避重试，要么干脆不依赖它的
+ *   重绘 —— forceSet 会把令牌**直接**写进 body（paint），同一任务内页面就是对的，
+ *   再用任务末尾的 microtask 补画一次（repaint）赢过晚到的 presenter 监听器。
  *
  *   **用户主权** —— 启动窗口过去之后，偏好被改成别的值就是用户的明确意图（内置
  *   Appearance 行、另一个主题插件），必须让位；再抢回去就是插件在跟用户较劲。
@@ -29,6 +31,20 @@ export interface SelectorDeps {
   /** 页面此刻真的写着的 `--dsw-alias-bg-base`。 */
   appliedGround(): string
   setTheme(id: string): void
+  /**
+   * 把 id 的令牌**直接**写进 DOM（本插件自己的主题才认识；别的 id 是 no-op）。
+   * 不再等 presenter 的重绘：写进 body 的那一刻页面就是对的，竞态里的中间态
+   * 就再也画不出来。
+   */
+  paint(id: string): void
+  /**
+   * 当前任务结束后、浏览器绘制前，再补画一次 id。
+   * 用途：adopt() 那次 emit 里，presenter 的监听器可能注册在我们后面，同步画
+   * 完又被它盖掉；microtask 排在所有同步监听器之后、绘制之前，能稳定赢回来。
+   */
+  repaint(id: string): void
+  /** 撤掉本插件直接写进 DOM 的令牌，把 DOM 完全交还给 presenter（复位/让位时）。 */
+  retract(): void
   /**
    * 最近 ms 毫秒内用户有没有真的动过手（点击/按键）。
    * 这是区分「用户在内置 Appearance 行点了 Light」和「框架又 adopt 了一次持久化
@@ -101,8 +117,6 @@ export function createThemeSelector(deps: SelectorDeps, options: SelectorOptions
   let settled = false
   let settledAt = 0
   let chosenAt = startedAt
-  /** 只忽略「紧接着的那一个」事件：forceSet 的中间态。 */
-  let suppress: string | undefined
 
   /**
    * 现在被别人改掉偏好，还算不算"不是用户干的"。
@@ -116,22 +130,19 @@ export function createThemeSelector(deps: SelectorDeps, options: SelectorOptions
   }
 
   /**
-   * 逼出一次真实的状态跃迁再设成我们要的。
+   * 把 id 同时送到服务与 DOM。
    *
-   * ui-theme 的 setTheme 对**同一个 id** 会去重：不发 theme/change、presenter 也
-   * 不重绘。而启动时我们的 id 早就写进服务了，presenter 却按 settings 读回的内置
-   * 偏好作画 —— 两边劈叉之后，重发同一个 id 是纯空转（实测 8 次重试全无事件）。
-   * 所以先切到 fallback 再切回来。启动阶段 presenter 还没画东西，看不到闪一下。
-   *
-   * 中间那次会引发一个 theme/change，suppress 让它只被忽略这一次，
-   * 免得和我们自己的重新断言打乒乓、把额度瞬间烧完。
+   * 过去这里要先切到 fallback 再切回来：ui-theme 的 setTheme 对同一个 id 会去重，
+   * 不发 theme/change、presenter 也不重绘。现在不依赖 presenter 的重绘了 ——
+   * paint() 在同一任务里就把令牌写进 body，页面瞬间就是对的；repaint() 在任务
+   * 末尾（浏览器绘制前）再补一次，专门赢过"监听器注册在我们后面、把刚画好的
+   * 内容又盖掉"的 presenter（实机刷新时 5 次闪动就来自它每次 adopt 后盖掉我们）。
+   * 中间不再经过 fallback，也就没有那一次可见的"跳回内置"。
    */
   function forceSet(id: string): void {
-    if (fallback !== id) {
-      suppress = fallback
-      deps.setTheme(fallback)
-    }
     deps.setTheme(id)
+    deps.paint(id)
+    deps.repaint(id)
   }
 
   /** 单飞：任何入口先掐掉挂起的那条链，否则两条链会并行且句柄互相覆盖。 */
@@ -147,7 +158,7 @@ export function createThemeSelector(deps: SelectorDeps, options: SelectorOptions
     if (desired === undefined) return
     const want = deps.expectedGround(desired)
     if (want === undefined) return
-    if (deps.appliedGround() === want) {                // presenter 已经写进去了
+    if (deps.appliedGround() === want) {                // 已经是我们的了
       if (!settled) { settled = true; settledAt = deps.now() }
       // 赢了一次就把额度还回来：长会话里 adopt 可能来很多轮（重连、设置同步），
       // 全局只给 5 次会被耗尽。settle 意味着 DOM 里就是我们的，不可能形成循环。
@@ -159,8 +170,7 @@ export function createThemeSelector(deps: SelectorDeps, options: SelectorOptions
       deps.warn(`${desired} did not reach the DOM after ${attempt} tries`)
       return
     }
-    if (attempt === 0) deps.setTheme(desired)
-    else forceSet(desired)                              // 重发同一个 id 会被去重
+    forceSet(desired)
     timer = deps.setTimer(() => { ensureApplied(attempt + 1) }, retryStepMs * (attempt + 1))
   }
 
@@ -206,13 +216,11 @@ export function createThemeSelector(deps: SelectorDeps, options: SelectorOptions
       yieldedToUser = true                             // 用户主动交还，记忆也该忘掉
       settled = false
       cancel()
+      deps.retract()                                   // 撤掉我们直写的令牌，DOM 交还 presenter
       deps.setTheme(fallback)
     },
 
     onPreference(preference: string): void {
-      const suppressed = suppress
-      suppress = undefined
-      if (suppressed !== undefined && preference === suppressed) return   // forceSet 的中间态
       // 别人的偏好值就是我们的回退目标 —— 我们要对抗的那次 adopt()，
       // 恰好也是我们唯一能学到「持久化偏好到底是什么」的机会。
       if (!deps.isKnown(preference)) fallback = preference
@@ -222,6 +230,7 @@ export function createThemeSelector(deps: SelectorDeps, options: SelectorOptions
         desired = undefined                            // 用户主权：让位，不再抢
         yieldedToUser = true
         cancel()
+        deps.retract()
         return
       }
       if (reasserts >= maxReasserts) {
@@ -238,6 +247,7 @@ export function createThemeSelector(deps: SelectorDeps, options: SelectorOptions
     dispose(): void {
       cancel()
       desired = undefined
+      deps.retract()
     },
   }
 }
