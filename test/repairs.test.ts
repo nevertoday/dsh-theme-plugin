@@ -7,7 +7,7 @@
  */
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { shadowTokens, shadowInk, parseRgb, sink, repairInputSurface, repairTokens, SHADOW_TOKEN_NAMES } from '../src/repairs.ts'
+import { shadowTokens, shadowInk, parseRgb, sink, repairInputSurface, repairThinkGradients, repairTokens, SHADOW_TOKEN_NAMES } from '../src/repairs.ts'
 
 /** harness 的原始定义，逐字抄自 ui-theme/lib/styles/gradient-shadow-text.css。 */
 const HARNESS_DEFAULTS: Record<string, string> = {
@@ -76,6 +76,8 @@ const GREEN_PAPER = {           // 竹青·亮：生成器把输入框推到了�
   '--dsw-alias-bg-base': 'rgb(246,253,247)',
   '--dsw-specific-input-major': 'rgb(240,247,241)',
   '--dsw-alias-label-primary': 'rgb(14,18,14)',
+  '--dsw-specific-selector': 'rgb(231,239,233)',
+  '--dsw-alias-bg-layer-1': 'rgb(244,252,246)',
 }
 const WARM_PAPER = {            // 香叶红·亮：本来就比纸更亮，不该动
   '--dsw-alias-bg-base': 'rgb(255,247,245)',
@@ -99,9 +101,56 @@ test('暗色不参与：那边的极性本来就和 harness 一致（地 950 / �
   }), {})
 })
 
-test('repairTokens 把两笔修补合在一起，且不改其它令牌', () => {
+test('repairTokens 把三笔修补合在一起，且不改其它令牌', () => {
   const out = repairTokens('light', GREEN_PAPER)
-  assert.deepEqual(Object.keys(out).sort(), [...SHADOW_TOKEN_NAMES, '--dsw-specific-input-major'].sort())
+  assert.deepEqual(Object.keys(out).sort(), [
+    ...SHADOW_TOKEN_NAMES,
+    '--dsw-specific-input-major',
+    '--dsw-linear-gradient-think',
+    '--dsw-linear-think-select',
+  ].sort())
   assert.ok(!('--dsw-alias-bg-base' in out), '动了纸色')
   assert.ok(!('--dsw-alias-label-primary' in out), '动了墨色')
+})
+
+/* ── 思考块渐变 ── */
+
+test('渐变从主题自己的表面淡出，不再是硬编码的白/近黑', () => {
+  const light = repairThinkGradients('light', {
+    '--dsw-alias-bg-base': 'rgb(246,253,247)',
+    '--dsw-specific-selector': 'rgb(231,239,233)',
+  })
+  assert.equal(light['--dsw-linear-gradient-think'],
+    'linear-gradient(180deg, rgb(246, 253, 247) 20.19%, rgba(246, 253, 247, 0) 100%)')
+  assert.equal(light['--dsw-linear-think-select'],
+    'linear-gradient(180deg, rgb(231, 239, 233) 20.19%, rgba(231, 239, 233, 0) 100%)')
+  assert.ok(!JSON.stringify(light).includes('#fff'))
+})
+
+test('停靠位与 alpha 段一个字没动（20.19% / 透明到 100%）', () => {
+  for (const scheme of ['light', 'dark'] as const) {
+    const out = repairThinkGradients(scheme, {
+      '--dsw-alias-bg-base': 'rgb(14,19,26)',
+      '--dsw-alias-bg-layer-1': 'rgb(16,23,31)',
+      '--dsw-specific-selector': 'rgb(36,46,57)',
+    })
+    for (const v of Object.values(out)) {
+      assert.match(v, /^linear-gradient\(180deg, rgb\([^)]+\) 20\.19%, rgba\([^)]+, 0\) 100%\)$/, scheme)
+    }
+  }
+})
+
+test('暗色的 select 渐变停在 bg-layer-1（harness 那一支就是它）', () => {
+  const dark = repairThinkGradients('dark', {
+    '--dsw-alias-bg-base': 'rgb(14,19,26)',
+    '--dsw-alias-bg-layer-1': 'rgb(16,23,31)',
+    '--dsw-specific-selector': 'rgb(36,46,57)',
+  })
+  assert.match(dark['--dsw-linear-think-select'], /rgb\(16, 23, 31\)/)
+})
+
+test('缺令牌时不生造：对应那一项直接不输出', () => {
+  assert.deepEqual(repairThinkGradients('light', {}), {})
+  const partial = repairThinkGradients('light', { '--dsw-alias-bg-base': 'rgb(1,2,3)' })
+  assert.deepEqual(Object.keys(partial), ['--dsw-linear-gradient-think'])
 })
