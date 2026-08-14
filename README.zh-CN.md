@@ -112,15 +112,15 @@ http://127.0.0.1:3080/#theme=tenghuang-light    # 藤黄·亮（陈宣赭纸 + �
 
 ## 无需 harness 的预览
 
-预览页是 mock 聊天界面 + 96 主题画廊 + 实时对比度徽章，主题数据用 `fetch()` 从同目录的 `preview/themes.json` 载入。因此**必须经本地 HTTP 服务打开** —— `file://` 下浏览器会拦掉这次 fetch，页面会显示「无法加载 themes.json」：
+预览页是 mock 聊天界面 + 96 主题画廊 + 实时对比度徽章，主题数据用 `fetch()` 从同目录的 `themes.json` 载入。因此**必须经本地 HTTP 服务打开** —— `file://` 下浏览器会拦掉这次 fetch，页面会显示「无法加载 themes.json」：
+
+> **`preview/` 是本地开发产物，不属于本仓库**（见 `.gitignore`）。全新 clone 没有 `preview/` 目录，下面的命令只在本地已存在该目录时适用。`preview/themes.json` 由 `pnpm generate` 与 `src/themes.generated.js` 同批产出；画廊页面与截图是原 checkout 的工作文件。
 
 ```sh
 cd preview
 python3 -m http.server 8000     # 或 npx serve .
 # 浏览器打开 http://localhost:8000/
 ```
-
-预览页截图：`preview/screenshot-light.png`、`preview/screenshot-dark.png`。
 
 ## 设计哲学：纸 · 帘 · 印
 
@@ -244,7 +244,7 @@ pnpm build            # tsdown；或 node scripts/build-esbuild.mjs
 | `scripts/generate-themes.mjs` | 确定性生成器 |
 | `scripts/check-contrast.mjs` | 数据闸门：对比度、不变量、发货件 ↔ 预览件一致性 |
 | `test/` | 行为闸门：选择器、配置，以及对构建产物的装载锁 |
-| `preview/` | 独立画廊（`themes.json` 与生成产物同批产出） |
+| `preview/` | 独立画廊 —— 仅本地、**不随仓库发布**（`themes.json` 与生成产物同批产出） |
 
 `test/bundle.test.ts` 用 stub 的 `window.__ModuleLoader__` 装 `lib/client.js`，所以先跑 `pnpm build` —— 没有产物时那一组会跳过并明说跳了，而不是静默通过。
 
@@ -261,7 +261,7 @@ pnpm build            # tsdown；或 node scripts/build-esbuild.mjs
 - **第三方客户端插件只能 `require` 页面模块表里已 seed 的包**（`react` / `react/jsx-runtime` / `react-dom` / `@deepseek-ai/cordis` / `ui-slots` / `web-react` / `ui-primitives`）。因此设置页用 React 自己的 `useState` + 由 `apply()` 递下来的 `subscribe`，而不是 `dsh-client-runtime` 的 `defineStore`；样式不走 CSS modules（第三方 esbuild 构建没有那个 loader），全部内联并只引用 `--dsw-*` 令牌 —— 副作用是面板自身也随主题变色。
 - **启动是一场竞态，但输掉竞态不等于可以跟用户较劲。** `ui-layout` 的 presenter 按自己的时机挂载，settings 作用域随后又会读回持久化偏好并 `adopt()`，两者都可能覆盖 `apply()` 期间发出的 `setTheme`。插件对着 presenter 真正写入的 DOM 自验证，未生效则有界退避重试（最多 8 次 ≈5s，成功即停）；启动后 5 秒窗口内被覆盖，最多重新断言 5 次。**窗口过后，偏好被改一律视为用户的决定，插件让位** —— 在内置 Appearance 行点 Light 就保持 Light。这套逻辑在 `src/client/selector.ts`，由 `test/selector.test.ts` 锁住。
 - **遮罩与骨架屏令牌已发货，但只在预览页里看过**，未在真实 harness 界面里核对观感。令牌覆盖本身是完整的（89/89）。
-- **尚无 harness 实机截图。** 实机验证是用计算样式取证做的（当时环境的浏览器截图不可用）；`preview/` 下的图是独立预览页的截图。
+- **尚无 harness 实机截图。** 实机验证是用计算样式取证做的（当时环境的浏览器截图不可用）；`preview/` 下的截图（本地未发布的产物）是独立预览页的截图。
 
 <details>
 <summary>验证状态 —— 哪些是确证的、哪些是实机测过的、哪些还没测</summary>
