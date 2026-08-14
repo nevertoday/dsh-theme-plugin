@@ -137,5 +137,44 @@ export function repairTokens(
   colorScheme: 'light' | 'dark',
   tokens: Readonly<Record<string, string>>,
 ): Record<string, string> {
-  return { ...shadowTokens(colorScheme, tokens), ...repairInputSurface(colorScheme, tokens) }
+  return {
+    ...shadowTokens(colorScheme, tokens),
+    ...repairInputSurface(colorScheme, tokens),
+    ...repairThinkGradients(colorScheme, tokens),
+  }
+}
+
+/* ── 三 · 思考块的两个渐变 ──
+ *
+ * `--dsw-linear-gradient-think` 与 `--dsw-linear-think-select` 同样是主题令牌、
+ * 同样不带 alias-/specific- 前缀、同样住在 gradient-shadow-text.css，于是同样被
+ * 词表漏掉。它们的颜色是**硬编码中性色**：
+ *   gradient-think： 亮 #fff（= bg-base）        暗 #151517（= bg-base，950）
+ *   think-select  ： 亮 #f5f6f7（= selector）    暗 #232325（≈ bg-layer-1，875）
+ * 也就是"从某个表面淡出到透明"。不修的话，绿纸上的思考块会淡出成一片白。
+ *
+ * 全仓库审计过：宿主定义了 277 个非 static 令牌，我们写 93 个，没写的 184 个里
+ * **只有这两个带颜色**，其余全是 --dsw-font-* 字体族与 --dsw-mask-blur（blur(2px)，
+ * 不含颜色）。所以补完这两个，颜色维度就没有漏网的了。
+ *
+ * think-select 的取色分亮暗两支 —— 不是我们想分，而是 harness 自己那两个值就分别
+ * 落在 selector 和 bg-layer-1 上；照抄它，才叫"只换色相不改关系"。
+ */
+
+/** 停靠位（20.19% / 100%）与 alpha 段逐字照抄，只换颜色。 */
+function fadeFrom([r, g, b]: Rgb): string {
+  return `linear-gradient(180deg, rgb(${r}, ${g}, ${b}) 20.19%, rgba(${r}, ${g}, ${b}, 0) 100%)`
+}
+
+export function repairThinkGradients(
+  colorScheme: 'light' | 'dark',
+  tokens: Readonly<Record<string, string>>,
+): Record<string, string> {
+  const out: Record<string, string> = {}
+  const base = parseRgb(tokens['--dsw-alias-bg-base'])
+  if (base !== undefined) out['--dsw-linear-gradient-think'] = fadeFrom(base)
+  // 亮色停在 selector（harness 用的是同一支灰），暗色停在 bg-layer-1。
+  const selected = parseRgb(tokens[colorScheme === 'light' ? '--dsw-specific-selector' : '--dsw-alias-bg-layer-1'])
+  if (selected !== undefined) out['--dsw-linear-think-select'] = fadeFrom(selected)
+  return out
 }
