@@ -3,6 +3,7 @@ import type { ClientContext } from '@deepseek-ai/dsh-client-runtime/client'
 import type {} from '@deepseek-ai/dsh-client-ui-theme/client'
 import { THEMES } from '../themes.generated.js'
 import { normalizeConfig, THEME_ID, type Config } from '../config.ts'
+import { repairTokens } from '../repairs.ts'
 import { createThemeSelector } from './selector.ts'
 import { ThemeSection, type ThemeRow } from './ThemeSection.tsx'
 import { en, zh } from './locales.ts'
@@ -42,6 +43,13 @@ export function apply(ctx: ClientContext, rawConfig?: unknown): void {
     warn('ctx.theme unavailable — no themes registered')
     return
   }
+  // 修补后的令牌，每套主题算一次。**注册与直写 DOM 的绘制路径共用这一份** ——
+  // 只修其中一条，画出来的就是没修的那份（实机踩过：绘制层用原始 tokens，于是
+  // body 上永远是 89 个令牌、阴影仍是中性灰）。见 src/repairs.ts。
+  const painted = new Map(
+    THEMES.map(t => [t.id, { ...t.tokens, ...repairTokens(t.colorScheme, t.tokens) }] as const),
+  )
+
   let failed = 0
   for (const t of THEMES) {
     try {
@@ -53,8 +61,9 @@ export function apply(ctx: ClientContext, rawConfig?: unknown): void {
       // seal*/link/err|suc|wrn names, identityShiftDL, degraded) is
       // provenance for the generator, README and preview page — it is
       // deliberately NOT passed to register(), which has no such fields.
+      const tokens = painted.get(t.id)!
       ctx.effect(
-        () => ctx.theme.register({ id: t.id, colorScheme: t.colorScheme, tokens: t.tokens }),
+        () => ctx.theme.register({ id: t.id, colorScheme: t.colorScheme, tokens }),
         `theme-zhongguo: ${t.id}`,
       )
     } catch (err) {
@@ -141,7 +150,8 @@ export function apply(ctx: ClientContext, rawConfig?: unknown): void {
     document.documentElement.style.colorScheme = theme.colorScheme
     if (theme.colorScheme === 'dark') body.setAttribute('data-ds-dark-theme', '')
     else body.removeAttribute('data-ds-dark-theme')
-    for (const [name, value] of Object.entries(theme.tokens)) {
+    // 画修补后的那份，与 register 完全一致（painted，而不是 theme.tokens）。
+    for (const [name, value] of Object.entries(painted.get(id) ?? theme.tokens)) {
       body.style.setProperty(name, value)
       paintedTokens.push(name)
     }
