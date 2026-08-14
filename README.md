@@ -1,19 +1,19 @@
 # dsh-theme-plugin
 
-Chinese traditional colors as a **DeepSeek Harness theme pack** — 49 anchors × light/dark = **98 themes**, each writing the full `--dsw-*` token vocabulary (89 tokens) and passing WCAG AA contrast checks (2254/2254 rows, 0 failures). The picker opens on a curated shortlist of 12.
+Chinese traditional colors as a **DeepSeek Harness theme pack**. 49 anchor colors × light/dark = **98 themes**, each writing the full `--dsw-*` token vocabulary (89 tokens) and clearing WCAG AA on all 2254 contrast assertions. The picker opens on a curated shortlist of twelve.
 
 📖 [中文文档](./README.zh-CN.md)
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/theme-zhuqing-light.png" alt="竹青 light: raw-silk paper, a green veil on the bubble, and the send button in the anchor green itself" width="49%">
-  <img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/theme-zhuhong-dark.png" alt="朱红 dark: sized-xuan paper in warm ink, a maroon veil, and a vermilion send button" width="49%">
+  <img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/theme-zhuqing-light.png" alt="竹青 light: raw-silk paper, a green wash on the bubble, and a send button in the anchor green itself" width="49%">
+  <img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/theme-zhuhong-dark.png" alt="朱红 dark: sized-xuan paper in warm ink, a deep maroon wash, and a vermilion send button" width="49%">
   <br>
-  <img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/theme-qunqing-light.png" alt="群青 light: violet-silk paper, a blue veil, and a blue send button" width="49%">
-  <img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/theme-tenghuang-dark.png" alt="藤黄 dark: ochre paper in olive ink, an olive veil, and a gold send button" width="49%">
+  <img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/theme-qunqing-light.png" alt="群青 light: violet-tinted silk paper, a blue wash, and a blue send button" width="49%">
+  <img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/theme-tenghuang-dark.png" alt="藤黄 dark: ochre paper in olive ink, an olive wash, and a gold send button" width="49%">
 </p>
 <p align="center">
   <sub>竹青 · light（素绢）&nbsp; | &nbsp;朱红 · dark（熟宣）<br>群青 · light（雪青）&nbsp; | &nbsp;藤黄 · dark（赭纸）</sub><br>
-  <sub>One anchor per paper family. In every one of them, the most saturated patch on screen is the color you picked.</sub>
+  <sub>One anchor per paper family, same conversation in each. The most saturated patch on screen is always the color you picked.</sub>
 </p>
 
 ## Install
@@ -23,70 +23,58 @@ npx -y @deepseek-ai/dsh plugin --profile web add dsh-theme-plugin@latest
 npx -y @deepseek-ai/dsh --profile web          # boot → open http://127.0.0.1:3080/
 ```
 
-That pulls the prebuilt bundle from npm — no clone, no build step. The `web` profile is created on first boot at `~/.dsh/profiles/web`.
+This pulls the prebuilt bundle from npm — no clone, no build step. The `web` profile is created on first boot under `~/.dsh/profiles/web`.
 
-- **Verify:** `dsh --profile web --dump-config` shows a `theme-zhongguo` row; the browser console logs `registered 98/98 themes`.
-- **Update:** run the same `add` command again (`@latest`).
-- **Uninstall:** `dsh plugin --profile web remove dsh-theme-plugin`
-
-### From source (development)
-
-Requirements: Node.js 20+ (`engines` in `package.json`; `pnpm test` runs `.ts` directly and needs 23.6+) and pnpm.
-
-```sh
-git clone https://github.com/nevertoday/dsh-theme-plugin
-cd dsh-theme-plugin
-pnpm install && pnpm build                                # ① build lib/client.js (browser bundle)
-dsh plugin --profile web add -w .                         # ② register ('.' = this directory)
-dsh --profile web                                         # ③ boot → open http://127.0.0.1:3080/
-```
-
-- **①** `pnpm install` already builds once through its `prepare` script; the explicit `pnpm build` is a safety net (and required if you install with `--ignore-scripts`). It needs `tsdown`; fallback `node scripts/build-esbuild.mjs` (esbuild is already a devDependency). The repo ships an `.npmrc` with `auto-install-peers=false` — **without it pnpm ≥ 9 cannot install**: it tries to fetch the `@deepseek-ai/*` peers (even though all are marked optional), and the `latest` of `dsh-client-runtime` depends on a package that was never published to npm, so the install dies with `ERR_PNPM_FETCH_404`.
-- **②** `-w` is required because the profile directory is a pnpm workspace root. `add` anchors relative specs like `.` to the directory you run it from. It links the directory (`link:` dependency) and auto-appends the package to `dsh.profile.bundles`; the loader reads `lib/client.js` straight from your working copy — step ① creates that file, so committing `lib/` is **not** required (committing it is fine too; the cost is 553KB of output plus a 790KB sourcemap showing up as changes after every install).
-- **Gates, no harness needed:** `pnpm check` (2254 contrast rows plus invariants) and `pnpm test` (46 behavioral assertions, including a load-time lock on `lib/client.js`).
-- **Update:** `git pull && pnpm install && pnpm build`, then boot — no re-registration needed.
+- **Verify** — the browser console logs `registered 98/98 themes (49 light / 49 dark)`, and `dsh --profile web --dump-config` shows a `theme-zhongguo` row.
+- **Update** — run the same `add` command again.
+- **Uninstall** — `dsh plugin --profile web remove dsh-theme-plugin`
 
 ## Usage
 
-Open **Settings → Traditional Colors** (after "Agent presets" in the nav) and pick a theme — applies immediately. Or share/bookmark a deep link:
+Open **Settings → Traditional Colors** and pick a theme; it applies immediately. Themes also have deep links:
 
 ```
 http://127.0.0.1:3080/#theme=zhuqing-light      # 竹青 light
 http://127.0.0.1:3080/#theme=qunqing-dark       # 群青 dark
 ```
 
-Changing the hash switches themes live. Your pick is remembered per browser (`localStorage`), not in `settings.yaml` — it does not follow you across devices.
+Changing the hash switches themes live. When several sources disagree, the order is **deep link → your remembered pick → `defaultTheme`**. The remembered pick lives in `localStorage`, not in `settings.yaml`, so it does not follow you across devices.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/panel-light.png" alt="Settings → Traditional Colors on 竹青 light: the curated shortlist first, then every anchor grouped by paper family; each row shows the theme's actual paper / veil / focus" width="49%">
-  <img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/panel-dark.png" alt="The same panel on 藤黄 dark: it is themed by the pack itself, because its styles only reference --dsw-* tokens" width="49%">
+  <img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/panel-light.png" alt="Settings → Traditional Colors on 竹青 light: the curated shortlist first, then every anchor grouped by paper family" width="49%">
+  <img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/panel-dark.png" alt="The same panel on 藤黄 dark, themed by the pack itself" width="49%">
 </p>
 <p align="center">
-  <sub>Each row's chip is the theme's <b>real</b> paper, veil and focus — not the anchor swatch at full chroma.
-  The line under the current theme names the seal and why it was picked (<code>茜红 · 策展印 · 冷暖对冲</code>).</sub>
+  <sub>Each row's chip shows the theme's <b>real</b> paper, veil and focus — not the raw anchor swatch, which is what the picker used to show and tells you very little about the theme you would get.
+  The line under the current theme names its seal and why that seal was chosen.</sub>
 </p>
 
-The panel is themed by the pack itself — its styles reference nothing but `--dsw-*` tokens, so it doubles as a demo of the theme you are picking.
+The panel references nothing but `--dsw-*` tokens, so it is themed by the pack itself and doubles as a preview of whatever you are about to pick.
 
-## Design: Paper · Veil · Seal
+## Design: 纸 · 帘 · 印
 
-Chinese painting does not start with color. It starts with preparing the paper, then washes over it, and signs last. These themes are built in the same order, and the three characters map onto three implementation layers.
+Chinese painting does not start with color. It prepares the paper, washes over it, and signs last. These themes are built in that order, and the three characters name three layers.
 
-- **纸 Paper** (layer A, ~60% of surface area) — the ground is not "the traditional color, lightened". It is a different material: four families (*su juan* raw silk, *shu xuan* sized paper, *xue qing* violet silk, *zhe zhi* ochre paper), and their chroma is deliberately spread — roughly 0.010 / 0.015 / 0.019 / 0.024 in OKLab — so the four papers are told apart by eye, not only in the data. The ground sits at L ≈ 0.966–0.970, off-white rather than white, which is what leaves room for a raised surface above it. No two of the 98 themes share a background.
-- **帘 Veil** (layer B, ~25%) — the sidebar and message bubbles are the anchor color itself, undiluted by paper, on their own chroma gate, held inside a **band** (1.25–1.55 against the paper) so the wash can neither vanish nor harden into a slab. **You recognize which traditional color you are in by the bubbles, not by the background.**
-- **印 Seal** (layer D) — **the focus is the anchor itself.** The primary button and the send button are the anchor pressed darker; the curated relative retreats to the active-nav accent, i.e. a signature rather than a focus. This reverses the pack's original law (the seal used to fill the primary button, a median 109° away from the color you picked — so choosing 竹青 gave you a crimson CTA). The generator still records `sealName` / `sealRel` / `sealWhy` per theme, now for that signature mark.
-- **Ink and empty space** (layer C) — text, rules, and secondary surfaces run down one ink ramp (the paper color pushed darker). Every `nb-XX` reference from the base stylesheet becomes a tinted neutral `N(XX)` of the same lightness; hover offsets, elevation steps, borders, and interaction alphas are copied verbatim. Hue changes, relations do not — with one deliberate exception: the ramp's **endpoints** are set here rather than inherited, because the base stylesheet's are the extremes. Light and dark now share one shape (body 16.9–17.5 / secondary ≈ 7.4–8.0 / tertiary ≈ 4.6–5.5), matching the colour studio's own `--ink` / `--ink-soft` / `--muted`.
-- **Provenance** — the generator distinguishes a *named* color (a traditional hex used directly) from a *fallback* (a value derived along OKLab lightness by `ensure()`), and records each in `degraded`. Anchors that fail the AA assertion matrix are dropped whole, with the reason logged. Run `pnpm generate` for the current tally.
-- **精选 Curated** — 12 of the 49 anchors are flagged `curated` and shown first in the picker. The list is derived, not hand-kept: the `CURATED` names that survive the gates, topped up by farthest-point sampling in OKLab so the shortlist spreads across the space instead of clustering.
+**纸 Paper** — about 60% of the screen. The ground is not "the traditional color, lightened"; it is a different material. Four families — 素绢 raw silk, 熟宣 sized xuan, 雪青 violet-tinted silk, 赭纸 ochre paper — carry deliberately separated chroma (OKLab ≈ 0.010 / 0.019 / 0.015 / 0.024 respectively), so the four papers are told apart by eye and not only in the data. Light grounds sit at L ≈ 0.963–0.971: off-white rather than white, which is what leaves room for a raised surface above them.
 
-Anchor distribution across paper families: 素绢 11 · 熟宣 14 · 雪青 18 · 赭纸 6.
+**帘 Veil** — about 25%. The sidebar and message bubbles are the anchor color itself, undiluted by paper, held inside a band of 1.25–1.55 contrast against the paper so the wash can neither disappear nor harden into a slab. **You recognize which traditional color you are in by the bubbles, not by the background.**
+
+**印 Seal** — **the focus is the anchor itself.** The primary button and the send button are the anchor pressed darker. This reverses the pack's original law, under which the primary button was filled by a curated *relative* of the anchor sitting a median 109° away in hue — so choosing 竹青 handed you a crimson call-to-action. That relative is still chosen, still recorded per theme as `sealName` / `sealRel` / `sealWhy`, and now appears only as the active-nav accent: a signature rather than a focus. The picker shows the reasoning ("茜红 · 策展印 · 冷暖对冲").
+
+**Ink** — text, rules and secondary surfaces run down one ink ramp, the paper color pushed darker. Every `nb-XX` step of the base stylesheet becomes a tinted neutral of the same lightness, and hover offsets, elevation steps, borders and interaction alphas are copied verbatim: hue changes, relations do not. The ramp's two **endpoints** are the deliberate exception — those are set here rather than inherited, because the base stylesheet's are the extremes. Light and dark now share one shape: body 16.7–17.5, secondary 7.4–8.0, tertiary 4.6–5.5.
+
+**Gates** — AA is a floor, and elegance lives at the ceiling, so most rules are two-sided. `pnpm check` re-derives every claim above from the emitted tokens: 2254 contrast rows, plus invariants for veil chroma, the single focus (both focus tokens must be the anchor's own hue and the most saturated patches on screen), elevation direction, and full token coverage. It trusts nothing the generator says about itself.
+
+**Curation** — twelve of the 49 anchors carry a `curated` flag and lead the picker. The list is derived rather than hand-kept: the `CURATED` names that survive the gates, topped up by farthest-point sampling in OKLab so the shortlist spreads across the space instead of clustering.
+
+Anchors per paper family: 素绢 12 · 熟宣 14 · 雪青 17 · 赭纸 6. Within one mode, the two closest themes still differ by ΔE 0.018 across the four signature dimensions (ground, brand, bubble, focus) against a 0.015 floor.
 
 ## Theme roster
 
 <details>
 <summary><b>49 anchors × light/dark = 98 themes</b> — click to expand</summary>
 
-⭐ marks the 12 curated anchors the picker shows first. Display names are `<name>·亮` / `<name>·暗` (e.g. `竹青·暗`). Paper families: 素绢 = raw silk, 熟宣 = sized xuan paper, 雪青 = violet-tinted silk, 赭纸 = ochre paper.
+⭐ marks the twelve curated anchors the picker shows first. Display names are `<name>·亮` / `<name>·暗`, e.g. `竹青·暗`. Paper families: 素绢 raw silk, 熟宣 sized xuan paper, 雪青 violet-tinted silk, 赭纸 ochre paper. The seal column is the curated relative described above — a signature mark, not the button color.
 
 | Color | 中文 | Anchor | Paper | Seal | Theme ids (light / dark) |
 |---|---|---|---|---|---|
@@ -116,6 +104,7 @@ Anchor distribution across paper families: 素绢 11 · 熟宣 14 · 雪青 18 �
 | Zi Teng Luo | 紫藤萝 | `#9B8AE8` | 雪青 | 淡罂粟红 | `zitengluo-light` / `zitengluo-dark` |
 | Han Xiu Lü | 汉绣绿 | `#2E7D32` | 素绢 | 绛紫 | `hanxiulv-light` / `hanxiulv-dark` |
 | An Zi Yuan Hong | 暗紫苑红 | `#82202B` | 熟宣 | 殷红 | `anziyuanhong-light` / `anziyuanhong-dark` |
+| Xin Lü | 新绿 | `#6CC788` | 素绢 | 茜裙 | `xinlv-light` / `xinlv-dark` |
 | Ling Meng Hong | 菱锰红 ⭐ | `#D276A3` | 熟宣 | 苋菜紫 | `lingmenghong-light` / `lingmenghong-dark` |
 | Man Tian Xing Zi | 满天星紫 | `#2E317C` | 雪青 | 栗紫 | `mantianxingzi-light` / `mantianxingzi-dark` |
 | Kong Que Lan | 孔雀蓝 | `#0EB0C9` | 雪青 | 胭脂红 | `kongquelan-light` / `kongquelan-dark` |
@@ -137,10 +126,9 @@ Anchor distribution across paper families: 素绢 11 · 熟宣 14 · 雪青 18 �
 | Yu Qin Lan | 玉鈫蓝 | `#126E82` | 雪青 | 赭石 | `yuqinlan-light` / `yuqinlan-dark` |
 | Pi Bian | 皮弁 | `#8B5D33` | 赭纸 | 石青 | `pibian-light` / `pibian-dark` |
 | Gan Lan Lü | 橄榄绿 | `#5E5314` | 赭纸 | 满天星紫 | `ganlanlv-light` / `ganlanlv-dark` |
-| Luo Lan Zi | 萝兰紫 | `#C08EAF` | 雪青 | 萝兰紫·深 | `luolanzi-light` / `luolanzi-dark` |
 | Dai Zi | 黛紫 ⭐ | `#5D3A6F` | 雪青 | 黛紫·深 | `daizi-light` / `daizi-dark` |
 
-The roster is whatever the generator emits — it is not maintained by hand. Re-export this table from the `node scripts/generate-themes.mjs` stdout summary.
+The roster is whatever the generator emits; it is not maintained by hand.
 
 </details>
 
@@ -155,6 +143,35 @@ config:
   hashSelector: true            # honour #theme=<id> deep links
   settingsOrder: 40             # settings page position in the nav
 ```
+
+A malformed value is dropped and falls back to its default rather than failing the load — one bad preference should not cost you the whole pack.
+
+## Development
+
+Requirements: Node.js 20+ (`pnpm test` runs `.ts` directly and needs 23.6+) and pnpm.
+
+```sh
+git clone https://github.com/nevertoday/dsh-theme-plugin
+cd dsh-theme-plugin
+pnpm install && pnpm build          # builds lib/client.js, the browser bundle
+dsh plugin --profile web add -w .   # register this directory
+dsh --profile web
+```
+
+- `-w` is required because the profile directory is a pnpm workspace root. `add` links the directory and appends the package to `dsh.profile.bundles`; the loader then reads `lib/client.js` from your working copy, so `pnpm build` is what makes changes visible.
+- The repo ships an `.npmrc` with `auto-install-peers=false`. **Without it pnpm ≥ 9 cannot install**: it tries to fetch the optional `@deepseek-ai/*` peers, and one of them depends on a package that was never published.
+- `pnpm build` needs `tsdown`; `node scripts/build-esbuild.mjs` is the fallback.
+- Committing `lib/` is optional. It costs a 564 KB bundle plus an 820 KB sourcemap showing up as changes after every build.
+
+**Gates** — `pnpm check` (2254 contrast rows plus invariants) and `pnpm test` (46 tests, including a load-time lock on `lib/client.js`). Neither needs a running harness.
+
+**Regenerating the themes** — `pnpm generate` reads the color data and OKLab math from the [中国传统色](https://github.com/nevertoday/zhongguo-traditional-colors) repository. Point it there:
+
+```sh
+ZH_COLORS_REPO=/path/to/zhongguo-traditional-colors pnpm generate
+```
+
+It also looks one directory up and at a sibling checkout, so a conventional layout needs no environment variable. The generator is deterministic — no clock, no randomness — so an unchanged input must reproduce byte-identical output.
 
 ## License
 
