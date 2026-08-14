@@ -28,6 +28,12 @@ export interface ThemeRow {
   familyNote: string
   sealName: string
   sealHex: string
+  /** 是否属于 12 锚 / 24 套的精选（由生成器推导，见 §11.5）。 */
+  curated: boolean
+  /** 这套主题**实际交付**的三段：纸、帘、焦点。色卡画它们，不画锚色原值。 */
+  paperHex: string
+  veilHex: string
+  focusHex: string
 }
 
 /** apply() 递进来的业务面。 */
@@ -101,23 +107,32 @@ export function ThemeSection({
     if (row !== undefined) setScheme(row.colorScheme)
   }, [preference, rows])
 
+  /* 分组：精选置顶，其后按纸家族排全部。
+   * 不做「精选/全部」切换 —— 那是把一次浏览拆成两个模式，而且要在明暗分段旁边
+   * 再摆一个分段控件。置顶一组就够了：先看见编辑过的 12 色，往下仍是完整名册，
+   * 精选项在自己的家族里照常出现（重复是有意的，跟「本期推荐」一个道理）。 */
   const groups = useMemo(() => {
     const q = query.trim().toLowerCase()
     const hit = (r: ThemeRow) => q === ''
       || r.name.includes(q) || r.pinyin.includes(q) || r.sealName.includes(q) || r.id.includes(q)
+    const visible = rows.filter(r => r.colorScheme === scheme && hit(r))
     const byFamily = new Map<string, { note: string; items: ThemeRow[] }>()
-    for (const r of rows) {
-      if (r.colorScheme !== scheme || !hit(r)) continue
+    for (const r of visible) {
       const g = byFamily.get(r.family) ?? { note: r.familyNote, items: [] }
       g.items.push(r)
       byFamily.set(r.family, g)
     }
-    return FAMILY_ORDER
+    const families = FAMILY_ORDER
       .filter(f => byFamily.has(f))
-      .map(f => ({ family: f, ...byFamily.get(f)! }))
-  }, [rows, scheme, query])
+      .map(f => ({ key: f, family: f, ...byFamily.get(f)! }))
+    const picks = visible.filter(r => r.curated)
+    return picks.length > 0
+      ? [{ key: '__curated', family: t('curated'), note: t('curatedNote'), items: picks }, ...families]
+      : families
+  }, [rows, scheme, query, t])
 
-  const shown = groups.reduce((n, g) => n + g.items.length, 0)
+  // 精选组与家族组有重叠，逐组相加会把 12 套算两遍 —— 计数要按去重后的行数。
+  const shown = new Set(groups.flatMap(g => g.items.map(r => r.id))).size
   const currentRow = rows.find(r => r.id === preference)
 
   /**
@@ -151,7 +166,7 @@ export function ThemeSection({
             padding: '12px 14px', background: TOKEN.surface, border: `1px solid ${TOKEN.lineSoft}`,
           }}
         >
-          <Swatch hex={currentRow.anchorHex} size={34} />
+          <ThemeChip row={currentRow} h={34} />
           <div style={{ display: 'flex', flexDirection: 'column', gap: 3, minWidth: 0 }}>
             <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: '.04em' }}>
               {currentRow.name}
@@ -221,7 +236,7 @@ export function ThemeSection({
       {shown === 0
         ? <div style={{ fontSize: 13, color: TOKEN.fg3, padding: '20px 0' }}>{t('empty')}</div>
         : groups.map(g => (
-          <section key={g.family} style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <section key={g.key} style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
               <h3 style={{ margin: 0, fontSize: 12.5, fontWeight: 700, letterSpacing: '.14em' }}>
                 {g.family}
@@ -247,7 +262,7 @@ export function ThemeSection({
                     border: `1px solid ${TOKEN.lineSoft}`,
                   }}
                 >
-                  <Swatch hex={r.anchorHex} size={20} />
+                  <ThemeChip row={r} h={20} />
                   <span style={{
                     flex: 1, fontSize: 13.5, fontWeight: 600, letterSpacing: '.03em',
                     whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
@@ -270,8 +285,43 @@ function Swatch({ hex, size }: { hex: string; size: number }): ReactNode {
       aria-hidden="true"
       style={{
         width: size, height: size, flexShrink: 0, background: hex,
-        boxShadow: 'inset 0 0 0 1px rgba(0,0,0,.16)',
+        boxShadow: `inset 0 0 0 1px ${TOKEN.line}`,
       }}
     />
+  )
+}
+
+/*
+ * 主题缩影：这套主题**实际交付**的三段，按面积纪律排布 ——
+ * 纸铺满、帘占底部约三分之一、焦点是右上一枚小点。
+ *
+ * 为什么不画 anchorHex：色卡画满彩度的锚色，交付的却是一张淡色纸，
+ * 点「朱红」期待朱砂、装上是白页配浅桃色。那个落差比任何单个色值都伤品相。
+ * 边框走 --dsw-alias-border-l2，不用固定的黑色内阴影 —— 后者在暗色主题上看不见。
+ */
+function ThemeChip({ row, h }: { row: ThemeRow; h: number }): ReactNode {
+  return (
+    <span
+      aria-hidden="true"
+      style={{
+        position: 'relative', display: 'block', overflow: 'hidden', flexShrink: 0,
+        width: Math.round(h * 1.35), height: h,
+        background: row.paperHex,
+        boxShadow: `inset 0 0 0 1px ${TOKEN.line}`,
+      }}
+    >
+      <span style={{
+        position: 'absolute', left: 0, right: 0, bottom: 0, height: '42%',
+        background: row.veilHex,
+      }} />
+      {/* 焦点这一块要够大才认得出 —— 三段全是同色相的浓淡，只靠纸和帘的话，
+       * 竹青/荷叶绿/粉绿在列表里是三枚几乎一样的淡绿方块，诚实但没法扫视。
+       * 焦点如今就是锚色本人，放大它既不失真，又把辨识度还了回来。 */}
+      <span style={{
+        position: 'absolute', top: 0, right: 0,
+        width: '42%', height: '58%',
+        background: row.focusHex,
+      }} />
+    </span>
   )
 }

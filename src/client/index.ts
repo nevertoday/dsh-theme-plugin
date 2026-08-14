@@ -245,6 +245,13 @@ export function apply(ctx: ClientContext, rawConfig?: unknown): void {
     familyNote: row.familyNote,
     sealName: row.sealName,
     sealHex: row.sealHex,
+    curated: row.curated,
+    // 色卡画的是**这套主题实际交付的三段**，不是满彩度的锚色原值。
+    // 原先每行画 anchorHex：点「朱红」看见的是朱砂，装上却是一张淡色纸 ——
+    // 那个预期落差比任何单个色值都伤品相。所见即所得。
+    paperHex: row.tokens['--dsw-alias-bg-base'],
+    veilHex: row.tokens['--dsw-specific-bubble'],
+    focusHex: row.tokens['--dsw-alias-button-primary-fill'],
   }))
 
   ctx.effect(() => ctx.locale.register(NS, { zh, en }), 'theme-zhongguo: settings copy')

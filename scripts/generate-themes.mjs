@@ -28,7 +28,7 @@
  * globalThis.window 垫片 + 间接 eval 加载，见下）。色彩数学一律复用
  * window.ZH_COLOR_CORE，本文件不另写 OKLab/WCAG 实现。
  */
-import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
 import { pinyin } from 'pinyin-pro';
@@ -37,7 +37,27 @@ import { pinyin } from 'pinyin-pro';
  * harmonies.js / color-core.js 是浏览器 IIFE，只写 window.*、不碰 DOM，
  * 所以裸 window = {} 即可；间接 eval `(0, eval)` 让脚本在全局作用域求值。 */
 globalThis.window = {};
-const repoRoot = fileURLToPath(new URL('../..', import.meta.url));
+
+/* 色库位置不再靠目录嵌套猜测（原先写死 `../..`，只有当本仓库正好躺在色库里时才成立；
+ * 一旦独立 clone 出来就会去找一个不存在的 assets/，且报错完全不解释原因）。
+ * 优先级：环境变量 → 历史的嵌套布局 → 与色库并列的同级目录。 */
+const CANDIDATES = [
+  process.env.ZH_COLORS_REPO,
+  fileURLToPath(new URL('../..', import.meta.url)),
+  fileURLToPath(new URL('../../zhongguo-traditional-colors', import.meta.url)),
+].filter(Boolean).map(p => p.endsWith('/') ? p : p + '/');
+
+const PROBE = 'assets/js/color-core.js';
+const repoRoot = CANDIDATES.find(root => existsSync(root + PROBE));
+if (!repoRoot) {
+  throw new Error(
+    '找不到中国传统色色库（需要 ' + PROBE + '）。已尝试：\n' +
+    CANDIDATES.map(c => '  · ' + c).join('\n') +
+    '\n请设置 ZH_COLORS_REPO 指向色库仓库根目录，例如：\n' +
+    '  ZH_COLORS_REPO=/path/to/zhongguo-traditional-colors node scripts/generate-themes.mjs'
+  );
+}
+
 const load = p => (0, eval)(readFileSync(repoRoot + p, 'utf8'));
 load('assets/data/harmonies.js');
 load('assets/js/color-core.js');
@@ -96,6 +116,12 @@ const NB_HEX = {
   875: '#232324', 900: '#1b1b1c', 950: '#151517', 1000: '#0f1115',
 };
 const NG_HEX = { 200: '#e5e5e5', 300: '#d4d4d4', 550: '#65676b', 600: '#545557', 700: '#3c3c3d', 850: '#212123' };
+/* 焦点必须是全场最艳的一块 —— 这条不变量保留，但比例按新律重定。
+ * 1.6 是为「异色印」标定的：焦点与帘相距 109°，只能靠彩度差压场。
+ * 一色到底后两者同色相，焦点靠的是「深而密」压「淡而薄」，分离主要来自明度；
+ * 对灰调锚色，压深本身就丢彩度，1.6 在数学上不可达（石绿、橄榄绿等整锚出局）。
+ * 1.35 仍保证焦点严格最艳，且不再因锚色偏灰就把它逐出名册。 */
+const FOCUS_C_RATIO = 1.35;
 const NB_L = Object.fromEntries(Object.entries(NB_HEX).map(([k, h]) => [k, hexOklab(h).L]));
 const NG_L = Object.fromEntries(Object.entries(NG_HEX).map(([k, h]) => [k, hexOklab(h).L]));
 
@@ -107,12 +133,12 @@ const NG_L = Object.fromEntries(Object.entries(NG_HEX).map(([k, h]) => [k, hexOk
  * 4 × 9 = 36 个数，替代原提案 8 × 7 = 56（省下的复杂度预算全投给逐锚级的印）。 */
 const FAMILIES = {
   // key      色相区        baseTint(淡/浓)   paperHue/Alt/paperP    veil   paperCap veilCap step  bgL    sealHue/MaxD
-  素绢: { hueLo: 110, hueHi: 200, baseTint: [0.014, 0.018], paperHue: 130, paperHueAlt: 250, paperP: 0.0055, veil: 0.052, paperCap: 0.036, veilCap: 0.086, step: 0.90, bgL: 0.988, sealHue: 28,  sealMaxD: 55, note: '青绿素绢' },
-  雪青: { hueLo: 200, hueHi: 340, baseTint: [0.014, 0.016], paperHue: 262, paperHueAlt: 300, paperP: 0.0080, veil: 0.058, paperCap: 0.034, veilCap: 0.078, step: 1.18, bgL: 0.988, sealHue: 28,  sealMaxD: 55, note: '雪青绢' },
-  赭纸: { hueLo:  60, hueHi: 110, baseTint: [0.016, 0.020], paperHue:  48, paperHueAlt:  20, paperP: 0.0095, veil: 0.056, paperCap: 0.040, veilCap: 0.092, step: 1.05, bgL: 0.984, sealHue: 240, sealMaxD: 70, note: '陈宣赭纸' },
+  素绢: { hueLo: 110, hueHi: 200, baseTint: [0.015, 0.019], paperHue: 130, paperHueAlt: 250, paperP: 0.0055, veil: 0.052, paperCap: 0.036, veilCap: 0.086, step: 0.90, bgL: 0.970, sealHue: 28,  sealMaxD: 55, note: '青绿素绢' },
+  雪青: { hueLo: 200, hueHi: 340, baseTint: [0.024, 0.029], paperHue: 262, paperHueAlt: 300, paperP: 0.0080, veil: 0.058, paperCap: 0.034, veilCap: 0.078, step: 1.18, bgL: 0.970, sealHue: 28,  sealMaxD: 55, note: '雪青绢' },
+  赭纸: { hueLo:  60, hueHi: 110, baseTint: [0.038, 0.044], paperHue:  48, paperHueAlt:  20, paperP: 0.0095, veil: 0.056, paperCap: 0.040, veilCap: 0.092, step: 1.05, bgL: 0.966, sealHue: 240, sealMaxD: 70, note: '陈宣赭纸' },
   // 熟宣（朱赤，340–60°）是最大的一组：纸相定在 70°（与锚色拉开 ≥28°），
   // 否则底/帘/印全是同一个红 —— 这是「单色浸染」最大的复发路径（SPEC R7）。
-  熟宣: { hueLo: 340, hueHi:  60, baseTint: [0.016, 0.019], paperHue:  70, paperHueAlt:  45, paperP: 0.0090, veil: 0.058, paperCap: 0.042, veilCap: 0.095, step: 1.00, bgL: 0.984, sealHue: 8,   sealMaxD: 40, note: '熟宣' },
+  熟宣: { hueLo: 340, hueHi:  60, baseTint: [0.034, 0.039], paperHue:  70, paperHueAlt:  45, paperP: 0.0090, veil: 0.058, paperCap: 0.042, veilCap: 0.095, step: 1.00, bgL: 0.966, sealHue: 8,   sealMaxD: 40, note: '熟宣' },
 };
 Object.entries(FAMILIES).forEach(([k, f]) => { f.key = k; });
 
@@ -433,6 +459,19 @@ function buildTheme(anchorRec, mode) {
       surf = atL(surf, clamp(Lof(surf) + surfDir * 0.008, 0.02, 0.995));
     return surf;
   }
+  /* fitSurface 的对偶：对比度**超过上限**时，把文字拉回背景一侧。
+   *
+   * 为什么需要它：ens() 只会把文字推离背景，永不拉近。于是暗模式从基准中性梯
+   * 继承来的次级/三级会一路顶到 12.3 / 8.7，而亮模式是 6.6 / 4.9 —— 同一层级
+   * 在两种模式下重量完全不同，用户切一次深浅就等于换了一套信息层级。
+   * AA 是地板，不是天花板；两条墨阶要收敛成同一形状，就必须有天花板。
+   * 方向自行判断，免得调用方传反。 */
+  function fitBand(fg, bg, ceil) {
+    const toward = Lof(fg) > Lof(bg) ? -0.004 : 0.004;
+    for (let i = 0; i < 60 && contrast(fg, bg) > ceil; i++)
+      fg = atL(fg, clamp(Lof(fg) + toward, 0.02, 0.995));
+    return fg;
+  }
   /* 印的彩度门槛取**两模式实测**的最大面彩度，而不是取彩度下限的名义值：
    * 亮模式的帘在近白处会被 gamut 截彩，用名义值会把门槛定得虚高，反而把大批
    * 主题推去 ③ 同族深印（实测 37.5% 降级，远超 §9 给的 15% 容限）。
@@ -444,7 +483,7 @@ function buildTheme(anchorRec, mode) {
     Math.max(0.045, 0.95 * BASELINE_ANCHOR_K.bubble * anchorC), -1);
   for (let i = 0; i < 6 && contrast(fgLightRef, bubLightRef) < 4.5; i++)
     bubLightRef = atL(bubLightRef, Math.min(0.995, Lof(bubLightRef) + 0.008));
-  const minSealC = 1.6 * Math.max(fam.paperCap, chromaOf(bubLightRef),
+  const minSealC = FOCUS_C_RATIO * Math.max(fam.paperCap, chromaOf(bubLightRef),
     0.95 * BASELINE_VEIL_C.dark.bubble, 0.95 * BASELINE_VEIL_C.dark.sidebar);
   const SEAL = sealOf(anchorRec, fam, minSealC);
   if (SEAL.degraded) degraded.push('seal');
@@ -475,12 +514,29 @@ function buildTheme(anchorRec, mode) {
    * gamut 在极端 L 上会把印的彩度截掉，这一步把截掉的补回来；
    * 若提彩反而破了印上的字，宁可放弃提彩、保住可读。 */
   function sealBoost(SF, cBig, WHITE, INK) {
-    const need = 1.6 * cBig;
+    const need = FOCUS_C_RATIO * cBig;
     if (chromaOf(SF.fill) >= need) return SF;
     const fill = boostChroma(SF.fill, need).hex;
     const fg = contrast(WHITE, fill) >= contrast(INK, fill) ? WHITE : INK;
     if (contrast(fg, fill) < 4.5) return SF;
     return { fill, fg, degraded: SF.degraded };
+  }
+
+  /* 主按钮 hover：不换色相，只动明度 —— 但**方向必须背离按钮上的字**。
+   *
+   * 原实现两支各写死一个方向（亮 +0.06、暗 -0.06），破了 4.5 就减半、再破就
+   * 取 0（等于没有 hover）。方向本身是反的：亮模式的按钮是深底白字，往浅里走
+   * 正是在压垮白字，于是大量主题退化成「无反馈」—— 改造前已有 31/96 中招，
+   * 换成锚色驱动后升到 52/98。按钮是主 CTA，没有 hover 是实打实的可用性缺陷。
+   *
+   * 现在先朝背离前景的方向试，再试反向，各留一个半步；全都不行才退回无变化。 */
+  function hoverOf(SF) {
+    const away = Lof(SF.fg) > Lof(SF.fill) ? -1 : 1;   // 字比底亮 → 底往更暗走
+    for (const d of [0.06 * away, 0.03 * away, -0.06 * away, -0.03 * away]) {
+      const cand = atL(SF.fill, clamp(Lof(SF.fill) + d, 0.02, 0.998));
+      if (contrast(SF.fg, cand) >= 4.5 && cand !== SF.fill) return cand;
+    }
+    return SF.fill;   // 兜底：hover 改由边框表达
   }
 
   /* 书写顺序硬性为 BG → INK → FG → BRAND → SEAL → STATE
@@ -555,36 +611,64 @@ function buildTheme(anchorRec, mode) {
 
     /* ═══ FG ① ── label-primary 先定住（§6#1）。一旦定住就不再动，
      * 否则整套墨梯漂移；后面所有表面都向它让步。 ═══ */
-    const FG = ens(ink(NB_L[1000]), BG, 4.5, 'label-primary');
+    // 亮模式正文封顶 17.6:1 —— 色库 --ink #111111 on --paper #f7f7f4 的实测值。
+    // 近黑压纸是家法，保留；只是不该越过家法自己的端点。
+    const FG = ens(fitBand(ink(NB_L[1000]), BG, 17.6), BG, 4.5, 'label-primary');
     T[P('label-primary')] = rgbStr(FG);
 
     /* ═══ 层B · 帘（25% 面积，独立 veilCap + 彩度硬下限） ═══
      * 层B 在写作顺序上归 BG（它是表面，不是字），但 §6#2 的兜底要读 FG
      * ——「动表面不动文字」这条纪律本身要求先有文字。故置于 FG ① 之后。 */
-    let sidebar = veil(0.958, { useP: 0.25, tint: fam.veil, floorC: 0.95 * B('sidebar') });
+    /* 帘的明度一律写成**相对纸的偏移**，不再是绝对值。
+     * 原先是硬编码的 0.958 / 0.930 / 0.905 / 0.955，全部以 bgL=0.988 为暗含前提；
+     * 纸一降到 0.970，间距就从 0.030 塌到 0.012，侧栏在画布上直接消失（实测 1.03:1）。
+     * 纸要可调，帘就必须跟着纸走。偏移量同时按目标区间放大：
+     * 侧栏/纸 1.12–1.20，帘/纸 1.25–1.45。 */
+    const DL = { sidebar: 0.052, hover: 0.082, active: 0.108, bubble: 0.070, bubHi: 0.125 };
+    let sidebar = veil(fam.bgL - DL.sidebar, { useP: 0.25, tint: fam.veil, floorC: 0.95 * B('sidebar') });
     sidebar = fitSurface(sidebar, FG, 4.5);
-    let navHover = veil(0.930, { useP: 0.25, tint: fam.veil, floorC: 0.95 * B('hover') });
-    let navActive = veil(0.905, { useP: 0.15, tint: fam.veil * 1.15, floorC: 0.95 * B('active') });
+    let navHover = veil(fam.bgL - DL.hover, { useP: 0.25, tint: fam.veil, floorC: 0.95 * B('hover') });
+    let navActive = veil(fam.bgL - DL.active, { useP: 0.15, tint: fam.veil * 1.15, floorC: 0.95 * B('active') });
     navActive = fitSurface(navActive, FG, 4.5);
     // 气泡：全主题**唯一**一块纯锚色大面（useP = 0）。锚色身份靠气泡认，不靠背景认
     // —— 这是「克制」与「辨识度」的解耦。彩度硬下限保证它永不比现状更淡（R1）。
-    const bubFloor = Math.max(0.045, 0.95 * B('bubble'));
-    let bubble = veilAtFloor(0.955, { useP: 0, tint: fam.veil * 1.25 }, bubFloor, -1);
+    /* 帘的彩度下限：尽可能厚，但**不厚过锚色所能支撑的限度**。
+     * 0.045 的旧下限太淡（「靠气泡认出锚色」在实测里名存实亡）；但改成绝对的
+     * 0.075 又会压垮灰调锚色 —— 焦点要稳压帘 1.6 倍，帘一旦到 0.075，
+     * 彩度低于 0.12 的锚色就压不住自己的帘，整锚出局（传统色里灰调不在少数）。
+     * 故取 min(0.075, anchorC / 1.75)：浓锚吃满 0.075，灰锚按自身比例收，两不相误。 */
+    const bubFloor = Math.max(Math.min(0.075, anchorC / 1.75), 0.95 * B('bubble'));
+    let bubble = veilAtFloor(fam.bgL - DL.bubble, { useP: 0, tint: fam.veil * 1.25 }, bubFloor, -1);
     bubble = fitSurface(bubble, FG, 4.5);       // §6#2：动表面不动文字
-    // §6#16：与 bg-base 的可见边界（≥1.04），不够就压深一步。
-    if (contrast(bubble, BG) < 1.04) bubble = atL(bubble, Lof(bubble) - 0.02);
+    // 与纸的可见边界：下限 1.25（原 1.04 等于「可以看不见」），上限 1.45（帘是罩染，不是色块）。
+    for (let i = 0; i < 40 && contrast(bubble, BG) < 1.25; i++) bubble = atL(bubble, clamp(Lof(bubble) - 0.004, 0.02, 0.995));
+    for (let i = 0; i < 40 && contrast(bubble, BG) > 1.45; i++) bubble = atL(bubble, clamp(Lof(bubble) + 0.004, 0.02, 0.995));
     if (chromaOf(bubble) < bubFloor - 1e-9) degraded.push('bubbleChroma');
-    let bubHi = veilAtFloor(0.900, { useP: 0, tint: fam.veil * 1.35 }, Math.max(0.045, 0.95 * B('highlight')), -1);
+    let bubHi = veilAtFloor(fam.bgL - DL.bubHi, { useP: 0, tint: fam.veil * 1.35 }, Math.max(Math.min(0.075, anchorC / 1.75), 0.95 * B('highlight')), -1);
     bubHi = fitSurface(bubHi, FG, 4.5);
 
     /* ═══ BRAND ── 层C 的 10%：锚色识别，**是线与字，不是面** ═══ */
     let PRIM = ens(anchorRec.hex, BG, 3.0, 'brand-primary');   // 组件级 3:1 下限
     // §6#8：brand-primary vs sidebar-fill 3.0 —— ① 先动表面（抬帘的 L），
     // ② 表面让到头才动 brand-primary 的 ens 目标。
-    for (let i = 0; i < 6 && contrast(PRIM, sidebar) < 3.0; i++)
+    // 抬帘有个下界：侧栏一旦被抬到贴近纸，它在画布上就消失了（实测最低到 1.01:1，
+    // 整个应用读起来是平的）。抬到 bgL-0.030 就停手，剩下的让 brand-primary 去让 ——
+    // 「先动表面」的次序不变，只是表面让步现在有了尽头。
+    const sidebarLCap = fam.bgL - 0.030;
+    for (let i = 0; i < 6 && contrast(PRIM, sidebar) < 3.0 && Lof(sidebar) + 0.008 <= sidebarLCap; i++)
       sidebar = atL(sidebar, clamp(Lof(sidebar) + 0.008, 0.02, 0.995));
     if (contrast(PRIM, sidebar) < 3.0) PRIM = ens(PRIM, sidebar, 3.0, 'brand-primary(vs sidebar)');
     T[S('sidebar-fill')] = rgbStr(sidebar);
+    /* 「新会话」是压在侧栏上的抬升面（button-elevated-fill）。它取中性、不取锚色是对的
+     * —— 否则它会和发送键并列成两个抢焦点的彩色按钮。但它原先没有任何与侧栏的分离下限，
+     * 实测最差只有 1.035:1，全靠 1px / 10% 的描边撑着，等于消失。抬升面必须真的抬起来。 */
+    {
+      let ev = parseRgb(T[P('button-elevated-fill')]);
+      for (let i = 0; i < 14 && contrast(ev, sidebar) < 1.12; i++)
+        ev = atL(ev, clamp(Lof(ev) + 0.006, 0.02, 0.998));
+      T[P('button-elevated-fill')] = rgbStr(ev);
+      T[P('button-floating-fill')] = rgbStr(ev);
+    }
     T[S('sidebar-nav-item-hover')] = rgbStr(navHover);
     T[S('sidebar-nav-item-active')] = rgbStr(navActive);
     T[S('bubble')] = rgbStr(bubble);
@@ -592,10 +676,14 @@ function buildTheme(anchorRec, mode) {
 
     /* ═══ FG ② ── 其余墨梯。§6#3：label-secondary 独立于 label-primary，
      * 可单独动 —— 对四个承载面里最难的那个逐一 ens（墨只会越推越深，单调收敛）。 ═══ */
-    let SEC = ink(NB_L[700]);
+    // 起点先压到 7.0（色库亮模式 --ink-soft 是 8.1，暗模式这一档收在 7.9–8.0）：
+    // 次级要在两种模式里是同一个重量，否则「同形状」只是口号。
+    let SEC = ens(ink(NB_L[700]), BG, 7.0, 'label-secondary');
     for (const s of [BG, LAYER1, bubble, sidebar]) SEC = ens(SEC, s, 4.5, 'label-secondary');
     T[P('label-secondary')] = rgbStr(SEC);
-    T[P('label-tertiary')] = rgbStr(ens(ink(NB_L[600]), BG, 3.0, 'label-tertiary')); // 基准三级本非 AA，守 3.0
+    // 三级承担代码注释（.ds-code .cm）与输入框占位（.ds-composer .ph）—— 都是要读的正文，
+    // 非装饰、非禁用态，因此守 AA 4.5 而不是继承基准梯的 3.0。
+    T[P('label-tertiary')] = rgbStr(ens(ink(NB_L[600]), BG, 4.5, 'label-tertiary'));
     T[P('label-caption')] = rgbStr(ink(NB_L[400]));   // 装饰性，无下限（对齐基准）
     T[P('label-dimmed')] = rgbStr(ink(NB_L[200]));
     T[P('label-primary-dimmed')] = rgbStr(ink(NB_L[950]));
@@ -608,8 +696,13 @@ function buildTheme(anchorRec, mode) {
     T[P('label-primary-bluish')] = rgbStr(ens(atL(LINK, 0.34, 1.15), BG, 4.5, 'label-primary-bluish'));
     const LNK = ens(atL(LINK, 0.52), BG, 4.5, 'brand-new-color'); // 链接是文字 → 4.5
     T[P('brand-primary-new-colorprimary-new-color')] = rgbStr(LNK);
-    T[P('button-info-fill')] = rgbStr(ens(atL(LINK, 0.55), BG, 3.0, 'button-info-fill'));
-    T[P('button-info-hover')] = rgbStr(atL(LINK, 0.72));
+    /* 发送键走的是 button-info-fill，不是 button-primary-fill（实测：真实应用里
+     * button-primary-fill 没有任何控件在用，preview/index.html 把发送键接到它上面
+     * 是错的，「唯一焦点」这条不变量因此一直在校验一个看不见的按钮）。
+     * 聊天应用里点得最多的就是发送 —— 它必须是锚色本人，否则粉色主题配一颗蓝键。
+     * LINK 留给真正的链接文字与 business 状态，那里异色是对的。 */
+    T[P('button-info-fill')] = rgbStr(ens(atL(anchorRec.hex, 0.55), BG, 3.0, 'button-info-fill'));
+    T[P('button-info-hover')] = rgbStr(atL(anchorRec.hex, 0.45));
     T[P('state-business-primary')] = rgbStr(LNK);
     T[P('state-business-tertiary')] = rgbStr(atL(LINK, 0.945, 0.35));
     T[P('button-primary-dimmed')] = rgbStr(N(100));
@@ -617,16 +710,16 @@ function buildTheme(anchorRec, mode) {
 
     /* ═══ SEAL ── 层D · 印（<1% 面积，唯一满彩块，不过任何闸门） ═══ */
     const cBig = Math.max(...[BG, LAYER1, sidebar, bubble].map(chromaOf));
-    const SF = sealBoost(sealFill(SEAL.hex, N(0), ink(NB_L[1000])), cBig, N(0), ink(NB_L[1000]));
+    // 一色到底：主按钮是**锚色本人**的加深版，不再是那枚配伍印。
+    // 理由不是偏好，是色库 DESIGN.md 的原文：「The color content is the only
+    // saturation on the page; chrome stays neutral.」主按钮属于 chrome，原先却
+    // 顶着一块离锚色中位 109°（最大 179°）的饱和外来色 —— 于是用户选了竹青，
+    // 全场最响的一笔是茜红。印退回 sidebar-nav-item-active-accent 那一抹余痕，
+    // 那才是落款该有的尺度；sealName / sealWhy 的策展数据因此仍然有用。
+    const SF = sealBoost(sealFill(anchorRec.hex, N(0), ink(NB_L[1000])), cBig, N(0), ink(NB_L[1000]));
     if (SF.degraded && !degraded.includes('seal')) degraded.push('seal');
     T[P('button-primary-fill')] = rgbStr(SF.fill);
-    // hover 不换色相，只动明度；若 ±0.06 破了前景 4.5 就减半、再破取 0
-    // （hover 改用边框而非填充变化表达）。
-    let hovL = 0.06;
-    let hov = atL(SF.fill, clamp(Lof(SF.fill) + hovL, 0.02, 0.998));
-    if (contrast(SF.fg, hov) < 4.5) { hovL = 0.03; hov = atL(SF.fill, clamp(Lof(SF.fill) + hovL, 0.02, 0.998)); }
-    if (contrast(SF.fg, hov) < 4.5) hov = SF.fill;
-    T[P('button-primary-hover')] = rgbStr(hov);
+    T[P('button-primary-hover')] = rgbStr(hoverOf(SF));
     T[P('label-primary-foreground')] = rgbStr(SF.fg);
     T[S('sidebar-nav-item-active-accent')] = rgbStr(atL(SEAL.hex, 0.93, 0.35)); // 一抹印泥的余痕
 
@@ -707,7 +800,10 @@ function buildTheme(anchorRec, mode) {
     T[P('button-tool-bar-fill-invisible')] = rgbaStr(ink(0.2), 0.36);
 
     /* ═══ FG ① ── label-primary 先定住（§6#1） ═══ */
-    const FG = ens(ink(NB_L[50]), BG, 4.5, 'label-primary');
+    /* 暗模式正文封顶 16.8:1。白字压深底会起光晕（散光人群尤甚），色库自己的
+     * --ink 取 #f2f0ea（16.7:1）而非纯白，正是这个判断；插件原先冲到 17.8:1，
+     * 比家法还亮。软化来自墨的色温（ink() 已带纸相），不是靠降对比度。 */
+    const FG = ens(fitBand(ink(NB_L[50]), BG, 16.8), BG, 4.5, 'label-primary');
     T[P('label-primary')] = rgbStr(FG);
 
     /* ═══ 层B · 帘（暗模式的表面向 FG 让步的方向是压深） ═══ */
@@ -717,12 +813,17 @@ function buildTheme(anchorRec, mode) {
     const navHover = veil(NB_L[850], { useP: 0.25, tint: vt, floorC: 0.95 * B('hover') });
     let navActive = veil(NB_L[750], { useP: 0.15, tint: vt * 1.15, floorC: 0.95 * B('active') });
     navActive = fitSurface(navActive, FG, 4.5);
-    const bubFloor = Math.max(0.045, 0.95 * B('bubble'));
+    // 同亮模式：帘尽可能厚，但不厚过锚色能支撑的限度。暗模式原先恒被 0.95×0.055
+    // 钳在 0.05 —— 96 套里 18 套记为 bubbleChroma 兜底，等于放弃了暗色的识别色。
+    const bubFloor = Math.max(Math.min(0.075, anchorC / 1.75), 0.95 * B('bubble'));
     let bubble = veilAtFloor(NB_L[850], { useP: 0, tint: vt * 1.25 }, bubFloor, 1);
     bubble = fitSurface(bubble, FG, 4.5);
-    if (contrast(bubble, BG) < 1.04) bubble = atL(bubble, Lof(bubble) + 0.02);
+    // 与亮模式同一条区间：下限 1.25（原 1.04 等于「可以看不见」），上限 1.45
+    // （帘是罩染，不是色块 —— 藤黄·暗 实测到过 1.77，明显是一块贴上去的黄）。
+    for (let i = 0; i < 40 && contrast(bubble, BG) < 1.25; i++) bubble = atL(bubble, clamp(Lof(bubble) + 0.004, 0.02, 0.995));
+    for (let i = 0; i < 40 && contrast(bubble, BG) > 1.45; i++) bubble = atL(bubble, clamp(Lof(bubble) - 0.004, 0.02, 0.995));
     if (chromaOf(bubble) < bubFloor - 1e-9) degraded.push('bubbleChroma');
-    let bubHi = veilAtFloor(NB_L[750], { useP: 0, tint: vt * 1.35 }, Math.max(0.045, 0.95 * B('highlight')), 1);
+    let bubHi = veilAtFloor(NB_L[750], { useP: 0, tint: vt * 1.35 }, Math.max(Math.min(0.075, anchorC / 1.75), 0.95 * B('highlight')), 1);
     bubHi = fitSurface(bubHi, FG, 4.5);
 
     /* ═══ BRAND ═══ */
@@ -736,16 +837,27 @@ function buildTheme(anchorRec, mode) {
       sidebar = atL(sidebar, clamp(Lof(sidebar) - 0.008, 0.02, 0.995));
     if (contrast(PRIM, sidebar) < 3.0) PRIM = ens(PRIM, sidebar, 3.0, 'brand-primary(vs sidebar)');
     T[S('sidebar-fill')] = rgbStr(sidebar);
+    /* 「新会话」是压在侧栏上的抬升面（button-elevated-fill）。它取中性、不取锚色是对的
+     * —— 否则它会和发送键并列成两个抢焦点的彩色按钮。但它原先没有任何与侧栏的分离下限，
+     * 实测最差只有 1.035:1，全靠 1px / 10% 的描边撑着，等于消失。抬升面必须真的抬起来。 */
+    {
+      let ev = parseRgb(T[P('button-elevated-fill')]);
+      for (let i = 0; i < 14 && contrast(ev, sidebar) < 1.12; i++)
+        ev = atL(ev, clamp(Lof(ev) + 0.006, 0.02, 0.998));
+      T[P('button-elevated-fill')] = rgbStr(ev);
+      T[P('button-floating-fill')] = rgbStr(ev);
+    }
     T[S('sidebar-nav-item-hover')] = rgbStr(navHover);
     T[S('sidebar-nav-item-active')] = rgbStr(navActive);
     T[S('bubble')] = rgbStr(bubble);
     T[S('bubble-highlight')] = rgbStr(bubHi);
 
     /* ═══ FG ② ── 其余墨梯（§6#3 同亮模式，方向相反：墨只会越推越亮） ═══ */
-    let SEC = ink(NB_L[300]);
+    // 先落回区间上限，再守各面的下限；两条墨阶因此同形状（见 fitBand）。
+    let SEC = fitBand(ink(NB_L[300]), BG, 8.0);
     for (const s of [BG, LAYER1, bubble, sidebar]) SEC = ens(SEC, s, 4.5, 'label-secondary');
     T[P('label-secondary')] = rgbStr(SEC);
-    T[P('label-tertiary')] = rgbStr(ens(ink(NB_L[400]), BG, 3.0, 'label-tertiary'));
+    T[P('label-tertiary')] = rgbStr(ens(fitBand(ink(NB_L[400]), BG, 5.5), BG, 4.5, 'label-tertiary'));
     T[P('label-caption')] = rgbStr(ink(NB_L[600]));
     T[P('label-dimmed')] = rgbStr(ink(NB_L[750]));
     T[P('label-primary-dimmed')] = rgbStr(ink(NB_L[100]));
@@ -756,8 +868,9 @@ function buildTheme(anchorRec, mode) {
     T[P('brand-primary-invert')] = rgbStr(litRec.hex);   // 原色，不 ensure（R4）
     const LNK = ens(atL(LINK, 0.68), BG, 4.5, 'brand-new-color');
     T[P('brand-primary-new-colorprimary-new-color')] = rgbStr(LNK);
-    T[P('button-info-fill')] = rgbStr(ens(atL(LINK, 0.72), BG, 3.0, 'button-info-fill'));
-    T[P('button-info-hover')] = rgbStr(atL(LINK, 0.60));
+    // 同亮模式：发送键是锚色本人（见亮模式分支的说明）。
+    T[P('button-info-fill')] = rgbStr(ens(atL(anchorRec.hex, 0.72), BG, 3.0, 'button-info-fill'));
+    T[P('button-info-hover')] = rgbStr(atL(anchorRec.hex, 0.82));
     T[P('state-business-primary')] = rgbStr(LNK);
     T[P('state-business-tertiary')] = rgbStr(atL(LINK, 0.38, 0.6));
     T[P('button-primary-dimmed')] = rgbStr(N(750));
@@ -766,14 +879,10 @@ function buildTheme(anchorRec, mode) {
     /* ═══ SEAL ═══ */
     const cBig = Math.max(...[BG, LAYER1, sidebar, bubble].map(chromaOf));
     const WH = paper(NB_L[0]), IK = ink(NB_L[1000]);
-    const SF = sealBoost(sealFill(SEAL.hex, WH, IK), cBig, WH, IK);
+    const SF = sealBoost(sealFill(anchorRec.hex, WH, IK), cBig, WH, IK); // 一色到底，同亮模式
     if (SF.degraded && !degraded.includes('seal')) degraded.push('seal');
     T[P('button-primary-fill')] = rgbStr(SF.fill);
-    let hovL = -0.06;
-    let hov = atL(SF.fill, clamp(Lof(SF.fill) + hovL, 0.02, 0.998));
-    if (contrast(SF.fg, hov) < 4.5) { hovL = -0.03; hov = atL(SF.fill, clamp(Lof(SF.fill) + hovL, 0.02, 0.998)); }
-    if (contrast(SF.fg, hov) < 4.5) hov = SF.fill;
-    T[P('button-primary-hover')] = rgbStr(hov);
+    T[P('button-primary-hover')] = rgbStr(hoverOf(SF));
     T[P('label-primary-foreground')] = rgbStr(SF.fg);
     T[S('sidebar-nav-item-active-accent')] = rgbStr(atL(SEAL.hex, 0.34, 0.55));
 
@@ -794,15 +903,29 @@ function buildTheme(anchorRec, mode) {
     T[P('state-warn-label')] = rgbStr(ens(atL(WRNr.hex, 0.70), BG, 4.5, 'state-warn-label'));
   }
 
-  /* ── 面积纪律的编译期式断言（SPEC §4.2）──
-   * 印色只进 3 个 token；锚色原色不做任何 button-*-fill。
-   * 面积小是**结构保证**，不是自觉：印色不进任何 bg-* / bubble* / sidebar-fill，
-   * 所以它在物理上无法占据大面积。 */
-  const SEAL_SLOTS = new Set([P('button-primary-fill'), P('button-primary-hover'), S('sidebar-nav-item-active-accent')]);
+  /* ── 面积纪律的编译期式断言（SPEC §4.2，「一色到底」后改写）──
+   *
+   * 旧律是「锚色永不做 fill，印色永不做 label」。前半句现已作废：焦点那一笔
+   * 就该是锚色本人 —— 否则用户选了竹青，全场最响的是一块离它 109° 的茜红，
+   * 这正是「不像我选的那个主题」的成因。
+   *
+   * 新律分两条，各自仍是结构保证而非自觉：
+   *   ① 锚色**原色**不做任何 fill —— 焦点必须是 sealFill 压过明度、
+   *      与其上的字配平过对比度的版本，不是色卡上那个原值直接铺开。
+   *   ② 印色只进 1 个 token（那一抹余痕），物理上无法占据大面积。 */
+  const SEAL_SLOTS = new Set([S('sidebar-nav-item-active-accent')]);
   const sealVals = new Set([...SEAL_SLOTS].map(k => T[k]));
+  /* 焦点是四个槽，不是两个：button-info-* 是真实应用里的发送键，
+   * 与 button-primary-* 同为「屏上最艳的那一块」，同受锚色原色的豁免。 */
+  const FOCUS_SLOTS = new Set([
+    P('button-primary-fill'), P('button-primary-hover'),
+    P('button-info-fill'), P('button-info-hover'),
+  ]);
+  const rawAnchor = rgbStr(anchorRec.hex);
   for (const [k, v] of Object.entries(T)) {
-    if (!SEAL_SLOTS.has(k) && sealVals.has(v)) throw new Error(`印色越界：${k} 与印色 token 同值 ${v}`);
-    if (/^--dsw-alias-button-.*-fill$/.test(k) && v === rgbStr(anchorRec.hex)) throw new Error(`锚色原色做了 fill：${k}`);
+    if (!SEAL_SLOTS.has(k) && !FOCUS_SLOTS.has(k) && sealVals.has(v)) throw new Error(`印色越界：${k} 与印色 token 同值 ${v}`);
+    // ① 的可测形式：锚色原色只许落在焦点两槽，其余任何 fill 用到它就是面积失控。
+    if (/-fill$/.test(k) && !FOCUS_SLOTS.has(k) && v === rawAnchor) throw new Error(`锚色原色越界做了 fill：${k}`);
   }
   const structural = {
     family: fam.key, familyNote: fam.note, ripeHi: fam.ripeHi,
@@ -833,7 +956,7 @@ function checkMatrix(tokens, mode) {
     [P('label-secondary'), P('bg-layer-1'), 4.5],
     [P('label-secondary'), S('bubble'), 4.5],
     [P('label-secondary'), S('sidebar-fill'), 4.5],
-    [P('label-tertiary'), P('bg-base'), 3.0],
+    [P('label-tertiary'), P('bg-base'), 4.5],
     [P('label-primary-foreground'), P('button-primary-fill'), 4.5],
     [P('label-primary-foreground'), P('button-primary-hover'), 4.5],
     ...(mode === 'light' ? [
@@ -863,7 +986,7 @@ function checkMatrix(tokens, mode) {
   const cSeal = window.ZH_COLOR_CORE.chromaOf(g(P('button-primary-fill')));
   const cBig = Math.max(...[P('bg-base'), P('bg-layer-1'), S('sidebar-fill'), S('bubble')]
     .map(k => window.ZH_COLOR_CORE.chromaOf(g(k))));
-  if (cSeal < cBig * 1.6) fails.push(`印色彩度 ${cSeal.toFixed(4)} < 最大面 ${cBig.toFixed(4)} × 1.6`);
+  if (cSeal < cBig * FOCUS_C_RATIO) fails.push(`焦点彩度 ${cSeal.toFixed(4)} < 最大面 ${cBig.toFixed(4)} × ${FOCUS_C_RATIO}`);
   // 不变量：亮模式层次方向（现状四同值白的回归护栏）
   if (mode === 'light') {
     const Ls = ['bg-base', 'bg-layer-1', 'bg-layer-2', 'bg-layer-3'].map(k => Lof(g(P(k))));
@@ -979,6 +1102,42 @@ for (let i = 0; i < kept.length; i++) for (let j = i + 1; j < kept.length; j++) 
   const p = kept[i], q = kept[j];
   minDE = Math.min(minDE, Math.hypot(p.L - q.L, p.a - q.a, p.b - q.b));
 }
+
+/* ── 11.5 精选（SPEC 新增）──
+ * 98 个选择等于没有选择：一整面色块读起来像取色器，不像主题库，而「优雅是编辑
+ * 的结果」。所以标出一份 12 锚 / 24 套的精选，其余折叠。
+ *
+ * 名单不手工维护，两段推导，全程确定性：
+ *   ① CURATED 里活到最终名册的（黛蓝 C 不够、天青/胭脂红/茜色 因近同被剔，
+ *      实际存活 6 个）—— 这是编辑意图，最高优先级；
+ *   ② 不足 12 个的部分，用 OKLab 最远点采样从剩下的锚里补：每次挑「与已选集合
+ *      最小距离最大」的那个，并列时按 rec.name 升序。补出来的是色彩空间里铺得最
+ *      开的一组，不是最像的一组。 */
+const CURATED_TARGET = 12;
+const anchorOf = new Map();          // anchorHex → { L, a, b, name }
+for (const a of kept) anchorOf.set(a.rec.hex, { L: a.L, a: a.a, b: a.b, name: a.rec.name });
+
+const curatedHex = [];
+for (const n of CURATED) {
+  const hit = [...anchorOf.entries()].find(([, v]) => v.name === n);
+  if (hit && !curatedHex.includes(hit[0])) curatedHex.push(hit[0]);
+}
+const dist = (p, q) => Math.hypot(p.L - q.L, p.a - q.a, p.b - q.b);
+while (curatedHex.length < CURATED_TARGET && curatedHex.length < anchorOf.size) {
+  let best = null, bestScore = -Infinity;
+  for (const [hex, v] of anchorOf) {
+    if (curatedHex.includes(hex)) continue;
+    const near = Math.min(...curatedHex.map(h => dist(v, anchorOf.get(h))));
+    if (near > bestScore + 1e-12
+      || (near > bestScore - 1e-12 && best && v.name < anchorOf.get(best).name)) {
+      best = hex; bestScore = near;
+    }
+  }
+  if (!best) break;
+  curatedHex.push(best);
+}
+const curatedSet = new Set(curatedHex);
+for (const t of themes) t.curated = curatedSet.has(t.anchorHex);
 
 /* ── 12. 产出 ── */
 const outDir = fileURLToPath(new URL('..', import.meta.url));

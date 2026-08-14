@@ -25,7 +25,17 @@ export interface GeneratedTheme {
   paperHue: number
   /** True when paperHue was rotated off the anchor hue to keep the ground legible. */
   paperHueRotated: boolean
-  /** 印 (layer D): the curated seal color used for the single primary accent. */
+  /**
+   * True for the 12-anchor / 24-theme shortlist the picker shows by default.
+   * Derived by the generator (§11.5), never hand-maintained: the CURATED names
+   * that survive the gates, topped up by farthest-point sampling in OKLab.
+   */
+  curated: boolean
+  /**
+   * 印 (layer D): the curated seal color. Since 「一色到底」 the seal no longer
+   * fills the primary button — that is the anchor itself — and is kept to the
+   * active nav accent, i.e. a signature rather than a focus.
+   */
   sealName: string
   sealHex: string
   /** Why this seal was picked (curation note). */

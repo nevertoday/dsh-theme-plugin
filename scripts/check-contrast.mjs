@@ -54,6 +54,8 @@ function oklab([r, g, b]) {
           0.0259040371 * l + 0.7827717662 * m - 0.8086757660 * s];
 }
 const Cof = tok => { const [, a, b] = oklab(rgbOf(tok)); return Math.hypot(a, b); };
+const Hof = tok => { const [, a, b] = oklab(rgbOf(tok)); return (Math.atan2(b, a) * 180 / Math.PI + 360) % 360; };
+const hueDist = (p, q) => { const d = Math.abs(p - q) % 360; return d > 180 ? 360 - d : d; };
 const Lof = tok => oklab(rgbOf(tok))[0];
 
 const A = k => `--dsw-alias-${k}`;
@@ -138,14 +140,65 @@ for (const t of themes) {
   if (c < 0.045 - 1e-9) fail(`${t.id}: C(bubble)=${c.toFixed(4)} < 0.045 — 帘比现状更淡，方案自毁`);
 }
 
-/* ── 不变量 2：印色唯一焦点（SPEC §4.2 / §4.3 锁 2）──
- * 主按钮填充的彩度必须 > 任何大面积 token 的彩度 × 1.6：
- * 「屏幕上最艳的一块只有主按钮」这句话必须是可测的，不是修辞。 */
+/* ── 不变量 2：唯一焦点（SPEC §4.2 / §4.3 锁 2，「一色到底」后重定比例）──
+ * 主按钮填充的彩度必须 > 任何大面积 token 的彩度 × FOCUS_C_RATIO：
+ * 「屏幕上最艳的一块只有主按钮」这句话必须是可测的，不是修辞。
+ *
+ * 比例从 1.6 降到 1.35：1.6 是为「异色印」标定的 —— 焦点与帘相距中位 109°，
+ * 只能靠彩度差压场。改成锚色本人之后两者同色相，焦点靠「深而密」压「淡而薄」，
+ * 分离主要来自明度；而对灰调锚色（石绿 #57C3C2、橄榄绿 #5E5314 等），压深本身
+ * 就会丢彩度，1.6 在数学上不可达，整锚出局。1.35 仍保证焦点严格最艳。
+ * 与 generate-themes.mjs 的 FOCUS_C_RATIO 必须一致 —— 此处刻意重复而不 import，
+ * 校验件不该信任生成件。 */
+const FOCUS_C_RATIO = 1.35;
 const BIG = [A('bg-base'), A('bg-layer-1'), SP('sidebar-fill'), SP('bubble')];
+/* 焦点是**两个**令牌，不是一个：
+ *   · button-primary-fill —— 名义上的主按钮；
+ *   · button-info-fill    —— 真实应用里的发送键，聊天场景中点得最多的那颗。
+ * 实测 button-primary-fill 在 DSH web 里没有任何控件在用，而这条不变量原先只查它，
+ * 于是「屏上最艳的一块只有主按钮」被验证在一个看不见的按钮上，发送键长期是异色。 */
+const FOCUS_KEYS = [A('button-primary-fill'), A('button-info-fill')];
 for (const t of themes) {
-  const cSeal = Cof(t.tokens[A('button-primary-fill')]);
   const cBig = Math.max(...BIG.map(k => Cof(t.tokens[k])));
-  if (cSeal < cBig * 1.6) fail(`${t.id}: 印色彩度 ${cSeal.toFixed(4)} 未显著高于最大面 ${cBig.toFixed(4)} — 焦点被稀释`);
+  for (const k of FOCUS_KEYS) {
+    const cFocus = Cof(t.tokens[k]);
+    if (cFocus < cBig * FOCUS_C_RATIO) fail(`${t.id}: ${k} 彩度 ${cFocus.toFixed(4)} 未显著高于最大面 ${cBig.toFixed(4)} — 焦点被稀释`);
+  }
+}
+/* 两个焦点必须同色相，否则「一色到底」只是改了其中一个的说法。 */
+for (const t of themes) {
+  const d = hueDist(Hof(t.tokens[A('button-primary-fill')]), Hof(t.tokens[A('button-info-fill')]));
+  if (d > 12) fail(`${t.id}: 主按钮与发送键色相相差 ${d.toFixed(1)}° — 屏上出现了两个不同色的焦点`);
+}
+
+/* ── 不变量 2b：焦点必须是**你选的那个色** ──
+ * 这是整套改造的核心性质，不该只靠人记得。改造前实测：焦点与锚色的色相中位差
+ * 109°、最大 179°（正对补色）—— 选了竹青，屏上最响的是一块茜红。 */
+const hexHue = hex => {
+  const rgb = [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16));
+  const [, a, b] = oklab(rgb);
+  return (Math.atan2(b, a) * 180 / Math.PI + 360) % 360;
+};
+/* 阈值 18°：实测中位 0.1°、p95 4.9°、最大 15.1°，而最大的几个**全是黄色系**
+ * （琥珀黄 / 雄黄 / 藤黄）—— 高彩度的黄在 sRGB 里压深必然向橙偏，这是色域效应
+ * 不是缺陷，卡死到 12° 只会把黄色主题全部误杀。改造前该值是中位 109°、最大 179°，
+ * 与色域漂移差一个数量级，18° 拦得住真正的问题。 */
+const FOCUS_HUE_TOL = 18;
+for (const t of themes) {
+  for (const k of FOCUS_KEYS) {
+    const d = hueDist(Hof(t.tokens[k]), hexHue(t.anchorHex));
+    if (d > FOCUS_HUE_TOL) fail(`${t.id}: ${k} 与锚色 ${t.anchorHex} 色相相差 ${d.toFixed(1)}° — 焦点不是用户选的那个色`);
+  }
+}
+
+/* ── 不变量 6：精选是一份有效的短名单 ── */
+{
+  const curated = themes.filter(t => t.curated);
+  const light = curated.filter(t => t.colorScheme === 'light');
+  if (curated.length !== light.length * 2) fail(`精选未成对：共 ${curated.length}，其中亮色 ${light.length}`);
+  if (light.length < 8 || light.length > 16) fail(`精选锚色数 ${light.length} 不在 8–16 —— 太少不成库，太多就不是编辑`);
+  const fams = new Set(light.map(t => t.family));
+  if (fams.size !== 4) fail(`精选只覆盖 ${fams.size} 个纸家族（应为 4）：${[...fams].join(' ')}`);
 }
 
 /* ── 不变量 3：层次方向（SPEC §2.1 #2）──
