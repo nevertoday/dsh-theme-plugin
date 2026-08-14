@@ -1,6 +1,6 @@
 {
   "name": "dsh-theme-plugin",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "中国传统色 DeepSeek Harness 主题包 · Chinese traditional color themes for DeepSeek Harness",
   "type": "module",
   "license": "MIT",
@@ -56,7 +56,7 @@
   },
   "scripts": {
     "generate": "node scripts/generate-themes.mjs",
-    "check": "node scripts/check-contrast.mjs",
+    "check": "node scripts/check-contrast.mjs && node scripts/check-readme.mjs",
     "test": "node --test test/*.test.ts",
     "build": "tsdown",
     "build:esbuild": "node scripts/build-esbuild.mjs",
