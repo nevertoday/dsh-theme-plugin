@@ -4,6 +4,18 @@
 
 📖 [English README](./README.md)
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/theme-zhuqing-light.png" alt="竹青·亮：素绢纸，气泡是一层竹青罩染，发送键是锚色本人" width="49%">
+  <img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/theme-zhuhong-dark.png" alt="朱红·暗：熟宣纸压成暖墨，气泡是深绛罩染，发送键是朱砂" width="49%">
+  <br>
+  <img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/theme-qunqing-light.png" alt="群青·亮：雪青绢，气泡是一层群青罩染，发送键是群青" width="49%">
+  <img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/theme-tenghuang-dark.png" alt="藤黄·暗：赭纸压成橄榄墨，气泡是橄榄罩染，发送键是明黄" width="49%">
+</p>
+<p align="center">
+  <sub>竹青·亮（素绢）&nbsp; | &nbsp;朱红·暗（熟宣）<br>群青·亮（雪青）&nbsp; | &nbsp;藤黄·暗（赭纸）</sub><br>
+  <sub>四种纸各取一个锚色。每一套里，<b>屏上最艳的那一块都是你选的那个色</b>。</sub>
+</p>
+
 ## 安装
 
 ```sh
@@ -47,7 +59,11 @@ http://127.0.0.1:3080/#theme=qunqing-dark       # 群青·暗
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/settings-light.png" alt="设置 → 传统色主题，竹青·亮：精选置顶，其后按纸家族排全部；每行的色卡画的是这套主题实际交付的纸/帘/焦点" width="49%">
-  <img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/settings-dark.png" alt="同一个面板在朱红·暗下：面板自身也随主题变色，因为它只引用 --dsw-* 令牌" width="49%">
+  <img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/settings-dark.png" alt="同一个面板在藤黄·暗下：面板自身也随主题变色，因为它只引用 --dsw-* 令牌" width="49%">
+</p>
+<p align="center">
+  <sub>每行的色卡画的是这套主题<b>实际交付</b>的纸、帘、焦点，不是满彩度的锚色。
+  当前主题那行还写明了印是谁、为什么是它（<code>茜红 · 策展印 · 冷暖对冲</code>）。</sub>
 </p>
 
 面板自己也随主题变色 —— 它的样式只引用 `--dsw-*` 令牌，所以它同时是这套主题的演示。

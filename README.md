@@ -4,6 +4,18 @@ Chinese traditional colors as a **DeepSeek Harness theme pack** — 49 anchors �
 
 📖 [中文文档](./README.zh-CN.md)
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/theme-zhuqing-light.png" alt="竹青 light: raw-silk paper, a green veil on the bubble, and the send button in the anchor green itself" width="49%">
+  <img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/theme-zhuhong-dark.png" alt="朱红 dark: sized-xuan paper in warm ink, a maroon veil, and a vermilion send button" width="49%">
+  <br>
+  <img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/theme-qunqing-light.png" alt="群青 light: violet-silk paper, a blue veil, and a blue send button" width="49%">
+  <img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/theme-tenghuang-dark.png" alt="藤黄 dark: ochre paper in olive ink, an olive veil, and a gold send button" width="49%">
+</p>
+<p align="center">
+  <sub>竹青 · light（素绢）&nbsp; | &nbsp;朱红 · dark（熟宣）<br>群青 · light（雪青）&nbsp; | &nbsp;藤黄 · dark（赭纸）</sub><br>
+  <sub>One anchor per paper family. In every one of them, the most saturated patch on screen is the color you picked.</sub>
+</p>
+
 ## Install
 
 ```sh
@@ -47,7 +59,11 @@ Changing the hash switches themes live. Your pick is remembered per browser (`lo
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/settings-light.png" alt="Settings → Traditional Colors on 竹青 light: the curated shortlist first, then every anchor grouped by paper family; each row shows the theme's actual paper / veil / focus" width="49%">
-  <img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/settings-dark.png" alt="The same panel on 朱红 dark: it is themed by the pack itself, because its styles only reference --dsw-* tokens" width="49%">
+  <img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/settings-dark.png" alt="The same panel on 藤黄 dark: it is themed by the pack itself, because its styles only reference --dsw-* tokens" width="49%">
+</p>
+<p align="center">
+  <sub>Each row's chip is the theme's <b>real</b> paper, veil and focus — not the anchor swatch at full chroma.
+  The line under the current theme names the seal and why it was picked (<code>茜红 · 策展印 · 冷暖对冲</code>).</sub>
 </p>
 
 The panel is themed by the pack itself — its styles reference nothing but `--dsw-*` tokens, so it doubles as a demo of the theme you are picking.
