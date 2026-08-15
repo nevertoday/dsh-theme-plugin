@@ -270,6 +270,7 @@ export function apply(ctx: ClientContext): void {
     sealWhy: row.sealWhy,
     sealRel: row.sealRel,
     curated: row.curated,
+    tier: row.tier,
     // 色卡画的是**这套主题实际交付的三段**，不是满彩度的锚色原值。
     // 原先每行画 anchorHex：点「朱红」看见的是朱砂，装上却是一张淡色纸 ——
     // 那个预期落差比任何单个色值都伤品相。所见即所得。

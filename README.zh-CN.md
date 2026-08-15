@@ -1,6 +1,6 @@
 # dsh-theme-plugin
 
-以中国传统色为锚色的 **DeepSeek Harness 主题包**。49 个锚色 × 亮/暗 = **98 套主题**，每套写满完整的 `--dsw-*` 令牌词表（89 个），2254 条对比度断言逐条通过 WCAG AA。选择面板默认只给 12 色精选。
+以中国传统色为锚色的 **DeepSeek Harness 主题包**。49 个锚色 × 亮/暗 = **98 套主题**，每套写满完整的令牌词表（98 个：89 个 `--dsw-*` + 9 个 `--shiki-token-*` 语法槽），3136 条对比度断言逐条通过 WCAG AA。选择面板默认只给 12 色精选。
 
 📖 [English README](./README.md)
 
@@ -54,9 +54,26 @@ http://127.0.0.1:3080/#theme=qunqing-dark       # 群青·暗
 
 **墨** —— 文字、线、次级面走同一支墨梯，即纸色再压深。基础样式表里每个 `nb-XX` 台阶换成同明度的染色中性，悬停位移、海拔阶梯、边框与交互水洗的 alpha 逐一照抄：只换色相，不改关系。唯一有意的例外是墨梯的两个**端点** —— 那是在这里定的，不是继承来的，因为基础样式表取的是极值。现在亮暗共用一个形状：正文 16.7–17.5，次级 7.4–8.0，三级 4.6–5.5。
 
-**闸门** —— AA 是地板，而「高级」住在天花板那一侧，所以多数规则是双向的。`pnpm check` 从产出的令牌重新推导上面每一条断言：2254 行对比度，外加帘彩度、唯一焦点（两个焦点令牌都必须是锚色本人的色相，且是全屏最艳的块）、层次方向与令牌覆盖等不变量。它不采信生成器对自己的任何说法。
+**语法** —— 代码块才是程序员视线真正住的地方，所以高亮也在主题之内。宿主的高亮器走 shiki 的 css-variables 主题（九个 `--shiki-token-*` 槽），每套主题都把它写满：五个彩色槽（keyword / string / constant / function / parameter）保留程序员已有的色相直觉，但颜色本人从 742 色名册里点名真实传统色；锚色色相落进某个槽的窗时，**由锚色本人出演那个槽** —— 竹青主题的字符串就是竹青，群青主题的常量就是群青。注释与标点是墨不是彩：三级、次级墨对代码底重走一遍对比度门。九个槽对代码底全部 ≥ 4.5，五个彩色槽两两色相分离 ≥ 15°，都是断言。
 
-**精选** —— 49 个锚色里有 12 个带 `curated` 标记，是面板的默认视图。一个锚的亮暗两套都必须没有生成器降级项；活过质量闸的编辑种子不足时，再用 OKLab 最远点采样补齐，让 12 色在色彩空间里铺开，而不是挤成一堆。
+**闸门** —— AA 是地板，而「高级」住在天花板那一侧，所以多数规则是双向的。`pnpm check` 从产出的令牌重新推导上面每一条断言：3136 行对比度，外加帘彩度、唯一焦点（两个焦点令牌都必须是锚色本人的色相，且是全屏最艳的块）、语法槽色相分离、锚色露脸、层次方向与令牌覆盖等不变量。它不采信生成器对自己的任何说法。
+
+**六档** —— 49 个色名对不懂传统色的人不构成选项，所以每套主题还带一个「今天想怎么工作」的档。它是**算出来的**：判据只用锚色的 OKLab 明度、彩度、色相。
+
+```
+L < 0.50 ─┬─ C < 0.13 → 夜航（暗而静）
+          └─ C ≥ 0.13 → 爆肝（暗而烈）
+C < 0.115 ──────────→ 禅定（淡而静）
+暖(h<120 或 h≥315) ─┬─ L < 0.71 → 攻坚（暖而烈）
+                    └─ L ≥ 0.71 → 收工（暖而明）
+冷 ────────────────→ 心流（冷而浓）
+```
+
+面板按程序员的一天排：晨起**心流** → 午后**禅定** → 傍晚**攻坚** → 深夜**爆肝** → 凌晨**夜航** → 天亮**收工** → 又是心流。锚色分布是 心流 11 · 禅定 12 · 攻坚 8 · 爆肝 4 · 夜航 8 · 收工 6。
+
+早先的设计是「五个模式各挑一套主题当代表」，结果面板里只有五行有标签、其余空着，读起来像数据缺失。改成划分之后，词汇量仍是六个，但每套主题恰好属于一档 —— 标签没有空洞，还能反过来当筛选维度。六档是这批数据的自然粒度：再切第七刀，无论切哪儿都会切出 1–3 套的瘦档，那就不再是「类」而是「名」了。档名是编辑主张，但那是六条主张，不是 49 条；`pnpm check` 用七个哨兵（群青→心流、碧螺春绿→禅定、朱红→攻坚、覆盆子红→爆肝、满天星紫→夜航、黛紫→夜航、雄黄→收工）把四条切线钉死 —— 树被改坏时哨兵会掉出来，而档名随便换。
+
+**精选** —— 49 个锚色里有 12 个带 `curated` 标记，是面板的默认视图。一个锚的亮暗两套都必须没有生成器降级项。名单分三段推导：编辑种子 → **每档补一枚**（六档都必须在默认视图里露面，否则那个标签用户根本看不到，等于不存在）→ 用 OKLab 最远点采样补齐到 12。补位一律取「离已选集合最远」的那枚，所以覆盖六档没有牺牲「12 色在色彩空间里铺开」。
 
 四族锚色分布：素绢 12 · 熟宣 14 · 雪青 17 · 赭纸 6。同一模式内，最接近的两套主题在四个签名维度（底、品牌、气泡、焦点）上仍相差 ΔE 0.018，门槛是 0.015。
 
@@ -79,9 +96,9 @@ http://127.0.0.1:3080/#theme=qunqing-dark       # 群青·暗
 | 淡曙红 | `#EE2746` | 熟宣 | 殷红 | `danshuhong-light` | `danshuhong-dark` |
 | 绀青 | `#4F84FF` | 雪青 | 落霞 | `ganqing-light` | `ganqing-dark` |
 | 玫瑰紫 | `#BA2F7B` | 熟宣 | 高粱红 | `meiguizi-light` | `meiguizi-dark` |
-| 鹦鹉绿 ⭐ | `#5BAE23` | 素绢 | 猩红 | `yingwulv-light` | `yingwulv-dark` |
+| 鹦鹉绿 | `#5BAE23` | 素绢 | 猩红 | `yingwulv-light` | `yingwulv-dark` |
 | 菠萝红 | `#FC7930` | 熟宣 | 芙蓉红 | `boluohong-light` | `boluohong-dark` |
-| 覆盆子红 | `#AC1F18` | 熟宣 | 苋菜红 | `fupenzihong-light` | `fupenzihong-dark` |
+| 覆盆子红 ⭐ | `#AC1F18` | 熟宣 | 苋菜红 | `fupenzihong-light` | `fupenzihong-dark` |
 | 苍碧 | `#2A52BE` | 雪青 | 猩红 | `cangbi-light` | `cangbi-dark` |
 | 雄黄 ⭐ | `#FF9900` | 赭纸 | 绀青 | `xionghuang-light` | `xionghuang-dark` |
 | 琥珀黄 | `#FEBA07` | 赭纸 | 绀青 | `hupohuang-light` | `hupohuang-dark` |
@@ -93,30 +110,30 @@ http://127.0.0.1:3080/#theme=qunqing-dark       # 群青·暗
 | 韎韐 | `#A5441B` | 熟宣 | 蟹蝥红 | `meige-light` | `meige-dark` |
 | 綟绶 | `#6B8E23` | 素绢 | 暗紫苑红 | `lishou-light` | `lishou-dark` |
 | 紫藤萝 ⭐ | `#9B8AE8` | 雪青 | 淡罂粟红 | `zitengluo-light` | `zitengluo-dark` |
-| 汉绣绿 | `#2E7D32` | 素绢 | 绛紫 | `hanxiulv-light` | `hanxiulv-dark` |
+| 汉绣绿 ⭐ | `#2E7D32` | 素绢 | 绛紫 | `hanxiulv-light` | `hanxiulv-dark` |
 | 暗紫苑红 | `#82202B` | 熟宣 | 殷红 | `anziyuanhong-light` | `anziyuanhong-dark` |
-| 新绿 | `#6CC788` | 素绢 | 茜裙 | `xinlv-light` | `xinlv-dark` |
-| 菱锰红 | `#D276A3` | 熟宣 | 苋菜紫 | `lingmenghong-light` | `lingmenghong-dark` |
+| 新绿 ⭐ | `#6CC788` | 素绢 | 茜裙 | `xinlv-light` | `xinlv-dark` |
+| 菱锰红 ⭐ | `#D276A3` | 熟宣 | 苋菜紫 | `lingmenghong-light` | `lingmenghong-dark` |
 | 满天星紫 ⭐ | `#2E317C` | 雪青 | 栗紫 | `mantianxingzi-light` | `mantianxingzi-dark` |
 | 孔雀蓝 | `#0EB0C9` | 雪青 | 胭脂红 | `kongquelan-light` | `kongquelan-dark` |
 | 宝石蓝 ⭐ | `#2486B9` | 雪青 | 朱墙 | `baoshilan-light` | `baoshilan-dark` |
 | 美蝶绿 | `#12AA9C` | 素绢 | 枫叶红 | `meidielv-light` | `meidielv-dark` |
 | 扁豆紫 | `#A35C8F` | 雪青 | 扁豆紫·深 | `biandouzi-light` | `biandouzi-dark` |
-| 浅紫藤萝 | `#D1B3FF` | 雪青 | 杏子 | `qianzitengluo-light` | `qianzitengluo-dark` |
+| 浅紫藤萝 ⭐ | `#D1B3FF` | 雪青 | 杏子 | `qianzitengluo-light` | `qianzitengluo-dark` |
 | 青矾绿 | `#2C9678` | 素绢 | 汉绣红 | `qingfanlv-light` | `qingfanlv-dark` |
-| 碧螺春绿 ⭐ | `#867018` | 赭纸 | 苍碧 | `biluochunlv-light` | `biluochunlv-dark` |
-| 橄榄石绿 ⭐ | `#B2CF87` | 素绢 | 酢酱草红 | `ganlanshilv-light` | `ganlanshilv-dark` |
-| 粉团花红 ⭐ | `#EC9BAD` | 熟宣 | 锦葵红 | `fentuanhuahong-light` | `fentuanhuahong-dark` |
-| 荷叶绿 ⭐ | `#1A6840` | 素绢 | 栗紫 | `heyelv-light` | `heyelv-dark` |
+| 碧螺春绿 | `#867018` | 赭纸 | 苍碧 | `biluochunlv-light` | `biluochunlv-dark` |
+| 橄榄石绿 | `#B2CF87` | 素绢 | 酢酱草红 | `ganlanshilv-light` | `ganlanshilv-dark` |
+| 粉团花红 | `#EC9BAD` | 熟宣 | 锦葵红 | `fentuanhuahong-light` | `fentuanhuahong-dark` |
+| 荷叶绿 | `#1A6840` | 素绢 | 栗紫 | `heyelv-light` | `heyelv-dark` |
 | 石绿 | `#57C3C2` | 素绢 | 银红 | `shilv-light` | `shilv-dark` |
 | 柞叶棕 | `#692A1B` | 熟宣 | 栗棕 | `zhayezong-light` | `zhayezong-dark` |
-| 长春花蓝 ⭐ | `#7EC0EE` | 雪青 | 香叶红 | `changchunhualan-light` | `changchunhualan-dark` |
+| 长春花蓝 | `#7EC0EE` | 雪青 | 香叶红 | `changchunhualan-light` | `changchunhualan-dark` |
 | 山梗紫 | `#61649F` | 雪青 | 满江红 | `shangengzi-light` | `shangengzi-dark` |
 | 鷃蓝 | `#144A74` | 雪青 | 枣红 | `yanlan-light` | `yanlan-dark` |
 | 粉绿 | `#83CBAC` | 素绢 | 梅红 | `fenlv-light` | `fenlv-dark` |
 | 玉鈫蓝 | `#126E82` | 雪青 | 赭石 | `yuqinlan-light` | `yuqinlan-dark` |
 | 皮弁 | `#8B5D33` | 赭纸 | 石青 | `pibian-light` | `pibian-dark` |
-| 橄榄绿 | `#5E5314` | 赭纸 | 满天星紫 | `ganlanlv-light` | `ganlanlv-dark` |
+| 橄榄绿 ⭐ | `#5E5314` | 赭纸 | 满天星紫 | `ganlanlv-light` | `ganlanlv-dark` |
 | 黛紫 | `#5D3A6F` | 雪青 | 黛紫·深 | `daizi-light` | `daizi-dark` |
 
 名册是生成器吐出来的，不手工维护。
@@ -138,11 +155,11 @@ dsh --profile web
 - 必须带 `-w`，因为 profile 目录是 pnpm 工作区根。`add` 会以目录链接挂载并把包并入 `dsh.profile.bundles`；装载器直接读工作副本里的 `lib/client.js`，所以改动要靠 `pnpm build` 才可见。
 - 仓库带一份 `.npmrc`（`auto-install-peers=false`）。**缺了它 pnpm ≥ 9 装不上**：它会去拉那些标了 optional 的 `@deepseek-ai/*` peer，而其中一个依赖着从未发布到 npm 的包。
 - `pnpm build` 需要 tsdown；备胎是 `node scripts/build-esbuild.mjs`。
-- `lib/` 提不提交都行。主构建目前约 566 KB，sourcemap 约 822 KB；两种 builder 都受 610 KB / 910 KB 发布预算约束。
+- `lib/` 提不提交都行。主构建目前约 640 KB，sourcemap 约 934 KB（esbuild 备胎略大）；两种 builder 都受 680 KB / 1020 KB 发布预算约束。
 
 DSH 0.1 的客户端 boot manifest 不携带宿主插件配置，因此本包有意不公开无效的 `cordis.yml` 配置块。用户只通过选择面板或 `#theme=` 进入，选择保存在浏览器里。
 
-**闸门** —— `pnpm check`（2254 行对比度 + 不变量）与 `pnpm test`（50 个测试，含对 `lib/client.js` 的装载锁）。两者都不需要起 harness。
+**闸门** —— `pnpm check`（3136 行对比度 + 不变量）与 `pnpm test`（60 个测试，含对 `lib/client.js` 的装载锁）。两者都不需要起 harness。
 
 **重新生成主题** —— `pnpm generate` 要从[中国传统色](https://github.com/nevertoday/zhongguo-traditional-colors)仓库读色卡数据与 OKLab 色彩数学，用环境变量指过去：
 

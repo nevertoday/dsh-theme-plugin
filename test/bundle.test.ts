@@ -153,7 +153,7 @@ test('产物的闭包工厂 id 等于包名（harness 装载后要校验这一�
   assert.deepEqual(world.plugin.inject, ['theme', 'slots', 'locale'])
 })
 
-test('注册全部主题，每套只传 ThemeDefinition 的三个字段 × 95 个令牌', { skip: !built && 'lib/client.js 未构建' }, () => {
+test('注册全部主题，每套只传 ThemeDefinition 的三个字段 × 104 个令牌', { skip: !built && 'lib/client.js 未构建' }, () => {
   const world = loadBundle()
   world.plugin.apply!(world.ctx)
 
@@ -170,14 +170,34 @@ test('注册全部主题，每套只传 ThemeDefinition 的三个字段 × 95 �
   }
   const SHADOWS = ['--dsw-shadow-lv1', '--dsw-shadow-lv1-blur', '--dsw-shadow-lv2', '--dsw-shadow-lv3']
   for (const t of world.registered) {
-    // 89 个词表 + 4 个阴影 + 2 个思考块渐变（后两族都不带 alias-/specific- 前缀，见 src/repairs.ts）
-    assert.equal(Object.keys(t.tokens).length, 95, `${t.id} 的令牌数不是 95`)
-    assert.ok(Object.keys(t.tokens).every(k => k.startsWith('--dsw-')), `${t.id} 有非 --dsw-* 令牌`)
+    // 89 个 --dsw 词表 + 9 个 --shiki 语法槽 + 4 个阴影 + 2 个思考块渐变
+    // （阴影与渐变不带 alias-/specific- 前缀，见 src/repairs.ts）
+    assert.equal(Object.keys(t.tokens).length, 104, `${t.id} 的令牌数不是 104`)
+    assert.ok(
+      Object.keys(t.tokens).every(k => k.startsWith('--dsw-') || k.startsWith('--shiki-token-')),
+      `${t.id} 有词表外前缀的令牌`,
+    )
     for (const name of SHADOWS) {
       const value = t.tokens[name]
       assert.ok(value !== undefined, `${t.id} 缺 ${name}`)
       assert.ok(!value.includes('rgba(0, 0, 0'), `${t.id} 的 ${name} 还是中性黑 —— 暖纸上会读成脏灰`)
     }
+  }
+  world.teardown()
+})
+
+test('语法层（--shiki-token-*）九槽齐全，link 与 constant 同值', { skip: !built && 'lib/client.js 未构建' }, () => {
+  const world = loadBundle()
+  world.plugin.apply!(world.ctx)
+  const SHIKI = ['constant', 'string', 'comment', 'keyword', 'parameter', 'function',
+    'string-expression', 'punctuation', 'link'].map(k => `--shiki-token-${k}`)
+  for (const t of world.registered) {
+    for (const name of SHIKI) {
+      assert.match(t.tokens[name] ?? '', /^rgb\(/, `${t.id} 缺语法槽 ${name}`)
+    }
+    // link 在代码块里极罕见且宿主默认与 constant 几乎同色 —— 生成器按同值下发。
+    assert.equal(t.tokens['--shiki-token-link'], t.tokens['--shiki-token-constant'],
+      `${t.id} 的 link 与 constant 不同值`)
   }
   world.teardown()
 })

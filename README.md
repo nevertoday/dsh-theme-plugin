@@ -1,6 +1,6 @@
 # dsh-theme-plugin
 
-Chinese traditional colors as a **DeepSeek Harness theme pack**. 49 anchor colors × light/dark = **98 themes**, each writing the full `--dsw-*` token vocabulary (89 tokens) and clearing WCAG AA on all 2254 contrast assertions. The picker opens on a curated shortlist of twelve.
+Chinese traditional colors as a **DeepSeek Harness theme pack**. 49 anchor colors × light/dark = **98 themes**, each writing the full token vocabulary (98 tokens: 89 `--dsw-*` plus 9 `--shiki-token-*` syntax slots) and clearing WCAG AA on all 3136 contrast assertions. The picker opens on a curated shortlist of twelve.
 
 📖 [中文文档](./README.zh-CN.md)
 
@@ -54,9 +54,26 @@ Chinese painting does not start with color. It prepares the paper, washes over i
 
 **Ink** — text, rules and secondary surfaces run down one ink ramp, the paper color pushed darker. Every `nb-XX` step of the base stylesheet becomes a tinted neutral of the same lightness, and hover offsets, elevation steps, borders and interaction alphas are copied verbatim: hue changes, relations do not. The ramp's two **endpoints** are the deliberate exception — those are set here rather than inherited, because the base stylesheet's are the extremes. Light and dark now share one shape: body 16.7–17.5, secondary 7.4–8.0, tertiary 4.6–5.5.
 
-**Gates** — AA is a floor, and elegance lives at the ceiling, so most rules are two-sided. `pnpm check` re-derives every claim above from the emitted tokens: 2254 contrast rows, plus invariants for veil chroma, the single focus (both focus tokens must be the anchor's own hue and the most saturated patches on screen), elevation direction, and full token coverage. It trusts nothing the generator says about itself.
+**Syntax** — the code block is where a programmer's eyes actually live, so the highlighter is themed too. The harness highlights through shiki's css-variables theme (nine `--shiki-token-*` slots), and every theme fills them: the five chromatic slots (keyword / string / constant / function / parameter) keep the hue conventions programmers already know, but each color is a real named color picked from the 742-color roster; when the anchor's hue falls within a slot's window, **the anchor itself plays that slot** — in 竹青 the strings are 竹青, in 群青 the constants are 群青. Comments and punctuation are ink, not color: the tertiary and secondary ink steps re-gated against the code-block ground. All nine slots clear 4.5 on that ground, and the five chromatic slots are asserted pairwise ≥ 15° apart in hue.
 
-**Curation** — twelve of the 49 anchors carry a `curated` flag and are the picker's default view. Both light and dark variants must contain no generator degradation; surviving editorial seeds are topped up by farthest-point sampling in OKLab so the shortlist spreads across the space instead of clustering.
+**Gates** — AA is a floor, and elegance lives at the ceiling, so most rules are two-sided. `pnpm check` re-derives every claim above from the emitted tokens: 3136 contrast rows, plus invariants for veil chroma, the single focus (both focus tokens must be the anchor's own hue and the most saturated patches on screen), syntax-slot hue separation, the anchor-on-stage rule, elevation direction, and full token coverage. It trusts nothing the generator says about itself.
+
+**Six tiers** — 49 color names are not a usable set of options for someone who does not already know traditional colors, so every theme also carries a "how do I want to work today" tier. It is *derived*: the only inputs are the anchor's OKLab lightness, chroma and hue.
+
+```
+L < 0.50 ─┬─ C < 0.13 → 夜航 Night   (dark and quiet)
+          └─ C ≥ 0.13 → 爆肝 Crunch  (dark and fierce)
+C < 0.115 ──────────→ 禅定 Zen       (pale and quiet)
+warm (h<120 or h≥315) ─┬─ L < 0.71 → 攻坚 Push  (warm and fierce)
+                       └─ L ≥ 0.71 → 收工 Ship  (warm and bright)
+cool ───────────────→ 心流 Flow      (cool and saturated)
+```
+
+The picker orders them as a programmer's day: Flow at dawn → Zen in the afternoon → Push in the evening → Crunch at midnight → Night in the small hours → Ship at daybreak → Flow again. Anchors land 心流 11 · 禅定 12 · 攻坚 8 · 爆肝 4 · 夜航 8 · 收工 6.
+
+An earlier design gave each of five moods one representative theme, which left most rows in the picker with an empty tag — it read as missing data rather than restraint. As a partition the vocabulary stays at six words while every theme belongs to exactly one tier, so the tag has no holes and doubles as a filter. Six is this data's natural granularity: a seventh cut anywhere carves out a 1–3 theme sliver, at which point the label names a few themes rather than classifying them. The tier *names* are an editorial claim, but that is six claims rather than 49; `pnpm check` pins all four cuts with seven sentinels (群青→Flow, 碧螺春绿→Zen, 朱红→Push, 覆盆子红→Crunch, 满天星紫→Night, 黛紫→Night, 雄黄→Ship), so breaking the tree trips the gate while renaming a tier does not.
+
+**Curation** — twelve of the 49 anchors carry a `curated` flag and are the picker's default view. Both light and dark variants must contain no generator degradation. The list is derived in three passes: editorial seeds → **one per tier** (every tier must appear in the default view, or its tag is one the user never sees) → farthest-point sampling in OKLab up to twelve. Every top-up picks the anchor farthest from what is already chosen, so covering all six tiers costs nothing in spread.
 
 Anchors per paper family: 素绢 12 · 熟宣 14 · 雪青 17 · 赭纸 6. Within one mode, the two closest themes still differ by ΔE 0.018 across the four signature dimensions (ground, brand, bubble, focus) against a 0.015 floor.
 
@@ -79,9 +96,9 @@ Anchors per paper family: 素绢 12 · 熟宣 14 · 雪青 17 · 赭纸 6. Withi
 | Dan Shu Hong | 淡曙红 | `#EE2746` | 熟宣 | 殷红 | `danshuhong-light` / `danshuhong-dark` |
 | Gan Qing | 绀青 | `#4F84FF` | 雪青 | 落霞 | `ganqing-light` / `ganqing-dark` |
 | Mei Gui Zi | 玫瑰紫 | `#BA2F7B` | 熟宣 | 高粱红 | `meiguizi-light` / `meiguizi-dark` |
-| Ying Wu Lü | 鹦鹉绿 ⭐ | `#5BAE23` | 素绢 | 猩红 | `yingwulv-light` / `yingwulv-dark` |
+| Ying Wu Lü | 鹦鹉绿 | `#5BAE23` | 素绢 | 猩红 | `yingwulv-light` / `yingwulv-dark` |
 | Bo Luo Hong | 菠萝红 | `#FC7930` | 熟宣 | 芙蓉红 | `boluohong-light` / `boluohong-dark` |
-| Fu Pen Zi Hong | 覆盆子红 | `#AC1F18` | 熟宣 | 苋菜红 | `fupenzihong-light` / `fupenzihong-dark` |
+| Fu Pen Zi Hong | 覆盆子红 ⭐ | `#AC1F18` | 熟宣 | 苋菜红 | `fupenzihong-light` / `fupenzihong-dark` |
 | Cang Bi | 苍碧 | `#2A52BE` | 雪青 | 猩红 | `cangbi-light` / `cangbi-dark` |
 | Xiong Huang | 雄黄 ⭐ | `#FF9900` | 赭纸 | 绀青 | `xionghuang-light` / `xionghuang-dark` |
 | Hu Po Huang | 琥珀黄 | `#FEBA07` | 赭纸 | 绀青 | `hupohuang-light` / `hupohuang-dark` |
@@ -93,30 +110,30 @@ Anchors per paper family: 素绢 12 · 熟宣 14 · 雪青 17 · 赭纸 6. Withi
 | Mei Ge | 韎韐 | `#A5441B` | 熟宣 | 蟹蝥红 | `meige-light` / `meige-dark` |
 | Li Shou | 綟绶 | `#6B8E23` | 素绢 | 暗紫苑红 | `lishou-light` / `lishou-dark` |
 | Zi Teng Luo | 紫藤萝 ⭐ | `#9B8AE8` | 雪青 | 淡罂粟红 | `zitengluo-light` / `zitengluo-dark` |
-| Han Xiu Lü | 汉绣绿 | `#2E7D32` | 素绢 | 绛紫 | `hanxiulv-light` / `hanxiulv-dark` |
+| Han Xiu Lü | 汉绣绿 ⭐ | `#2E7D32` | 素绢 | 绛紫 | `hanxiulv-light` / `hanxiulv-dark` |
 | An Zi Yuan Hong | 暗紫苑红 | `#82202B` | 熟宣 | 殷红 | `anziyuanhong-light` / `anziyuanhong-dark` |
-| Xin Lü | 新绿 | `#6CC788` | 素绢 | 茜裙 | `xinlv-light` / `xinlv-dark` |
-| Ling Meng Hong | 菱锰红 | `#D276A3` | 熟宣 | 苋菜紫 | `lingmenghong-light` / `lingmenghong-dark` |
+| Xin Lü | 新绿 ⭐ | `#6CC788` | 素绢 | 茜裙 | `xinlv-light` / `xinlv-dark` |
+| Ling Meng Hong | 菱锰红 ⭐ | `#D276A3` | 熟宣 | 苋菜紫 | `lingmenghong-light` / `lingmenghong-dark` |
 | Man Tian Xing Zi | 满天星紫 ⭐ | `#2E317C` | 雪青 | 栗紫 | `mantianxingzi-light` / `mantianxingzi-dark` |
 | Kong Que Lan | 孔雀蓝 | `#0EB0C9` | 雪青 | 胭脂红 | `kongquelan-light` / `kongquelan-dark` |
 | Bao Shi Lan | 宝石蓝 ⭐ | `#2486B9` | 雪青 | 朱墙 | `baoshilan-light` / `baoshilan-dark` |
 | Mei Die Lü | 美蝶绿 | `#12AA9C` | 素绢 | 枫叶红 | `meidielv-light` / `meidielv-dark` |
 | Bian Dou Zi | 扁豆紫 | `#A35C8F` | 雪青 | 扁豆紫·深 | `biandouzi-light` / `biandouzi-dark` |
-| Qian Zi Teng Luo | 浅紫藤萝 | `#D1B3FF` | 雪青 | 杏子 | `qianzitengluo-light` / `qianzitengluo-dark` |
+| Qian Zi Teng Luo | 浅紫藤萝 ⭐ | `#D1B3FF` | 雪青 | 杏子 | `qianzitengluo-light` / `qianzitengluo-dark` |
 | Qing Fan Lü | 青矾绿 | `#2C9678` | 素绢 | 汉绣红 | `qingfanlv-light` / `qingfanlv-dark` |
-| Bi Luo Chun Lü | 碧螺春绿 ⭐ | `#867018` | 赭纸 | 苍碧 | `biluochunlv-light` / `biluochunlv-dark` |
-| Gan Lan Shi Lü | 橄榄石绿 ⭐ | `#B2CF87` | 素绢 | 酢酱草红 | `ganlanshilv-light` / `ganlanshilv-dark` |
-| Fen Tuan Hua Hong | 粉团花红 ⭐ | `#EC9BAD` | 熟宣 | 锦葵红 | `fentuanhuahong-light` / `fentuanhuahong-dark` |
-| He Ye Lü | 荷叶绿 ⭐ | `#1A6840` | 素绢 | 栗紫 | `heyelv-light` / `heyelv-dark` |
+| Bi Luo Chun Lü | 碧螺春绿 | `#867018` | 赭纸 | 苍碧 | `biluochunlv-light` / `biluochunlv-dark` |
+| Gan Lan Shi Lü | 橄榄石绿 | `#B2CF87` | 素绢 | 酢酱草红 | `ganlanshilv-light` / `ganlanshilv-dark` |
+| Fen Tuan Hua Hong | 粉团花红 | `#EC9BAD` | 熟宣 | 锦葵红 | `fentuanhuahong-light` / `fentuanhuahong-dark` |
+| He Ye Lü | 荷叶绿 | `#1A6840` | 素绢 | 栗紫 | `heyelv-light` / `heyelv-dark` |
 | Shi Lü | 石绿 | `#57C3C2` | 素绢 | 银红 | `shilv-light` / `shilv-dark` |
 | Zha Ye Zong | 柞叶棕 | `#692A1B` | 熟宣 | 栗棕 | `zhayezong-light` / `zhayezong-dark` |
-| Chang Chun Hua Lan | 长春花蓝 ⭐ | `#7EC0EE` | 雪青 | 香叶红 | `changchunhualan-light` / `changchunhualan-dark` |
+| Chang Chun Hua Lan | 长春花蓝 | `#7EC0EE` | 雪青 | 香叶红 | `changchunhualan-light` / `changchunhualan-dark` |
 | Shan Geng Zi | 山梗紫 | `#61649F` | 雪青 | 满江红 | `shangengzi-light` / `shangengzi-dark` |
 | Yan Lan | 鷃蓝 | `#144A74` | 雪青 | 枣红 | `yanlan-light` / `yanlan-dark` |
 | Fen Lü | 粉绿 | `#83CBAC` | 素绢 | 梅红 | `fenlv-light` / `fenlv-dark` |
 | Yu Qin Lan | 玉鈫蓝 | `#126E82` | 雪青 | 赭石 | `yuqinlan-light` / `yuqinlan-dark` |
 | Pi Bian | 皮弁 | `#8B5D33` | 赭纸 | 石青 | `pibian-light` / `pibian-dark` |
-| Gan Lan Lü | 橄榄绿 | `#5E5314` | 赭纸 | 满天星紫 | `ganlanlv-light` / `ganlanlv-dark` |
+| Gan Lan Lü | 橄榄绿 ⭐ | `#5E5314` | 赭纸 | 满天星紫 | `ganlanlv-light` / `ganlanlv-dark` |
 | Dai Zi | 黛紫 | `#5D3A6F` | 雪青 | 黛紫·深 | `daizi-light` / `daizi-dark` |
 
 The roster is whatever the generator emits; it is not maintained by hand.
@@ -138,11 +155,11 @@ dsh --profile web
 - `-w` is required because the profile directory is a pnpm workspace root. `add` links the directory and appends the package to `dsh.profile.bundles`; the loader then reads `lib/client.js` from your working copy, so `pnpm build` is what makes changes visible.
 - The repo ships an `.npmrc` with `auto-install-peers=false`. **Without it pnpm ≥ 9 cannot install**: it tries to fetch the optional `@deepseek-ai/*` peers, and one of them depends on a package that was never published.
 - `pnpm build` needs `tsdown`; `node scripts/build-esbuild.mjs` is the fallback.
-- Committing `lib/` is optional. The primary build is currently about 566 KB plus an 822 KB sourcemap; both builders are held below 610 KB / 910 KB release budgets.
+- Committing `lib/` is optional. The primary build is currently about 640 KB plus a 934 KB sourcemap (the esbuild fallback is a little larger); both builders are held below 680 KB / 1020 KB release budgets.
 
 DSH 0.1's client boot manifest does not carry host plugin config, so this package intentionally exposes no `cordis.yml` config block. User choices enter through the picker or `#theme=` and persist in the browser.
 
-**Gates** — `pnpm check` (2254 contrast rows plus invariants) and `pnpm test` (50 tests, including a load-time lock on `lib/client.js`). Neither needs a running harness.
+**Gates** — `pnpm check` (3136 contrast rows plus invariants) and `pnpm test` (60 tests, including a load-time lock on `lib/client.js`). Neither needs a running harness.
 
 **Regenerating the themes** — `pnpm generate` reads the color data and OKLab math from the [中国传统色](https://github.com/nevertoday/zhongguo-traditional-colors) repository. Point it there:
 

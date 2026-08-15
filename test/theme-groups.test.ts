@@ -3,10 +3,10 @@ import assert from 'node:assert/strict'
 import { buildThemeGroups } from '../src/client/theme-groups.ts'
 
 const rows = [
-  { id: 'a-light', name: '竹青', nameEn: 'Zhu Qing', pinyin: 'zhuqing', sealName: '茜红', colorScheme: 'light', family: '素绢', familyNote: '清透', curated: true },
-  { id: 'b-light', name: '朱红', nameEn: 'Zhu Hong', pinyin: 'zhuhong', sealName: '赭石', colorScheme: 'light', family: '熟宣', familyNote: '温润', curated: true },
-  { id: 'c-light', name: '群青', nameEn: 'Qun Qing', pinyin: 'qunqing', sealName: '枫叶红', colorScheme: 'light', family: '雪青', familyNote: '冷静', curated: false },
-  { id: 'a-dark', name: '竹青', nameEn: 'Zhu Qing', pinyin: 'zhuqing', sealName: '茜红', colorScheme: 'dark', family: '素绢', familyNote: '清透', curated: true },
+  { id: 'a-light', name: '竹青', nameEn: 'Zhu Qing', pinyin: 'zhuqing', sealName: '茜红', colorScheme: 'light', family: '素绢', familyNote: '清透', curated: true, tier: '心流' },
+  { id: 'b-light', name: '朱红', nameEn: 'Zhu Hong', pinyin: 'zhuhong', sealName: '赭石', colorScheme: 'light', family: '熟宣', familyNote: '温润', curated: true, tier: '攻坚' },
+  { id: 'c-light', name: '群青', nameEn: 'Qun Qing', pinyin: 'qunqing', sealName: '枫叶红', colorScheme: 'light', family: '雪青', familyNote: '冷静', curated: false, tier: '心流' },
+  { id: 'a-dark', name: '竹青', nameEn: 'Zhu Qing', pinyin: 'zhuqing', sealName: '茜红', colorScheme: 'dark', family: '素绢', familyNote: '清透', curated: true, tier: '心流' },
 ] as const
 
 const copy: Record<string, string> = {
@@ -42,4 +42,23 @@ test('英文拼音副标也可被搜索', () => {
   const groups = buildThemeGroups(rows, 'light', 'Qun Qing', false, t)
 
   assert.deepEqual(groups.flatMap(group => group.items.map(row => row.id)), ['c-light'])
+})
+
+test('按档筛选会穿透「只看精选」的折叠 —— 否则点一下像没生效', () => {
+  // c-light 属于心流但不在精选里；筛心流时它必须出现。
+  const groups = buildThemeGroups(rows, 'light', '', false, t, '心流')
+
+  assert.deepEqual(groups.flatMap(group => group.items.map(row => row.id)), ['a-light', 'c-light'])
+})
+
+test('档与搜索是「与」的关系，不是互相顶掉', () => {
+  const groups = buildThemeGroups(rows, 'light', 'zhu', false, t, '攻坚')
+
+  assert.deepEqual(groups.flatMap(group => group.items.map(row => row.id)), ['b-light'])
+})
+
+test('搜索档名也能命中', () => {
+  const groups = buildThemeGroups(rows, 'light', '攻坚', false, t)
+
+  assert.deepEqual(groups.flatMap(group => group.items.map(row => row.id)), ['b-light'])
 })

@@ -4,7 +4,17 @@
 export type ThemeFamily = '素绢' | '熟宣' | '雪青' | '赭纸'
 
 /** Named fallbacks the generator had to apply for a theme (empty when none). */
-export type DegradedFlag = 'bubbleChroma' | 'seal'
+export type DegradedFlag = 'bubbleChroma' | 'seal' | 'syntax'
+
+/** The five chromatic syntax slots of the host's shiki css-variables theme. */
+export type SyntaxSlot = 'keyword' | 'string' | 'constant' | 'function' | 'parameter'
+
+/**
+ * 六档: the working-mood tier an anchor falls into, derived from its OKLab
+ * lightness / chroma / hue by a fixed decision tree (see the generator's §6c).
+ * Display order follows a programmer's day: 心流 → 禅定 → 攻坚 → 爆肝 → 夜航 → 收工.
+ */
+export type ThemeTier = '心流' | '禅定' | '攻坚' | '爆肝' | '夜航' | '收工'
 
 export interface GeneratedTheme {
   /** `<pinyin>-light` | `<pinyin>-dark`; the id passed to ctx.theme.register. */
@@ -48,11 +58,24 @@ export interface GeneratedTheme {
   errName: string
   sucName: string
   wrnName: string
+  /**
+   * 语法 (layer E): roster names picked for the five chromatic `--shiki-token-*`
+   * slots (provenance only). `null` for a slot the generator had to synthesize.
+   */
+  synNames: Record<SyntaxSlot, string | null>
+  /** The slot the anchor itself plays (锚色露脸), or null when its hue fits none. */
+  synAnchorSlot: SyntaxSlot | null
+  /** Which of the six working-mood tiers this anchor falls into (derived, never hand-set). */
+  tier: ThemeTier
   /** OKLab ΔL the anchor identity was shifted by to satisfy contrast. */
   identityShiftDL: number
   /** Fallbacks applied to this theme; empty array when fully by-the-book. */
   degraded: DegradedFlag[]
-  /** The 89 `--dsw-alias-*` / `--dsw-specific-*` CSS variables (full vocabulary). */
+  /**
+   * The full 98-token vocabulary: 89 `--dsw-alias-*` / `--dsw-specific-*`
+   * variables plus the 9 `--shiki-token-*` syntax slots the host's shiki
+   * css-variables theme consumes.
+   */
   tokens: Record<string, string>
 }
 export declare const THEMES: GeneratedTheme[]

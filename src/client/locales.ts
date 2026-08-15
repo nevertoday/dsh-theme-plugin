@@ -48,6 +48,16 @@ export const zh = {
   relSame: '同名色系',
   relSelf: '自身深色',
   remembered: '选择保存在本浏览器并随刷新恢复；「内置主题」把页面交还给应用偏好。',
+  /* 六档。name 是档名，basis 是判据（事实，由锚色算出），hour 是时段（叙事，
+   * 把六个档串成程序员的一天，读一遍就记得住）。 */
+  tierAll: '全部',
+  tierLabel: '按状态筛选',
+  tierFlow: '心流', tierFlowBasis: '冷而浓', tierFlowHour: '晨起',
+  tierZen: '禅定', tierZenBasis: '淡而静', tierZenHour: '午后',
+  tierPush: '攻坚', tierPushBasis: '暖而烈', tierPushHour: '傍晚',
+  tierCrunch: '爆肝', tierCrunchBasis: '暗而烈', tierCrunchHour: '深夜',
+  tierNight: '夜航', tierNightBasis: '暗而静', tierNightHour: '凌晨',
+  tierShip: '收工', tierShipBasis: '暖而明', tierShipHour: '天亮',
 } as const
 
 export const en: Record<keyof typeof zh, string> = {
@@ -88,6 +98,14 @@ export const en: Record<keyof typeof zh, string> = {
   relSame: 'same family',
   relSelf: 'own deep shade',
   remembered: 'Selections persist in this browser and return after reload. Use built-in returns control to the app.',
+  tierAll: 'All',
+  tierLabel: 'Filter by working mood',
+  tierFlow: 'Flow', tierFlowBasis: 'cool and saturated', tierFlowHour: 'morning',
+  tierZen: 'Zen', tierZenBasis: 'pale and quiet', tierZenHour: 'afternoon',
+  tierPush: 'Push', tierPushBasis: 'warm and fierce', tierPushHour: 'evening',
+  tierCrunch: 'Crunch', tierCrunchBasis: 'dark and fierce', tierCrunchHour: 'late night',
+  tierNight: 'Night', tierNightBasis: 'dark and quiet', tierNightHour: 'small hours',
+  tierShip: 'Ship', tierShipBasis: 'warm and bright', tierShipHour: 'daybreak',
 }
 
 export type ThemeSectionKey = keyof typeof zh

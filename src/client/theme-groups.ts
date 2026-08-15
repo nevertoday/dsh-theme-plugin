@@ -8,6 +8,8 @@ export interface ThemeGroupRow {
   colorScheme: 'light' | 'dark'
   family: string
   curated: boolean
+  /** 六档之一（生成器算出）。筛选用。 */
+  tier: string
 }
 
 export interface ThemeGroup<T extends ThemeGroupRow> {
@@ -36,6 +38,8 @@ export function buildThemeGroups<T extends ThemeGroupRow>(
   query: string,
   showAll: boolean,
   t: (key: string) => string,
+  /** 六档筛选；undefined = 不筛。选了某一档就等于「浏览全部里的这一档」。 */
+  tier?: string,
 ): ThemeGroup<T>[] {
   const q = query.trim().toLowerCase()
   const hit = (row: T): boolean => q === ''
@@ -44,9 +48,13 @@ export function buildThemeGroups<T extends ThemeGroupRow>(
     || row.pinyin.toLowerCase().includes(q)
     || row.sealName.toLowerCase().includes(q)
     || row.id.toLowerCase().includes(q)
-  const visible = rows.filter(row => row.colorScheme === scheme && hit(row))
+    || row.tier.includes(q)
+  const visible = rows.filter(row => row.colorScheme === scheme && hit(row)
+    && (tier === undefined || row.tier === tier))
 
-  if (q === '' && !showAll) {
+  // 选了某一档就是在做查找而不是浏览，和搜索一样穿透「只看精选」的折叠 ——
+  // 否则点「爆肝」只会剩下精选里恰好属于该档的一两套，看起来像没生效。
+  if (q === '' && !showAll && tier === undefined) {
     const picks = visible.filter(row => row.curated)
     if (picks.length > 0) {
       return [{ key: '__curated', family: t('curated'), note: t('curatedNote'), items: picks }]
