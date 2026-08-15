@@ -199,6 +199,9 @@ for (const t of themes) {
   if (light.length < 8 || light.length > 16) fail(`精选锚色数 ${light.length} 不在 8–16 —— 太少不成库，太多就不是编辑`);
   const fams = new Set(light.map(t => t.family));
   if (fams.size !== 4) fail(`精选只覆盖 ${fams.size} 个纸家族（应为 4）：${[...fams].join(' ')}`);
+  for (const t of curated) {
+    if (t.degraded.length > 0) fail(`${t.id}: 精选主题含降级项 ${t.degraded.join(' / ')}`);
+  }
 }
 
 /* ── 不变量 3：层次方向（SPEC §2.1 #2）──

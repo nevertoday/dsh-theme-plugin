@@ -35,8 +35,17 @@ import { pinyin } from 'pinyin-pro';
 
 /* ── 1. 加载 window 模块 ──
  * harmonies.js / color-core.js 是浏览器 IIFE，只写 window.*、不碰 DOM，
- * 所以裸 window = {} 即可；间接 eval `(0, eval)` 让脚本在全局作用域求值。 */
+ * 所以裸 window = {} 即可；间接 eval `(0, eval)` 让脚本在全局作用域求值。
+ *
+ * 两份脚本会以生成器进程权限执行，因此只认审阅过的内容指纹。对应上游 revision：
+ * zhongguo-traditional-colors@3f5fc62ada73f1933bc3dbfa682e102adeffada9。
+ * 上游更新时先审 diff、更新下面的 SHA-256，再重生成并跑完整闸门。 */
 globalThis.window = {};
+
+const SOURCE_SHA256 = {
+  'assets/data/harmonies.js': 'de6a94fcec80bd99bedd64cbff0d099e313365942c082498b3c94c5b7bf9950f',
+  'assets/js/color-core.js': '8a31f3d8d6445dfb5a4477e7db5ba2ae1d36fc3b51a5818abada03c0446cc5d2',
+};
 
 /* 色库位置不再靠目录嵌套猜测（原先写死 `../..`，只有当本仓库正好躺在色库里时才成立；
  * 一旦独立 clone 出来就会去找一个不存在的 assets/，且报错完全不解释原因）。
@@ -58,7 +67,20 @@ if (!repoRoot) {
   );
 }
 
-const load = p => (0, eval)(readFileSync(repoRoot + p, 'utf8'));
+const load = p => {
+  const source = readFileSync(repoRoot + p, 'utf8');
+  const actual = createHash('sha256').update(source).digest('hex');
+  const expected = SOURCE_SHA256[p];
+  if (actual !== expected) {
+    throw new Error(
+      `${p} 的 SHA-256 与已审阅输入不匹配：\n` +
+      `  expected ${expected}\n` +
+      `  actual   ${actual}\n` +
+      '请先审阅上游变更，再显式更新 scripts/generate-themes.mjs 中的指纹。',
+    );
+  }
+  return (0, eval)(source);
+};
 load('assets/data/harmonies.js');
 load('assets/js/color-core.js');
 
@@ -1123,7 +1145,9 @@ for (let i = 0; i < kept.length; i++) for (let j = i + 1; j < kept.length; j++) 
 
 /* ── 11.5 精选（SPEC 新增）──
  * 98 个选择等于没有选择：一整面色块读起来像取色器，不像主题库，而「优雅是编辑
- * 的结果」。所以标出一份 12 锚 / 24 套的精选，其余折叠。
+ * 的结果」。所以标出一份 12 锚 / 24 套的精选，其余折叠。精选比完整名册多一道
+ * 质量闸：同一锚的亮暗两套都不得含 degraded；完整名册可以诚实保留这些兜底结果，
+ * 但编辑推荐不能把「放弃设计意图」当代表作。
  *
  * 名单不手工维护，两段推导，全程确定性：
  *   ① CURATED 里活到最终名册的（黛蓝 C 不够、天青/胭脂红/茜色 因近同被剔，
@@ -1132,8 +1156,23 @@ for (let i = 0; i < kept.length; i++) for (let j = i + 1; j < kept.length; j++) 
  *      最小距离最大」的那个，并列时按 rec.name 升序。补出来的是色彩空间里铺得最
  *      开的一组，不是最像的一组。 */
 const CURATED_TARGET = 12;
+const pairByAnchor = new Map();
+for (const theme of themes) {
+  const pair = pairByAnchor.get(theme.anchorHex) ?? [];
+  pair.push(theme);
+  pairByAnchor.set(theme.anchorHex, pair);
+}
+const curatedEligible = new Set(
+  [...pairByAnchor]
+    .filter(([, pair]) => pair.length === 2 && pair.every(theme => theme.degraded.length === 0))
+    .map(([hex]) => hex),
+);
 const anchorOf = new Map();          // anchorHex → { L, a, b, name }
-for (const a of kept) anchorOf.set(a.rec.hex, { L: a.L, a: a.a, b: a.b, name: a.rec.name });
+for (const a of kept) {
+  if (curatedEligible.has(a.rec.hex)) {
+    anchorOf.set(a.rec.hex, { L: a.L, a: a.a, b: a.b, name: a.rec.name });
+  }
+}
 
 const curatedHex = [];
 for (const n of CURATED) {

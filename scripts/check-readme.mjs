@@ -10,10 +10,12 @@
  *
  * 用法：node scripts/check-readme.mjs（已并入 pnpm check）
  */
-import { readFileSync, statSync } from 'node:fs';
+import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 
-const A = JSON.parse(readFileSync('preview/themes.json', 'utf8'));
+/* Read the shipped source of truth. preview/themes.json is a local, ignored
+ * generator artifact and therefore cannot be required by a clean checkout. */
+const { THEMES: A } = await import(new URL('../src/themes.generated.js', import.meta.url));
 const en = readFileSync('README.md', 'utf8');
 const zh = readFileSync('README.zh-CN.md', 'utf8');
 const both = en + '\n' + zh;
@@ -48,9 +50,10 @@ const rows = (chk.match(/(\d+)\/(\d+) 行通过/) || [])[2];
 check('对比度行数', '2254', rows, rows === '2254' && both.includes('2254'));
 // 测试数静态点算，不 spawn `pnpm test`：本脚本已并入 pnpm check，而 prepublishOnly
 // 里 test 与 check 各跑一次 —— 再套一层就是把测试跑三遍。
-const testCount = ['config', 'repairs', 'bundle', 'selector']
-  .reduce((n, f) => n + (readFileSync(`test/${f}.test.ts`, 'utf8').match(/^test\(/gm) || []).length, 0);
-check('测试数', '46', testCount, testCount === 46 && both.includes(`${testCount} 个测试`) && both.includes(`${testCount} tests`));
+const testFiles = readdirSync('test').filter(name => name.endsWith('.test.ts'));
+const testCount = testFiles.reduce((n, name) =>
+  n + (readFileSync(`test/${name}`, 'utf8').match(/^test\(/gm) || []).length, 0);
+check('测试数', '50', testCount, testCount === 50 && both.includes(`${testCount} 个测试`) && both.includes(`${testCount} tests`));
 
 // 四族纸彩度（README 顺序：素绢 熟宣 雪青 赭纸）
 const fam = {};
@@ -82,21 +85,34 @@ check('三级墨阶', '4.6–5.5', `${t1.toFixed(2)}–${t2.toFixed(2)}`, t1 >= 
 // 家族分布
 const dist = {}; for (const t of light) dist[t.family] = (dist[t.family] || 0) + 1;
 const distStr = `素绢 ${dist['素绢']} · 熟宣 ${dist['熟宣']} · 雪青 ${dist['雪青']} · 赭纸 ${dist['赭纸']}`;
-check('家族分布', '素绢 11 · 熟宣 14 · 雪青 18 · 赭纸 6', distStr, both.includes(distStr));
+check('家族分布', '素绢 12 · 熟宣 14 · 雪青 17 · 赭纸 6', distStr, both.includes(distStr));
 
-// 体积
+// 体积：tsdown 与 esbuild fallback 的压缩策略不同，闸门守发布预算而不是某个
+// builder 的字节签名。README 仍记录主构建的典型体积，方便评估 review 噪音。
 const kb = p => Math.round(statSync(p).size / 1024);
-check('bundle 体积', '564 KB', kb('lib/client.js') + ' KB', both.includes(`${kb('lib/client.js')} KB`));
-check('sourcemap 体积', '820 KB', kb('lib/client.js.map') + ' KB', both.includes(`${kb('lib/client.js.map')} KB`));
+check('bundle 体积预算', '≤ 610 KB', kb('lib/client.js') + ' KB',
+  kb('lib/client.js') <= 610 && both.includes('610 KB'));
+check('sourcemap 体积预算', '≤ 910 KB', kb('lib/client.js.map') + ' KB',
+  kb('lib/client.js.map') <= 910 && both.includes('910 KB'));
 
 // 最小主题距离
 const de = (chk.match(/最小主题距离[^：]*：([\d.]+)/) || [])[1];
 check('最小签名 ΔE', '0.018', de, both.includes('0.018') && Math.abs(+de - 0.018) < 0.0005);
 
-// 名册表行数
+// 名册表行数与星标名单
+const curatedIds = new Set(light.filter(theme => theme.curated).map(theme => theme.id));
 for (const [name, md] of [['README.md', en], ['README.zh-CN.md', zh]]) {
   const n = (md.match(/^\| .* \| `[a-z0-9-]+-light`/gm) || []).length;
   check(`${name} 名册行数`, '49', n, n === 49);
+  const starred = new Set(
+    md.split('\n')
+      .filter(line => line.startsWith('| ') && line.includes('⭐'))
+      .map(line => line.match(/`([a-z0-9-]+-light)`/)?.[1])
+      .filter(Boolean),
+  );
+  const same = starred.size === curatedIds.size
+    && [...curatedIds].every(id => starred.has(id));
+  check(`${name} 精选星标`, '与生成数据一致', starred.size, same);
 }
 
 // 不该再出现的旧数字

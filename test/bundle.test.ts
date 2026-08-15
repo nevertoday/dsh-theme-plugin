@@ -4,7 +4,7 @@
  * 跑法：pnpm build && node --test test/bundle.test.ts
  * 没有 lib/client.js 时整组跳过（并明说跳了）—— 它测的是**产物**，不是源码。
  *
- * 这一组盯的是只有真正装载一次才会暴露的东西：闭包工厂的 id 校验、96 套主题的
+ * 这一组盯的是只有真正装载一次才会暴露的东西：闭包工厂的 id 校验、完整主题表的
  * 注册载荷形状、disposer 是否真的成对、设置页有没有挂进槽、以及深链启动路径。
  * 过去这些靠一次浏览器实测撑着，现在每次 build 之后都能跑。
  */
@@ -17,6 +17,7 @@ const BUNDLE = new URL('../lib/client.js', import.meta.url)
 const built = existsSync(BUNDLE)
 
 interface Registered { id: string; colorScheme: string; tokens: Record<string, string> }
+interface InjectedThemeRow { id: string; focusHex: string }
 
 /** 装一次 bundle，返回它注册了什么。 */
 function loadBundle(hash = '', seedStorage: Record<string, string> = {}) {
@@ -30,6 +31,10 @@ function loadBundle(hash = '', seedStorage: Record<string, string> = {}) {
   let loadedId: string | undefined
   let preference = 'system'
   let ground = 'rgb(255,255,255)'
+  const locationState = { hash, pathname: '/', search: '' }
+  const rootStyle = new Map<string, string>([['color-scheme', 'light']])
+  const bodyStyle = new Map<string, string>()
+  const bodyAttributes = new Set<string>()
 
   const react = {
     useEffect() {}, useMemo(fn: () => unknown) { return fn() }, useState(v: unknown) { return [v, () => {}] },
@@ -73,7 +78,15 @@ function loadBundle(hash = '', seedStorage: Record<string, string> = {}) {
 
   const g = globalThis as Record<string, unknown>
   g.window = globalThis
-  g.location = { hash }
+  g.location = locationState
+  g.history = {
+    replaceState(_state: unknown, _title: string, url: string) {
+      const parsed = new URL(url, 'http://localhost')
+      locationState.pathname = parsed.pathname
+      locationState.search = parsed.search
+      locationState.hash = parsed.hash
+    },
+  }
   g.addEventListener = () => {}
   g.removeEventListener = () => {}
   g.localStorage = {
@@ -83,16 +96,25 @@ function loadBundle(hash = '', seedStorage: Record<string, string> = {}) {
   }
   g.document = {
     documentElement: {
-      style: { setProperty() {}, removeProperty() {} },
+      style: {
+        get colorScheme() { return rootStyle.get('color-scheme') ?? '' },
+        set colorScheme(value: string) { rootStyle.set('color-scheme', value) },
+        getPropertyValue: (name: string) => rootStyle.get(name) ?? '',
+        setProperty: (name: string, value: string) => { rootStyle.set(name, value) },
+        removeProperty: (name: string) => { rootStyle.delete(name) },
+      },
     },
     body: {
       style: {
-        getPropertyValue: (name: string) => (name === '--dsw-alias-bg-base' ? ground : ''),
-        // 直写是 no-op：stub 的 DOM 永远不会「落地」，重试链保持活跃，
-        // 由 teardown() 统一清掉 —— 这也顺带断言 dispose 真的清了定时器。
-        setProperty() {}, removeProperty() {},
+        getPropertyValue: (name: string) => bodyStyle.get(name)
+          ?? (name === '--dsw-alias-bg-base' ? ground : ''),
+        // Track the direct-paint path so lifecycle tests can assert full cleanup.
+        setProperty(name: string, value: string) { bodyStyle.set(name, value) },
+        removeProperty(name: string) { bodyStyle.delete(name) },
       },
-      setAttribute() {}, removeAttribute() {}, hasAttribute: () => false,
+      setAttribute(name: string) { bodyAttributes.add(name) },
+      removeAttribute(name: string) { bodyAttributes.delete(name) },
+      hasAttribute: (name: string) => bodyAttributes.has(name),
     },
   }
 
@@ -109,6 +131,11 @@ function loadBundle(hash = '', seedStorage: Record<string, string> = {}) {
   return {
     get id() { return loadedId },
     plugin, ctx, registered, payloadKeys, setThemeCalls, slots, disposers, stored,
+    get hash() { return locationState.hash },
+    get preference() { return preference },
+    get rootColorScheme() { return rootStyle.get('color-scheme') ?? '' },
+    hasBodyAttribute(name: string) { return bodyAttributes.has(name) },
+    get paintedTokenCount() { return [...bodyStyle.keys()].filter(k => k.startsWith('--dsw-')).length },
     emit(event: string, payload: unknown) { for (const l of listeners.get(event) ?? []) l(payload) },
     setGround(value: string) { ground = value },
     /**
@@ -164,15 +191,39 @@ test('disposer 成对：全部释放后注册表清空', { skip: !built && 'lib/
   assert.equal(world.registered.length, 0, '卸载后仍有主题挂在注册表里')
 })
 
-test('设置页挂进 settings.section，位置可由配置改', { skip: !built && 'lib/client.js 未构建' }, () => {
+test('设置页挂进 settings.section，并排在内置配置页之后', { skip: !built && 'lib/client.js 未构建' }, () => {
   const world = loadBundle()
-  world.plugin.apply!(world.ctx, { settingsOrder: 7 })
+  world.plugin.apply!(world.ctx)
 
   assert.equal(world.slots.length, 1)
   assert.equal(world.slots[0].def.name, 'settings.section')
   assert.equal(world.slots[0].def.id, 'theme-zhongguo')
-  assert.equal(world.slots[0].def.order, 7)
+  assert.equal(world.slots[0].def.order, 40)
   assert.equal(typeof world.slots[0].component, 'function')
+  const injected = (world.slots[0].def.inject as () => Record<string, unknown>)()
+  assert.doesNotThrow(
+    () => (world.slots[0].component as (props: Record<string, unknown>) => unknown)({
+      ...injected,
+      t: (key: string) => key,
+    }),
+    '槽组件注册成功但在第一次真实 render 时崩溃',
+  )
+  world.teardown()
+})
+
+test('设置页色卡的焦点色来自实际 info 交互 token', { skip: !built && 'lib/client.js 未构建' }, () => {
+  const world = loadBundle()
+  world.plugin.apply!(world.ctx)
+  const injected = (world.slots[0].def.inject as () => { rows: InjectedThemeRow[] })()
+  const registered = new Map(world.registered.map(theme => [theme.id, theme]))
+
+  for (const row of injected.rows) {
+    assert.equal(
+      row.focusHex,
+      registered.get(row.id)?.tokens['--dsw-alias-button-info-fill'],
+      `${row.id} 的缩影没有画出真正使用的焦点色`,
+    )
+  }
   world.teardown()
 })
 
@@ -205,21 +256,32 @@ test('启动恢复期间迟到的 adopt() 不会清掉记忆', { skip: !built &&
   world.teardown()
 })
 
-test('remember: false 时不写 localStorage', { skip: !built && 'lib/client.js 未构建' }, () => {
+test('从面板选择会移除旧的 theme 深链，刷新时不再被旧值覆盖', { skip: !built && 'lib/client.js 未构建' }, () => {
   const world = loadBundle('#theme=zhuqing-light')
-  world.plugin.apply!(world.ctx, { remember: false })
+  world.plugin.apply!(world.ctx)
+  const injected = (world.slots[0].def.inject as () => { select(id: string): void })()
 
-  assert.ok(world.setThemeCalls.includes('zhuqing-light'))
-  assert.equal(world.stored.size, 0)
+  injected.select('daizi-dark')
+
+  assert.equal(world.hash, '')
+  assert.equal(world.stored.get('dsh:theme-zhongguo:theme'), 'daizi-dark')
   world.teardown()
 })
 
-test('hashSelector: false 时深链被忽略', { skip: !built && 'lib/client.js 未构建' }, () => {
-  const world = loadBundle('#theme=zhuqing-light')
-  world.plugin.apply!(world.ctx, { hashSelector: false })
+test('卸载当前暗色主题会交还原偏好，并恢复插件改写的全局外观状态', { skip: !built && 'lib/client.js 未构建' }, async () => {
+  const world = loadBundle('#theme=daizi-dark')
+  world.plugin.apply!(world.ctx)
+  await Promise.resolve()
+  assert.equal(world.rootColorScheme, 'dark')
+  assert.equal(world.hasBodyAttribute('data-ds-dark-theme'), true)
+  assert.ok(world.paintedTokenCount > 0)
 
-  assert.deepEqual(world.setThemeCalls, [])
   world.teardown()
+
+  assert.equal(world.preference, 'system')
+  assert.equal(world.rootColorScheme, 'light')
+  assert.equal(world.hasBodyAttribute('data-ds-dark-theme'), false)
+  assert.equal(world.paintedTokenCount, 0)
 })
 
 test('平台模块留在外部：页面里只能有一份 React', { skip: !built && 'lib/client.js 未构建' }, () => {

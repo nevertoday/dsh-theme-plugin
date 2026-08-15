@@ -114,7 +114,7 @@ export const THEMES = [
       "--dsw-alias-state-warn-tertiary": "rgb(253,240,222)",
       "--dsw-alias-state-warn-label": "rgb(144,106,43)"
     },
-    "curated": true
+    "curated": false
   },
   {
     "id": "zhuqing-dark",
@@ -228,7 +228,7 @@ export const THEMES = [
       "--dsw-alias-state-warn-tertiary": "rgb(52,44,33)",
       "--dsw-alias-state-warn-label": "rgb(191,151,89)"
     },
-    "curated": true
+    "curated": false
   },
   {
     "id": "zhuhong-light",
@@ -572,7 +572,7 @@ export const THEMES = [
       "--dsw-alias-state-warn-tertiary": "rgb(251,242,208)",
       "--dsw-alias-state-warn-label": "rgb(130,98,0)"
     },
-    "curated": true
+    "curated": false
   },
   {
     "id": "qunqing-dark",
@@ -686,7 +686,7 @@ export const THEMES = [
       "--dsw-alias-state-warn-tertiary": "rgb(52,46,22)",
       "--dsw-alias-state-warn-label": "rgb(188,156,0)"
     },
-    "curated": true
+    "curated": false
   },
   {
     "id": "tenghuang-light",
@@ -800,7 +800,7 @@ export const THEMES = [
       "--dsw-alias-state-warn-tertiary": "rgb(255,240,212)",
       "--dsw-alias-state-warn-label": "rgb(140,91,0)"
     },
-    "curated": true
+    "curated": false
   },
   {
     "id": "tenghuang-dark",
@@ -916,7 +916,7 @@ export const THEMES = [
       "--dsw-alias-state-warn-tertiary": "rgb(54,44,26)",
       "--dsw-alias-state-warn-label": "rgb(199,149,40)"
     },
-    "curated": true
+    "curated": false
   },
   {
     "id": "jiangzi-light",
@@ -1260,7 +1260,7 @@ export const THEMES = [
       "--dsw-alias-state-warn-tertiary": "rgb(255,237,206)",
       "--dsw-alias-state-warn-label": "rgb(172,90,0)"
     },
-    "curated": true
+    "curated": false
   },
   {
     "id": "ziyun-dark",
@@ -1374,7 +1374,7 @@ export const THEMES = [
       "--dsw-alias-state-warn-tertiary": "rgb(59,42,21)",
       "--dsw-alias-state-warn-label": "rgb(221,136,0)"
     },
-    "curated": true
+    "curated": false
   },
   {
     "id": "meihongse-light",
@@ -1490,7 +1490,7 @@ export const THEMES = [
       "--dsw-alias-state-warn-tertiary": "rgb(253,242,201)",
       "--dsw-alias-state-warn-label": "rgb(135,96,0)"
     },
-    "curated": true
+    "curated": false
   },
   {
     "id": "meihongse-dark",
@@ -1604,7 +1604,7 @@ export const THEMES = [
       "--dsw-alias-state-warn-tertiary": "rgb(53,46,17)",
       "--dsw-alias-state-warn-label": "rgb(194,154,0)"
     },
-    "curated": true
+    "curated": false
   },
   {
     "id": "danshuhong-light",
@@ -2406,7 +2406,7 @@ export const THEMES = [
       "--dsw-alias-state-warn-tertiary": "rgb(254,240,214)",
       "--dsw-alias-state-warn-label": "rgb(148,105,0)"
     },
-    "curated": false
+    "curated": true
   },
   {
     "id": "yingwulv-dark",
@@ -2520,7 +2520,7 @@ export const THEMES = [
       "--dsw-alias-state-warn-tertiary": "rgb(53,45,28)",
       "--dsw-alias-state-warn-label": "rgb(195,151,53)"
     },
-    "curated": false
+    "curated": true
   },
   {
     "id": "boluohong-light",
@@ -3322,7 +3322,7 @@ export const THEMES = [
       "--dsw-alias-state-warn-tertiary": "rgb(255,237,206)",
       "--dsw-alias-state-warn-label": "rgb(174,88,0)"
     },
-    "curated": false
+    "curated": true
   },
   {
     "id": "xionghuang-dark",
@@ -3436,7 +3436,7 @@ export const THEMES = [
       "--dsw-alias-state-warn-tertiary": "rgb(60,42,21)",
       "--dsw-alias-state-warn-label": "rgb(224,135,0)"
     },
-    "curated": false
+    "curated": true
   },
   {
     "id": "hupohuang-light",
@@ -5386,7 +5386,7 @@ export const THEMES = [
       "--dsw-alias-state-warn-tertiary": "rgb(251,241,221)",
       "--dsw-alias-state-warn-label": "rgb(127,97,23)"
     },
-    "curated": false
+    "curated": true
   },
   {
     "id": "zitengluo-dark",
@@ -5500,7 +5500,7 @@ export const THEMES = [
       "--dsw-alias-state-warn-tertiary": "rgb(51,45,32)",
       "--dsw-alias-state-warn-label": "rgb(186,154,85)"
     },
-    "curated": false
+    "curated": true
   },
   {
     "id": "hanxiulv-light",
@@ -6298,7 +6298,7 @@ export const THEMES = [
       "--dsw-alias-state-warn-tertiary": "rgb(242,245,218)",
       "--dsw-alias-state-warn-label": "rgb(104,108,0)"
     },
-    "curated": true
+    "curated": false
   },
   {
     "id": "lingmenghong-dark",
@@ -6412,7 +6412,7 @@ export const THEMES = [
       "--dsw-alias-state-warn-tertiary": "rgb(46,47,30)",
       "--dsw-alias-state-warn-label": "rgb(160,166,71)"
     },
-    "curated": true
+    "curated": false
   },
   {
     "id": "mantianxingzi-light",
@@ -6526,7 +6526,7 @@ export const THEMES = [
       "--dsw-alias-state-warn-tertiary": "rgb(252,240,223)",
       "--dsw-alias-state-warn-label": "rgb(129,95,38)"
     },
-    "curated": false
+    "curated": true
   },
   {
     "id": "mantianxingzi-dark",
@@ -6640,7 +6640,7 @@ export const THEMES = [
       "--dsw-alias-state-warn-tertiary": "rgb(52,45,34)",
       "--dsw-alias-state-warn-label": "rgb(188,152,95)"
     },
-    "curated": false
+    "curated": true
   },
   {
     "id": "kongquelan-light",
@@ -6984,7 +6984,7 @@ export const THEMES = [
       "--dsw-alias-state-warn-tertiary": "rgb(250,242,209)",
       "--dsw-alias-state-warn-label": "rgb(128,99,0)"
     },
-    "curated": false
+    "curated": true
   },
   {
     "id": "baoshilan-dark",
@@ -7098,7 +7098,7 @@ export const THEMES = [
       "--dsw-alias-state-warn-tertiary": "rgb(51,46,24)",
       "--dsw-alias-state-warn-label": "rgb(186,156,0)"
     },
-    "curated": false
+    "curated": true
   },
   {
     "id": "meidielv-light",
@@ -7674,7 +7674,7 @@ export const THEMES = [
       "--dsw-alias-state-warn-tertiary": "rgb(246,241,230)",
       "--dsw-alias-state-warn-label": "rgb(114,100,66)"
     },
-    "curated": true
+    "curated": false
   },
   {
     "id": "qianzitengluo-dark",
@@ -7788,7 +7788,7 @@ export const THEMES = [
       "--dsw-alias-state-warn-tertiary": "rgb(49,46,38)",
       "--dsw-alias-state-warn-label": "rgb(172,157,120)"
     },
-    "curated": true
+    "curated": false
   },
   {
     "id": "qingfanlv-light",
@@ -8130,7 +8130,7 @@ export const THEMES = [
       "--dsw-alias-state-warn-tertiary": "rgb(251,241,219)",
       "--dsw-alias-state-warn-label": "rgb(129,96,1)"
     },
-    "curated": false
+    "curated": true
   },
   {
     "id": "biluochunlv-dark",
@@ -8244,7 +8244,7 @@ export const THEMES = [
       "--dsw-alias-state-warn-tertiary": "rgb(52,45,25)",
       "--dsw-alias-state-warn-label": "rgb(191,154,21)"
     },
-    "curated": false
+    "curated": true
   },
   {
     "id": "ganlanshilv-light",
@@ -8358,7 +8358,7 @@ export const THEMES = [
       "--dsw-alias-state-warn-tertiary": "rgb(246,244,208)",
       "--dsw-alias-state-warn-label": "rgb(116,104,0)"
     },
-    "curated": false
+    "curated": true
   },
   {
     "id": "ganlanshilv-dark",
@@ -8472,7 +8472,7 @@ export const THEMES = [
       "--dsw-alias-state-warn-tertiary": "rgb(49,47,23)",
       "--dsw-alias-state-warn-label": "rgb(173,163,0)"
     },
-    "curated": false
+    "curated": true
   },
   {
     "id": "fentuanhuahong-light",
@@ -8586,7 +8586,7 @@ export const THEMES = [
       "--dsw-alias-state-warn-tertiary": "rgb(237,246,221)",
       "--dsw-alias-state-warn-label": "rgb(91,112,20)"
     },
-    "curated": false
+    "curated": true
   },
   {
     "id": "fentuanhuahong-dark",
@@ -8700,7 +8700,7 @@ export const THEMES = [
       "--dsw-alias-state-warn-tertiary": "rgb(43,48,32)",
       "--dsw-alias-state-warn-label": "rgb(146,170,85)"
     },
-    "curated": false
+    "curated": true
   },
   {
     "id": "heyelv-light",
@@ -9500,7 +9500,7 @@ export const THEMES = [
       "--dsw-alias-state-warn-tertiary": "rgb(249,242,213)",
       "--dsw-alias-state-warn-label": "rgb(124,100,0)"
     },
-    "curated": false
+    "curated": true
   },
   {
     "id": "changchunhualan-dark",
@@ -9614,7 +9614,7 @@ export const THEMES = [
       "--dsw-alias-state-warn-tertiary": "rgb(50,46,26)",
       "--dsw-alias-state-warn-label": "rgb(182,158,40)"
     },
-    "curated": false
+    "curated": true
   },
   {
     "id": "shangengzi-light",
@@ -10184,7 +10184,7 @@ export const THEMES = [
       "--dsw-alias-state-warn-tertiary": "rgb(250,240,228)",
       "--dsw-alias-state-warn-label": "rgb(136,108,70)"
     },
-    "curated": true
+    "curated": false
   },
   {
     "id": "fenlv-dark",
@@ -10298,7 +10298,7 @@ export const THEMES = [
       "--dsw-alias-state-warn-tertiary": "rgb(51,45,37)",
       "--dsw-alias-state-warn-label": "rgb(182,153,114)"
     },
-    "curated": true
+    "curated": false
   },
   {
     "id": "yuqinlan-light",
@@ -11098,7 +11098,7 @@ export const THEMES = [
       "--dsw-alias-state-warn-tertiary": "rgb(245,241,233)",
       "--dsw-alias-state-warn-label": "rgb(112,101,76)"
     },
-    "curated": true
+    "curated": false
   },
   {
     "id": "daizi-dark",
@@ -11214,6 +11214,6 @@ export const THEMES = [
       "--dsw-alias-state-warn-tertiary": "rgb(44,48,29)",
       "--dsw-alias-state-warn-label": "rgb(150,170,62)"
     },
-    "curated": true
+    "curated": false
   }
 ];
