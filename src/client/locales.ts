@@ -50,8 +50,8 @@ export const zh = {
   remembered: '选择保存在本浏览器并随刷新恢复；「内置主题」把页面交还给应用偏好。',
   /* 六档。name 是档名，basis 是判据（事实，由锚色算出），hour 是时段（叙事，
    * 把六个档串成程序员的一天，读一遍就记得住）。 */
-  tierAll: '全部',
   tierLabel: '按状态筛选',
+  tierClearHint: '再点一次取消筛选',
   tierFlow: '心流', tierFlowBasis: '冷而浓', tierFlowHour: '晨起',
   tierZen: '禅定', tierZenBasis: '淡而静', tierZenHour: '午后',
   tierPush: '攻坚', tierPushBasis: '暖而烈', tierPushHour: '傍晚',
@@ -98,8 +98,8 @@ export const en: Record<keyof typeof zh, string> = {
   relSame: 'same family',
   relSelf: 'own deep shade',
   remembered: 'Selections persist in this browser and return after reload. Use built-in returns control to the app.',
-  tierAll: 'All',
   tierLabel: 'Filter by working mood',
+  tierClearHint: 'Click again to clear the filter',
   tierFlow: 'Flow', tierFlowBasis: 'cool and saturated', tierFlowHour: 'morning',
   tierZen: 'Zen', tierZenBasis: 'pale and quiet', tierZenHour: 'afternoon',
   tierPush: 'Push', tierPushBasis: 'warm and fierce', tierPushHour: 'evening',

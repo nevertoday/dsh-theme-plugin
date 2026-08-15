@@ -85,6 +85,19 @@ const TOKEN = {
   surface: 'var(--dsw-alias-bg-layer-2)',
 }
 
+/* 圆角照抄宿主，不自创一套：实测 DSH web 的弹层 24 · 侧栏导航项 8 ·
+ * 新会话与设置导航 12 · 短按钮 14。这个面板是长在宿主里的一页，
+ * 用直角会立刻显得是外挂上去的。
+ *
+ * （注意别跟色库那边的规矩弄混：colors.xiaoxiaodong.ai 的 DESIGN.md 写着
+ * 「Sharp corners are a hard rule」—— 那是那个站点的语言，不是这里的。） */
+const RADIUS = {
+  card: 12,   // 当前主题卡：与「新会话」「设置左侧导航」同级
+  control: 8, // 分段、chip、搜索框、次级按钮：与侧栏导航项同级
+  row: 8,     // 主题行：它就是一个列表项
+  chip: 3,    // 色卡与印点：小方块，只去掉硬角
+}
+
 /* 状态样式。类名带 dshtz- 前缀，免得撞上宿主的样式表。 */
 const CSS = `
 .dshtz-row, .dshtz-seg-btn, .dshtz-ctl {
@@ -173,7 +186,7 @@ export function ThemeSection({
             className="dshtz-ctl"
             onClick={reset}
             style={{
-              flexShrink: 0, border: `1px solid ${TOKEN.line}`, font: 'inherit', fontSize: 12,
+              flexShrink: 0, border: `1px solid ${TOKEN.line}`, borderRadius: RADIUS.control, font: 'inherit', fontSize: 12,
               padding: '4px 12px', cursor: 'pointer', color: TOKEN.fg2,
             }}
           >
@@ -187,7 +200,7 @@ export function ThemeSection({
           aria-label={t('current')}
           style={{
             display: 'flex', alignItems: 'center', gap: 12,
-            padding: '12px 14px', background: TOKEN.surface, border: `1px solid ${TOKEN.lineSoft}`,
+            padding: '12px 14px', background: TOKEN.surface, border: `1px solid ${TOKEN.lineSoft}`, borderRadius: RADIUS.card,
           }}
         >
           <ThemeChip row={currentRow} h={34} />
@@ -197,7 +210,7 @@ export function ThemeSection({
               {isTier(currentRow.tier) && (
                 <span style={{
                   fontSize: 10.5, fontWeight: 600, letterSpacing: '.08em', marginLeft: 8,
-                  padding: '1px 6px', color: TOKEN.fg2, border: `1px solid ${TOKEN.line}`,
+                  padding: '1px 6px', color: TOKEN.fg2, border: `1px solid ${TOKEN.line}`, borderRadius: RADIUS.chip,
                 }}>
                   {t(TIER_COPY[currentRow.tier].name)}
                 </span>
@@ -222,24 +235,19 @@ export function ThemeSection({
 
       {/* 六档筛选条 —— 与明暗分段同一层的控件，不另起区块。
         * 顺序照「程序员的一天」：心流(晨起) → 禅定(午后) → 攻坚(傍晚) →
-        * 爆肝(深夜) → 夜航(凌晨) → 收工(天亮)，再回到心流。 */}
+        * 爆肝(深夜) → 夜航(凌晨) → 收工(天亮)，再回到心流。
+        *
+        * 这里**没有**「全部」chip，是有意的。它曾经在，制造了两个问题：
+        *   · 词撞车 —— 右边还有一个「全部主题」，两个「全部」谁都说不清；
+        *     而且点这枚只是清掉档筛选、落回精选视图，于是写着「全部」给的是 12 套。
+        *   · 换行 —— 六枚档 chip 实测 545px，容器 564px 本来装得下，
+        *     正是这枚（46 + 间隙 6）把它撑成了两排。
+        * 取消筛选改为再点一次当前档（aria-pressed 有按下态，title 里也写了）。 */}
       <div
         role="group"
         aria-label={t('tierLabel')}
         style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}
       >
-        <button
-          type="button"
-          className="dshtz-seg-btn"
-          aria-pressed={tier === undefined}
-          onClick={() => { setTier(undefined) }}
-          style={{
-            border: `1px solid ${TOKEN.line}`, font: 'inherit', fontSize: 12,
-            padding: '4px 10px', cursor: 'pointer',
-          }}
-        >
-          {t('tierAll')}
-        </button>
         {TIERS.map(key => {
           const copy = TIER_COPY[key]
           const n = tierCounts.get(key) ?? 0
@@ -251,11 +259,12 @@ export function ThemeSection({
               aria-pressed={tier === key}
               // 无障碍名与 title 都带上判据 —— 视觉上省掉的那一段不能连语义一起省掉。
               aria-label={`${t(copy.hour)} ${t(copy.name)} · ${t(copy.basis)} · ${n}`}
-              title={`${t(copy.hour)} · ${t(copy.name)} · ${t(copy.basis)}`}
+              title={`${t(copy.hour)} · ${t(copy.name)} · ${t(copy.basis)}${tier === key ? `\n${t('tierClearHint')}` : ''}`}
               onClick={() => { setTier(current => (current === key ? undefined : key)) }}
               style={{
                 display: 'inline-flex', alignItems: 'baseline', gap: 5,
-                border: `1px solid ${TOKEN.line}`, font: 'inherit', fontSize: 12,
+                border: `1px solid ${TOKEN.line}`, borderRadius: RADIUS.control,
+                font: 'inherit', fontSize: 12,
                 padding: '4px 10px', cursor: 'pointer',
               }}
             >
@@ -276,7 +285,7 @@ export function ThemeSection({
         <div
           role="group"
           aria-label={t('scheme')}
-          style={{ display: 'inline-flex', border: `1px solid ${TOKEN.line}` }}
+          style={{ display: 'inline-flex', border: `1px solid ${TOKEN.line}`, borderRadius: RADIUS.control, overflow: 'hidden' }}
         >
           {(['light', 'dark'] as const).map(s => (
             <button
@@ -301,7 +310,7 @@ export function ThemeSection({
           style={{
             flex: 1, minWidth: 160, font: 'inherit', fontSize: 12.5, padding: '5px 10px',
             color: TOKEN.fg, background: 'var(--dsw-specific-input-major)',
-            border: `1px solid ${TOKEN.line}`,
+            border: `1px solid ${TOKEN.line}`, borderRadius: RADIUS.control,
           }}
         />
         {/* 分母只算当前明暗分支；面板一次只能选择这一支，写 98 会把另一支算成缺失。 */}
@@ -315,7 +324,7 @@ export function ThemeSection({
             aria-expanded={showAll}
             onClick={() => { setShowAll(value => !value) }}
             style={{
-              border: `1px solid ${TOKEN.line}`, font: 'inherit', fontSize: 12.5,
+              border: `1px solid ${TOKEN.line}`, borderRadius: RADIUS.control, font: 'inherit', fontSize: 12.5,
               padding: '5px 14px', cursor: 'pointer', color: TOKEN.fg2,
             }}
           >
@@ -350,7 +359,7 @@ export function ThemeSection({
                   style={{
                     display: 'flex', alignItems: 'center', gap: 9, textAlign: 'left',
                     font: 'inherit', cursor: 'pointer', padding: '7px 9px',
-                    border: `1px solid ${TOKEN.lineSoft}`,
+                    border: `1px solid ${TOKEN.lineSoft}`, borderRadius: RADIUS.row,
                   }}
                 >
                   <ThemeChip row={r} h={20} />
@@ -366,7 +375,7 @@ export function ThemeSection({
                   {isTier(r.tier) && (
                     <span style={{
                       flexShrink: 0, fontSize: 10.5, letterSpacing: '.06em', padding: '1px 5px',
-                      color: TOKEN.fg3, border: `1px solid ${TOKEN.lineSoft}`,
+                      color: TOKEN.fg3, border: `1px solid ${TOKEN.lineSoft}`, borderRadius: RADIUS.chip,
                     }}>
                       {t(TIER_COPY[r.tier].name)}
                     </span>
@@ -386,7 +395,7 @@ function Swatch({ hex, size }: { hex: string; size: number }): ReactNode {
     <span
       aria-hidden="true"
       style={{
-        width: size, height: size, flexShrink: 0, background: hex,
+        width: size, height: size, flexShrink: 0, background: hex, borderRadius: RADIUS.chip,
         boxShadow: `inset 0 0 0 1px ${TOKEN.line}`,
       }}
     />
@@ -408,7 +417,7 @@ function ThemeChip({ row, h }: { row: ThemeRow; h: number }): ReactNode {
       style={{
         position: 'relative', display: 'block', overflow: 'hidden', flexShrink: 0,
         width: Math.round(h * 1.35), height: h,
-        background: row.paperHex,
+        background: row.paperHex, borderRadius: RADIUS.chip,
         boxShadow: `inset 0 0 0 1px ${TOKEN.line}`,
       }}
     >
