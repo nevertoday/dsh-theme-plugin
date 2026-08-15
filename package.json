@@ -1,6 +1,6 @@
 {
   "name": "dsh-theme-plugin",
-  "version": "0.2.4",
+  "version": "0.3.0",
   "description": "中国传统色 DeepSeek Harness 主题包 · Chinese traditional color themes for DeepSeek Harness",
   "type": "module",
   "packageManager": "pnpm@10.15.0",
