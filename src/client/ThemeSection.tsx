@@ -129,7 +129,12 @@ export function ThemeSection({
   const [preference, setPreference] = useState(getPreference)
   const [scheme, setScheme] = useState<'light' | 'dark'>(initialScheme)
   const [query, setQuery] = useState('')
-  const [showAll, setShowAll] = useState(false)
+  /* 默认给全库，不是精选。
+   * 精选解决的是「49 个色名不构成选项」，但它同时也藏起了三分之二的东西 ——
+   * 打开面板先看见 12 套、右上角写着「12 / 49」，第一反应是「怎么少了」而不是
+   * 「这是挑过的」。全库摆开时纸家族的分组本身就在给结构，六档 chip 又随时能收窄，
+   * 收敛的手段已经够多了，不必再拿默认视图去做。「仅精选」仍在一次点击之外。 */
+  const [showAll, setShowAll] = useState(true)
   const [tier, setTier] = useState<Tier | undefined>(undefined)
 
   // 主题可以从别处被改（内置 Appearance 行、#theme= 深链、settings 读回），

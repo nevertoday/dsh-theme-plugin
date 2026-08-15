@@ -29,8 +29,12 @@ const FAMILY_COPY: Record<string, { name: string; note: string }> = {
 }
 
 /**
- * 默认只给编辑推荐；展开后才给全库。搜索属于查找而不是浏览，因此总是穿透折叠，
- * 但仍按纸家族交代材质关系，不另造一个会重复结果的“精选”组。
+ * `showAll = false` 时只给编辑推荐的那 12 套，否则按纸家族给全库。
+ * （面板的默认值是 `true` —— 见 ThemeSection 里那段说明；这里只定义参数含义，
+ * 不替调用方决定默认，免得两处各写一半、日后对不上。）
+ *
+ * 搜索属于查找而不是浏览，因此总是穿透折叠，但仍按纸家族交代材质关系，
+ * 不另造一个会重复结果的「精选」组。
  */
 export function buildThemeGroups<T extends ThemeGroupRow>(
   rows: readonly T[],
