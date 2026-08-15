@@ -40,7 +40,28 @@ http://127.0.0.1:3080/#theme=qunqing-dark       # 群青 dark
 
 Changing the hash switches themes live. A deep link wins over your remembered pick. The remembered pick lives in `localStorage`, not in `settings.yaml`, so it does not follow you across devices.
 
-The picker opens on the full set — the 49 anchors of the current light or dark branch, grouped by paper family. **Curated only** narrows it to twelve edited recommendations, the six mood chips narrow it further, and search always covers the whole branch. Each chip shows the theme's real paper, veil and focus rather than a raw anchor swatch. The panel references nothing but `--dsw-*` tokens, so it is themed by the pack itself and doubles as a preview of whatever you are about to pick.
+### Four ways to find a theme
+
+<table>
+<tr>
+<td width="50%"><img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/use-browse.png" alt="The picker on its default view: all 49 anchors of the light branch, grouped into the four paper families"></td>
+<td width="50%"><img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/use-tier.png" alt="The 凌晨 夜航 chip pressed: the list narrows to the eight dark-and-quiet themes, spanning all four paper families"></td>
+</tr>
+<tr>
+<td><b>Browse</b> — opens on all 49 anchors of the current branch, grouped by paper family. Each row's chip is the theme's real paper, veil and focus, so the list previews itself.</td>
+<td><b>By working mood</b> — six chips read left to right as one day: 晨起 morning → 天亮 dawn. Pick <code>凌晨 夜航</code> and you get the eight dark-and-quiet themes, whatever their color.</td>
+</tr>
+<tr>
+<td><img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/use-search.png" alt="Typing the pinyin lv into the search box narrows the list to the twelve green themes"></td>
+<td><img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/use-curated-dark.png" alt="Curated only on the dark branch: twelve edited picks, the panel itself rendered in 竹青 dark"></td>
+</tr>
+<tr>
+<td><b>Search</b> — matches the Chinese name, its pinyin, the seal's name and the mood. Typing <code>lv</code> finds all twelve greens without switching keyboards.</td>
+<td><b>Curated only</b> — twelve edited picks covering all four papers and all six moods. Use it when 49 is too many; the panel is themed by the pack, so the dark branch looks like this.</td>
+</tr>
+</table>
+
+The panel references nothing but `--dsw-*` tokens, which is why it changes color with your pick and doubles as a preview of whatever you are about to choose.
 
 ## Design: 纸 · 帘 · 印
 

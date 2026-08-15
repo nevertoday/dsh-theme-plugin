@@ -40,7 +40,28 @@ http://127.0.0.1:3080/#theme=qunqing-dark       # 群青·暗
 
 改 hash 即时切换。深链优先于浏览器里记住的选择。记忆存在 `localStorage`，不写进 `settings.yaml`，所以换设备不跟随。
 
-面板默认摆开全库 —— 当前亮/暗分支的 49 个锚色，按纸家族分组。点「仅精选」收到 12 个编辑推荐，六档 chip 可以再收窄，搜索则始终覆盖整支名册。每行色卡画的是主题实际交付的纸、帘、焦点，不是满彩度锚色色卡。面板只引用 `--dsw-*` 令牌，所以它随主题变色，本身就是你即将选中的主题预览。
+### 四种找法
+
+<table>
+<tr>
+<td width="50%"><img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/use-browse.png" alt="面板的默认视图：亮色分支的 49 个锚色，按四个纸家族分组"></td>
+<td width="50%"><img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/use-tier.png" alt="按下「凌晨 夜航」：列表收到 8 套暗而静的主题，横跨四个纸家族"></td>
+</tr>
+<tr>
+<td><b>翻</b> —— 默认摆开当前分支的 49 个锚色，按纸家族分组。每行的色卡就是这套主题实际交付的纸、帘、焦点，所以列表本身就是预览。</td>
+<td><b>按状态</b> —— 六枚 chip 从左到右是一天：晨起 → 天亮。点 <code>凌晨 夜航</code>，拿到的是 8 套「暗而静」，不论它们是什么颜色。</td>
+</tr>
+<tr>
+<td><img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/use-search.png" alt="在搜索框敲拼音 lv，列表收到 12 套绿色主题"></td>
+<td><img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/use-curated-dark.png" alt="暗色分支下的「仅精选」：12 套编辑推荐，面板自身也是竹青·暗"></td>
+</tr>
+<tr>
+<td><b>搜</b> —— 色名、拼音、印色、档名都能命中。敲 <code>lv</code> 就能找出全部 12 套绿，不用切输入法。</td>
+<td><b>仅精选</b> —— 12 套编辑推荐，覆盖四种纸与六个档。嫌 49 套太多时用它；面板自己也随主题变色，所以暗色分支长这样。</td>
+</tr>
+</table>
+
+面板只引用 `--dsw-*` 令牌 —— 这正是它随你的选择变色、本身就是预览的原因。
 
 ## 设计：纸 · 帘 · 印
 
