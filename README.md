@@ -1,6 +1,6 @@
 # dsh-theme-plugin
 
-Chinese traditional colors as a **DeepSeek Harness theme pack**. 49 anchor colors × light/dark = **98 themes**, each writing the full token vocabulary (98 tokens: 89 `--dsw-*` plus 9 `--shiki-token-*` syntax slots) and clearing WCAG AA on all 3136 contrast assertions. The picker opens on a curated shortlist of twelve.
+Chinese traditional colors as a **DeepSeek Harness theme pack**. 49 anchor colors × light/dark = **98 themes**, each writing the full token vocabulary (98 tokens: 89 `--dsw-*` plus 9 `--shiki-token-*` syntax slots) and clearing WCAG AA on all 3136 contrast assertions. Twelve of the anchors are marked as a curated shortlist.
 
 📖 [中文文档](./README.zh-CN.md)
 
@@ -40,7 +40,7 @@ http://127.0.0.1:3080/#theme=qunqing-dark       # 群青 dark
 
 Changing the hash switches themes live. A deep link wins over your remembered pick. The remembered pick lives in `localStorage`, not in `settings.yaml`, so it does not follow you across devices.
 
-The picker opens on twelve edited recommendations; **Browse all** reveals the 49 anchors in the current light or dark branch, while search always covers the full branch. Each chip shows the theme's real paper, veil and focus rather than a raw anchor swatch. The panel references nothing but `--dsw-*` tokens, so it is themed by the pack itself and doubles as a preview of whatever you are about to pick.
+The picker opens on the full set — the 49 anchors of the current light or dark branch, grouped by paper family. **Curated only** narrows it to twelve edited recommendations, the six mood chips narrow it further, and search always covers the whole branch. Each chip shows the theme's real paper, veil and focus rather than a raw anchor swatch. The panel references nothing but `--dsw-*` tokens, so it is themed by the pack itself and doubles as a preview of whatever you are about to pick.
 
 ## Design: 纸 · 帘 · 印
 
@@ -73,7 +73,7 @@ The picker orders them as a programmer's day: Flow at dawn → Zen in the aftern
 
 An earlier design gave each of five moods one representative theme, which left most rows in the picker with an empty tag — it read as missing data rather than restraint. As a partition the vocabulary stays at six words while every theme belongs to exactly one tier, so the tag has no holes and doubles as a filter. Six is this data's natural granularity: a seventh cut anywhere carves out a 1–3 theme sliver, at which point the label names a few themes rather than classifying them. The tier *names* are an editorial claim, but that is six claims rather than 49; `pnpm check` pins all four cuts with seven sentinels (群青→Flow, 碧螺春绿→Zen, 朱红→Push, 覆盆子红→Crunch, 满天星紫→Night, 黛紫→Night, 雄黄→Ship), so breaking the tree trips the gate while renaming a tier does not.
 
-**Curation** — twelve of the 49 anchors carry a `curated` flag and are the picker's default view. Both light and dark variants must contain no generator degradation. The list is derived in three passes: editorial seeds → **one per tier** (every tier must appear in the default view, or its tag is one the user never sees) → farthest-point sampling in OKLab up to twelve. Every top-up picks the anchor farthest from what is already chosen, so covering all six tiers costs nothing in spread.
+**Curation** — twelve of the 49 anchors carry a `curated` flag, reachable through **Curated only**. Both light and dark variants must contain no generator degradation. The list is derived in three passes: editorial seeds → **one per tier** (every tier must survive the narrowing, or its chip would have nothing to offer) → farthest-point sampling in OKLab up to twelve. Every top-up picks the anchor farthest from what is already chosen, so covering all six tiers costs nothing in spread.
 
 Anchors per paper family: 素绢 12 · 熟宣 14 · 雪青 17 · 赭纸 6. Within one mode, the two closest themes still differ by ΔE 0.018 across the four signature dimensions (ground, brand, bubble, focus) against a 0.015 floor.
 
