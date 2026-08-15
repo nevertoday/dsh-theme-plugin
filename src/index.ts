@@ -12,14 +12,10 @@
  * 只是因为 profile 的 node_modules 恰好 hoist 了 harness 自己那份。
  * 而"给仓库也装一份"会把框架模块变成两个实例（同一天刚被两份 React 教育过）。
  *
- * 代价：cordis.yml 里的配置不再由框架在装载期校验。补偿是 src/config.ts 的
- * normalizeConfig()：类型不对就丢弃并落回默认值，一个写错的偏好装不坏 96 套主题。
- * 它是纯函数，由 test/config.test.ts 盯着。
+ * DSH 0.1 的客户端 boot manifest 不携带宿主 config，因此这里不公开假配置 API；
+ * 选择入口是设置页与 #theme=，持久化在浏览器 localStorage。
  */
 export const name = 'theme-zhongguo'
-
-/** 配置形状见 src/config.ts（客户端半用 normalizeConfig 收敛）。 */
-export type { Config } from './config.ts'
 
 /** Provides no host-side behavior — the roster and the picker are browser-side. */
 export function apply(): void {}

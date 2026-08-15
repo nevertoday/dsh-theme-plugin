@@ -246,8 +246,10 @@ export function createThemeSelector(deps: SelectorDeps, options: SelectorOptions
 
     dispose(): void {
       cancel()
+      const restore = desired !== undefined
       desired = undefined
       deps.retract()
+      if (restore) deps.setTheme(fallback)
     },
   }
 }

@@ -11,10 +11,9 @@ const id = 'dsh-theme-plugin'
 // Platform externals live in one place now — tsdown uses the same list.
 import { PLATFORM_EXTERNALS as external } from './platform-externals.mjs'
 
-// Host half: esm, node. `packages: 'external'` keeps framework imports
-// (@deepseek-ai/schemastery, for the config schema) unresolved at build time —
-// they are optional peers that may not be installed here, and the harness's own
-// node process always provides them at runtime.
+// Host half: esm, node. `packages: 'external'` keeps any future framework
+// imports unresolved at build time; optional peers may not be installed here,
+// while the harness process provides them at runtime.
 await build({
   entryPoints: { index: path.join(root, 'src/index.ts') },
   outdir: path.join(root, 'lib'),

@@ -2,7 +2,6 @@ import type { ClientContext } from '@deepseek-ai/dsh-client-runtime/client'
 // Type-only: pulls the ctx.theme Context merge + ThemeDefinition.
 import type {} from '@deepseek-ai/dsh-client-ui-theme/client'
 import { THEMES } from '../themes.generated.js'
-import { normalizeConfig, THEME_ID, type Config } from '../config.ts'
 import { repairTokens } from '../repairs.ts'
 import { createThemeSelector } from './selector.ts'
 import { ThemeSection, type ThemeRow } from './ThemeSection.tsx'
@@ -25,16 +24,12 @@ const NS = 'settings.theme-zhongguo'
  * prefix keeps it out of the way of the harness's own origin-wide keys.
  */
 const STORE_KEY = 'dsh:theme-zhongguo:theme'
+const THEME_ID = /^[a-z0-9-]+$/
 
 const log = (message: string): void => { console.info(`[dsh-theme-plugin] ${message}`) }
 const warn = (message: string): void => { console.warn(`[dsh-theme-plugin] ${message}`) }
 
-export function apply(ctx: ClientContext, rawConfig?: unknown): void {
-  // The client graph may or may not forward the cordis.yml config to a browser
-  // row (unverified — see README limitations), so every field is defaulted here
-  // rather than assumed present.
-  const config: Config = normalizeConfig(rawConfig)
-
+export function apply(ctx: ClientContext): void {
   // Defensive: inject ['theme'] should guarantee the service, but if the
   // plugin is ever composed without ui-theme, degrade to a logged no-op
   // instead of throwing during boot.
@@ -81,11 +76,29 @@ export function apply(ctx: ClientContext, rawConfig?: unknown): void {
 
   /* ── 选择 ──
    * 内置 Appearance 行只渲染 light/dark/system（它自己 schema 里的
-   * THEME_PREFERENCES），所以注册过的第三方 id 在那里没有产品入口。替代入口有三个：
-   * 本函数末尾注册的设置页、`#theme=` 深链、以及配置里的 defaultTheme。三条都走
-   * selector，于是 DOM 自验证重试与「用户改了就让位」对三者一致生效。 */
+   * THEME_PREFERENCES），所以注册过的第三方 id 在那里没有产品入口。替代入口有两个：
+   * 本函数末尾注册的设置页与 `#theme=` 深链。两条都走 selector，于是 DOM
+   * 自验证重试与「用户改了就让位」对二者一致生效。 */
   const ids = new Set(THEMES.map(t => t.id))
   const grounds = new Map(THEMES.map(t => [t.id, t.tokens['--dsw-alias-bg-base']]))
+
+  const themeFromHash = (): string | undefined => {
+    const id = new URLSearchParams(location.hash.slice(1)).get('theme') ?? undefined
+    return id !== undefined && THEME_ID.test(id) ? id : undefined
+  }
+
+  /** A picker action supersedes an old deep link; keep unrelated hash params. */
+  const clearThemeFromHash = (): void => {
+    const params = new URLSearchParams(location.hash.slice(1))
+    if (!params.has('theme')) return
+    params.delete('theme')
+    const hash = params.toString()
+    try {
+      history.replaceState(history.state, '', `${location.pathname}${location.search}${hash ? `#${hash}` : ''}`)
+    } catch {
+      // A restricted history implementation should not prevent theme selection.
+    }
+  }
 
   const readPreference = (): string => {
     try {
@@ -98,14 +111,12 @@ export function apply(ctx: ClientContext, rawConfig?: unknown): void {
   // localStorage 可能被隐私模式/配额拒绝，读写都不许把 boot 弄挂。
   const store = {
     read(): string | undefined {
-      if (!config.remember) return undefined
       try {
         const v = localStorage.getItem(STORE_KEY)
         return v !== null && THEME_ID.test(v) ? v : undefined
       } catch { return undefined }
     },
     write(id: string): void {
-      if (!config.remember) return
       try { localStorage.setItem(STORE_KEY, id) } catch { /* 记不住就算了，不是错误 */ }
     },
     clear(): void {
@@ -139,6 +150,17 @@ export function apply(ctx: ClientContext, rawConfig?: unknown): void {
   // 撤它自己写的那份、把我们残留的令牌留在 body 上（内置主题不写 --dsw-alias-*，
   // 残留的会盖住内置底色）。
   let paintedTokens: string[] = []
+  const rootStyle = document.documentElement.style
+  const originalColorScheme = rootStyle.getPropertyValue('color-scheme')
+  const originalDarkMarker = document.body?.hasAttribute('data-ds-dark-theme') ?? false
+  const restoreGlobalAppearance = (): void => {
+    if (originalColorScheme === '') rootStyle.removeProperty('color-scheme')
+    else rootStyle.setProperty('color-scheme', originalColorScheme)
+    const body = document.body
+    if (!body) return
+    if (originalDarkMarker) body.setAttribute('data-ds-dark-theme', '')
+    else body.removeAttribute('data-ds-dark-theme')
+  }
   const paintTheme = (id: string | undefined): void => {
     const body = document.body
     if (!body) return
@@ -184,18 +206,24 @@ export function apply(ctx: ClientContext, rawConfig?: unknown): void {
   }, { initialPreference: readPreference() })
 
   /** 用户的一次明确选择：记住它，这样刷新后还在。 */
-  const select = (id: string): void => {
+  const chooseAndRemember = (id: string): void => {
     if (selector.choose(id)) store.write(id)
+  }
+  const select = (id: string): void => {
+    clearThemeFromHash()
+    chooseAndRemember(id)
   }
   /** 交还内置偏好，并忘掉记住的选择（否则刷新又把它拉回来）。 */
   const reset = (): void => {
+    clearThemeFromHash()
+    restoreGlobalAppearance()
     selector.reset()
     store.clear()
   }
 
   const applyFromHash = (): void => {
-    const id = /(?:^|[#&])theme=([a-z0-9-]+)/.exec(location.hash)?.[1]
-    if (id !== undefined) select(id)
+    const id = themeFromHash()
+    if (id !== undefined) chooseAndRemember(id)
   }
 
   ctx.on('theme/change', (snapshot: { preference: string }) => {
@@ -209,27 +237,21 @@ export function apply(ctx: ClientContext, rawConfig?: unknown): void {
   })
 
   ctx.effect(() => {
-    if (config.hashSelector) addEventListener('hashchange', applyFromHash)
+    addEventListener('hashchange', applyFromHash)
     return () => {
-      if (config.hashSelector) removeEventListener('hashchange', applyFromHash)
+      removeEventListener('hashchange', applyFromHash)
+      restoreGlobalAppearance()
       selector.dispose()
     }
   }, 'theme-zhongguo: #theme= hash selector')
 
-  // 启动优先级：深链 > 记住的上次选择 > 配置的 defaultTheme。
-  // 前两者是用户动作，最后一个是部署者的默认值，所以顺序是这个顺序 ——
-  // 也因此只有前者会被记住：把 defaultTheme 写进 localStorage 的话，部署方
-  // 以后改了配置也再也送不到这个浏览器（storage 会把旧默认值钉死）。
-  const hashId = config.hashSelector
-    ? /(?:^|[#&])theme=([a-z0-9-]+)/.exec(location.hash)?.[1]
-    : undefined
+  // 启动优先级：深链 > 记住的上次选择。两者都来自用户动作。
+  const hashId = themeFromHash()
   if (hashId !== undefined) {
-    select(hashId)                                   // 点进一条深链也是一次选择
+    chooseAndRemember(hashId)                        // 点进一条深链也是一次选择
   } else {
-    const bootId = store.read() ?? config.defaultTheme
-    if (bootId !== undefined && !selector.choose(bootId) && bootId === config.defaultTheme) {
-      warn(`config.defaultTheme "${bootId}" is not a theme this plugin registers`)
-    }
+    const bootId = store.read()
+    if (bootId !== undefined) selector.choose(bootId)
   }
 
   /* ── 设置页 ──
@@ -238,11 +260,11 @@ export function apply(ctx: ClientContext, rawConfig?: unknown): void {
   const rows: ThemeRow[] = THEMES.map(row => ({
     id: row.id,
     name: row.nameZh.replace(/·[亮暗]$/, ''),
+    nameEn: row.nameEn.replace(/ (Light|Dark)$/, ''),
     pinyin: row.id.replace(/-(light|dark)$/, ''),
     anchorHex: row.anchorHex,
     colorScheme: row.colorScheme,
     family: row.family,
-    familyNote: row.familyNote,
     sealName: row.sealName,
     sealHex: row.sealHex,
     sealWhy: row.sealWhy,
@@ -253,7 +275,7 @@ export function apply(ctx: ClientContext, rawConfig?: unknown): void {
     // 那个预期落差比任何单个色值都伤品相。所见即所得。
     paperHex: row.tokens['--dsw-alias-bg-base'],
     veilHex: row.tokens['--dsw-specific-bubble'],
-    focusHex: row.tokens['--dsw-alias-button-primary-fill'],
+    focusHex: row.tokens['--dsw-alias-button-info-fill'],
   }))
 
   ctx.effect(() => ctx.locale.register(NS, { zh, en }), 'theme-zhongguo: settings copy')
@@ -274,12 +296,11 @@ export function apply(ctx: ClientContext, rawConfig?: unknown): void {
     id: 'theme-zhongguo',
     // Default 40: after 通用设置 / 模型 / 插件 / Agent 预设 — a palette is a
     // preference, not something to meet before the model is configured.
-    order: config.settingsOrder,
+    order: 40,
     label: () => tr('nav'),
     locale: NS,
     inject: () => ({
       rows,
-      remember: config.remember,
       // 面板打开时页面已经是暗的，就先给暗色那一支 —— 而不是恒从 light 开始。
       initialScheme: (document.body.hasAttribute('data-ds-dark-theme') ? 'dark' : 'light') as 'light' | 'dark',
       getPreference: readPreference,

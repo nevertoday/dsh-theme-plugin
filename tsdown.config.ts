@@ -10,10 +10,12 @@ const id = 'dsh-theme-plugin'
 export default defineConfig([
   { // host half
     entry: { index: 'src/index.ts' },
-    outDir: 'lib', format: 'esm', platform: 'node', dts: false, clean: false,
+    outDir: 'lib', format: 'esm', platform: 'node', dts: true, clean: false,
   },
   { // browser half: closure-factory artifact for window.__ModuleLoader__
     entry: { client: 'src/client/index.ts' },
+    // Declaration is kept as lib/client.d.ts: tsdown's closure banner/footer mode
+    // currently emits only a stray client.ts.map when dts is enabled.
     outDir: 'lib', format: 'cjs', platform: 'browser', dts: false, clean: false,
     sourcemap: true,
     // MUST be explicit. Relying on "unresolvable ⇒ external" silently inlines

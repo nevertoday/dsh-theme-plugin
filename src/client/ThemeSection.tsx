@@ -9,23 +9,25 @@
  * 而令牌是主题的公共契约，所以面板自身也随主题变色）：
  *   · 布局用内联 style —— 尺寸、栅格、间距，一次性的东西
  *   · 状态用下面这张 <style> 里的类 —— :hover / :active / :focus-visible 是
- *     内联样式表达不了的，而 96 个可点卡片没有悬停与聚焦反馈是不能接受的
+ *     内联样式表达不了的，而几十个可点卡片没有悬停与聚焦反馈是不能接受的
  * 注意：有状态规则的元素**不要**再写内联 background/color，内联优先级更高会盖掉。
  */
 import { useEffect, useMemo, useState, type ReactNode } from 'react'
 import { fill } from './locales.ts'
+import { buildThemeGroups } from './theme-groups.ts'
 
 /** 一行色名需要呈现的全部信息（apply() 从生成数据里裁出来）。 */
 export interface ThemeRow {
   id: string
   /** 去掉「·亮/·暗」后缀的中文色名。 */
   name: string
+  /** 带空格的无声调拼音，作为可读副标而不是替换文化名。 */
+  nameEn: string
   pinyin: string
   anchorHex: string
   colorScheme: 'light' | 'dark'
   /** 纸家族：素绢 / 熟宣 / 赭纸 / 雪青。 */
   family: string
-  familyNote: string
   sealName: string
   sealHex: string
   /** 印的出处：策展印 / 关系集印 / 同族深印。 */
@@ -43,8 +45,6 @@ export interface ThemeRow {
 /** apply() 递进来的业务面。 */
 export interface ThemeSectionInjected {
   rows: readonly ThemeRow[]
-  /** 选择是否会被记住（决定页首那句话怎么写）。 */
-  remember: boolean
   /** 打开面板时先展示哪一支 —— 页面已经是暗的就别从亮色列表开始。 */
   initialScheme: 'light' | 'dark'
   /** 当前生效的主题 id（可能是 light/dark/system 等内置偏好）。 */
@@ -56,9 +56,6 @@ export interface ThemeSectionInjected {
 }
 
 type Props = ThemeSectionInjected & { t: (key: string) => string }
-
-/** 纸家族的固定顺序：与生成器的家族表同序，避免每次渲染顺序漂移。 */
-const FAMILY_ORDER = ['素绢', '熟宣', '赭纸', '雪青']
 
 /* 和声关系槽 → 可读的说法。`sealRel` 形如 `temperatureContrast[0]`，是代码标识，
  * 不该直接给人看；而这枚印「为什么是它」正是这套配色最见功夫的地方 ——
@@ -99,8 +96,8 @@ const CSS = `
   background: var(--dsw-alias-interactive-bg-active);
 }
 .dshtz-row[aria-pressed="true"], .dshtz-seg-btn[aria-pressed="true"] {
-  background: var(--dsw-alias-brand-primary);
-  color: var(--dsw-alias-label-primary-foreground);
+  background: var(--dsw-specific-sidebar-nav-item-active);
+  color: var(--dsw-alias-label-primary);
   border-color: transparent;
 }
 .dshtz-row:focus-visible, .dshtz-seg-btn:focus-visible,
@@ -111,11 +108,12 @@ const CSS = `
 `
 
 export function ThemeSection({
-  rows, remember, initialScheme, getPreference, subscribe, select, reset, t,
+  rows, initialScheme, getPreference, subscribe, select, reset, t,
 }: Props): ReactNode {
   const [preference, setPreference] = useState(getPreference)
   const [scheme, setScheme] = useState<'light' | 'dark'>(initialScheme)
   const [query, setQuery] = useState('')
+  const [showAll, setShowAll] = useState(false)
 
   // 主题可以从别处被改（内置 Appearance 行、#theme= 深链、settings 读回），
   // 所以选中态永远跟服务的快照走，不本地记账。
@@ -127,32 +125,12 @@ export function ThemeSection({
     if (row !== undefined) setScheme(row.colorScheme)
   }, [preference, rows])
 
-  /* 分组：精选置顶，其后按纸家族排全部。
-   * 不做「精选/全部」切换 —— 那是把一次浏览拆成两个模式，而且要在明暗分段旁边
-   * 再摆一个分段控件。置顶一组就够了：先看见编辑过的 12 色，往下仍是完整名册，
-   * 精选项在自己的家族里照常出现（重复是有意的，跟「本期推荐」一个道理）。 */
-  const groups = useMemo(() => {
-    const q = query.trim().toLowerCase()
-    const hit = (r: ThemeRow) => q === ''
-      || r.name.includes(q) || r.pinyin.includes(q) || r.sealName.includes(q) || r.id.includes(q)
-    const visible = rows.filter(r => r.colorScheme === scheme && hit(r))
-    const byFamily = new Map<string, { note: string; items: ThemeRow[] }>()
-    for (const r of visible) {
-      const g = byFamily.get(r.family) ?? { note: r.familyNote, items: [] }
-      g.items.push(r)
-      byFamily.set(r.family, g)
-    }
-    const families = FAMILY_ORDER
-      .filter(f => byFamily.has(f))
-      .map(f => ({ key: f, family: f, ...byFamily.get(f)! }))
-    const picks = visible.filter(r => r.curated)
-    return picks.length > 0
-      ? [{ key: '__curated', family: t('curated'), note: t('curatedNote'), items: picks }, ...families]
-      : families
-  }, [rows, scheme, query, t])
-
-  // 精选组与家族组有重叠，逐组相加会把 12 套算两遍 —— 计数要按去重后的行数。
-  const shown = new Set(groups.flatMap(g => g.items.map(r => r.id))).size
+  const groups = useMemo(
+    () => buildThemeGroups(rows, scheme, query, showAll, t),
+    [rows, scheme, query, showAll, t],
+  )
+  const shown = groups.reduce((total, group) => total + group.items.length, 0)
+  const schemeTotal = rows.filter(row => row.colorScheme === scheme).length
   const currentRow = rows.find(r => r.id === preference)
 
   /**
@@ -173,8 +151,21 @@ export function ThemeSection({
 
       <header style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
         <div style={{ fontSize: 13, color: TOKEN.fg2, lineHeight: 1.6 }}>{t('intro')}</div>
-        <div style={{ fontSize: 12, color: TOKEN.fg3 }}>
-          {remember ? t('remembered') : t('notPersisted')}
+        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+          <div style={{ flex: 1, fontSize: 12, color: TOKEN.fg3 }}>
+            {t('remembered')}
+          </div>
+          <button
+            type="button"
+            className="dshtz-ctl"
+            onClick={reset}
+            style={{
+              flexShrink: 0, border: `1px solid ${TOKEN.line}`, font: 'inherit', fontSize: 12,
+              padding: '4px 12px', cursor: 'pointer', color: TOKEN.fg2,
+            }}
+          >
+            {t('reset')}
+          </button>
         </div>
       </header>
 
@@ -191,7 +182,7 @@ export function ThemeSection({
             <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: '.04em' }}>
               {currentRow.name}
               <span style={{ fontSize: 11, color: TOKEN.fg3, marginLeft: 8, fontWeight: 400 }}>
-                {currentRow.id}
+                {currentRow.nameEn} · {currentRow.id}
               </span>
             </div>
             <div style={{ fontSize: 11.5, color: TOKEN.fg2, display: 'flex', alignItems: 'center', gap: 6 }}>
@@ -240,21 +231,24 @@ export function ThemeSection({
             border: `1px solid ${TOKEN.line}`,
           }}
         />
-        {/* 显示"当前筛出的 / 全库"两个数：只写筛出的那个会被读成"这个包只有 48 套"。 */}
+        {/* 分母只算当前明暗分支；面板一次只能选择这一支，写 98 会把另一支算成缺失。 */}
         <span aria-live="polite" style={{ fontSize: 11.5, color: TOKEN.fg3 }}>
-          {fill(t('count'), { n: shown, total: rows.length })}
+          {fill(t('count'), { n: shown, total: schemeTotal })}
         </span>
-        <button
-          type="button"
-          className="dshtz-ctl"
-          onClick={reset}
-          style={{
-            border: `1px solid ${TOKEN.line}`, font: 'inherit', fontSize: 12.5,
-            padding: '5px 14px', cursor: 'pointer', color: TOKEN.fg2,
-          }}
-        >
-          {t('reset')}
-        </button>
+        {query.trim() === '' && (
+          <button
+            type="button"
+            className="dshtz-ctl"
+            aria-expanded={showAll}
+            onClick={() => { setShowAll(value => !value) }}
+            style={{
+              border: `1px solid ${TOKEN.line}`, font: 'inherit', fontSize: 12.5,
+              padding: '5px 14px', cursor: 'pointer', color: TOKEN.fg2,
+            }}
+          >
+            {showAll ? t('showCurated') : t('browseAll')}
+          </button>
+        )}
       </div>
 
       {shown === 0
@@ -288,10 +282,11 @@ export function ThemeSection({
                 >
                   <ThemeChip row={r} h={20} />
                   <span style={{
-                    flex: 1, fontSize: 13.5, fontWeight: 600, letterSpacing: '.03em',
+                    flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', lineHeight: 1.18,
                     whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
                   }}>
-                    {r.name}
+                    <span style={{ fontSize: 13.5, fontWeight: 600, letterSpacing: '.03em' }}>{r.name}</span>
+                    <span style={{ fontSize: 10.5, fontWeight: 400, color: TOKEN.fg3 }}>{r.nameEn}</span>
                   </span>
                   <Swatch hex={r.sealHex} size={9} />
                 </button>

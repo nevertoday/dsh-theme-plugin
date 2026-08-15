@@ -38,18 +38,9 @@ http://127.0.0.1:3080/#theme=zhuqing-light      # 竹青 light
 http://127.0.0.1:3080/#theme=qunqing-dark       # 群青 dark
 ```
 
-Changing the hash switches themes live. When several sources disagree, the order is **deep link → your remembered pick → `defaultTheme`**. The remembered pick lives in `localStorage`, not in `settings.yaml`, so it does not follow you across devices.
+Changing the hash switches themes live. A deep link wins over your remembered pick. The remembered pick lives in `localStorage`, not in `settings.yaml`, so it does not follow you across devices.
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/panel-light.png" alt="Settings → Traditional Colors on 竹青 light: the curated shortlist first, then every anchor grouped by paper family" width="49%">
-  <img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/panel-dark.png" alt="The same panel on 藤黄 dark, themed by the pack itself" width="49%">
-</p>
-<p align="center">
-  <sub>Each row's chip shows the theme's <b>real</b> paper, veil and focus — not the raw anchor swatch, which is what the picker used to show and tells you very little about the theme you would get.
-  The line under the current theme names its seal and why that seal was chosen.</sub>
-</p>
-
-The panel references nothing but `--dsw-*` tokens, so it is themed by the pack itself and doubles as a preview of whatever you are about to pick.
+The picker opens on twelve edited recommendations; **Browse all** reveals the 49 anchors in the current light or dark branch, while search always covers the full branch. Each chip shows the theme's real paper, veil and focus rather than a raw anchor swatch. The panel references nothing but `--dsw-*` tokens, so it is themed by the pack itself and doubles as a preview of whatever you are about to pick.
 
 ## Design: 纸 · 帘 · 印
 
@@ -65,7 +56,7 @@ Chinese painting does not start with color. It prepares the paper, washes over i
 
 **Gates** — AA is a floor, and elegance lives at the ceiling, so most rules are two-sided. `pnpm check` re-derives every claim above from the emitted tokens: 2254 contrast rows, plus invariants for veil chroma, the single focus (both focus tokens must be the anchor's own hue and the most saturated patches on screen), elevation direction, and full token coverage. It trusts nothing the generator says about itself.
 
-**Curation** — twelve of the 49 anchors carry a `curated` flag and lead the picker. The list is derived rather than hand-kept: the `CURATED` names that survive the gates, topped up by farthest-point sampling in OKLab so the shortlist spreads across the space instead of clustering.
+**Curation** — twelve of the 49 anchors carry a `curated` flag and are the picker's default view. Both light and dark variants must contain no generator degradation; surviving editorial seeds are topped up by farthest-point sampling in OKLab so the shortlist spreads across the space instead of clustering.
 
 Anchors per paper family: 素绢 12 · 熟宣 14 · 雪青 17 · 赭纸 6. Within one mode, the two closest themes still differ by ΔE 0.018 across the four signature dimensions (ground, brand, bubble, focus) against a 0.015 floor.
 
@@ -78,21 +69,21 @@ Anchors per paper family: 素绢 12 · 熟宣 14 · 雪青 17 · 赭纸 6. Withi
 
 | Color | 中文 | Anchor | Paper | Seal | Theme ids (light / dark) |
 |---|---|---|---|---|---|
-| Zhu Qing | 竹青 ⭐ | `#00A86B` | 素绢 | 茜红 | `zhuqing-light` / `zhuqing-dark` |
+| Zhu Qing | 竹青 | `#00A86B` | 素绢 | 茜红 | `zhuqing-light` / `zhuqing-dark` |
 | Zhu Hong | 朱红 ⭐ | `#ED5126` | 熟宣 | 赭石 | `zhuhong-light` / `zhuhong-dark` |
-| Qun Qing | 群青 ⭐ | `#1772B4` | 雪青 | 枫叶红 | `qunqing-light` / `qunqing-dark` |
-| Teng Huang | 藤黄 ⭐ | `#FFD111` | 赭纸 | 瑶碧 | `tenghuang-light` / `tenghuang-dark` |
+| Qun Qing | 群青 | `#1772B4` | 雪青 | 枫叶红 | `qunqing-light` / `qunqing-dark` |
+| Teng Huang | 藤黄 | `#FFD111` | 赭纸 | 瑶碧 | `tenghuang-light` / `tenghuang-dark` |
 | Jiang Zi | 绛紫 ⭐ | `#8E354A` | 熟宣 | 洋葱紫 | `jiangzi-light` / `jiangzi-dark` |
-| Zi Yun | 紫云 ⭐ | `#A020F0` | 雪青 | 蜻蜓红 | `ziyun-light` / `ziyun-dark` |
-| Mei Hong Se | 玫红色 ⭐ | `#FF007F` | 熟宣 | 品红 | `meihongse-light` / `meihongse-dark` |
+| Zi Yun | 紫云 | `#A020F0` | 雪青 | 蜻蜓红 | `ziyun-light` / `ziyun-dark` |
+| Mei Hong Se | 玫红色 | `#FF007F` | 熟宣 | 品红 | `meihongse-light` / `meihongse-dark` |
 | Dan Shu Hong | 淡曙红 | `#EE2746` | 熟宣 | 殷红 | `danshuhong-light` / `danshuhong-dark` |
 | Gan Qing | 绀青 | `#4F84FF` | 雪青 | 落霞 | `ganqing-light` / `ganqing-dark` |
 | Mei Gui Zi | 玫瑰紫 | `#BA2F7B` | 熟宣 | 高粱红 | `meiguizi-light` / `meiguizi-dark` |
-| Ying Wu Lü | 鹦鹉绿 | `#5BAE23` | 素绢 | 猩红 | `yingwulv-light` / `yingwulv-dark` |
+| Ying Wu Lü | 鹦鹉绿 ⭐ | `#5BAE23` | 素绢 | 猩红 | `yingwulv-light` / `yingwulv-dark` |
 | Bo Luo Hong | 菠萝红 | `#FC7930` | 熟宣 | 芙蓉红 | `boluohong-light` / `boluohong-dark` |
 | Fu Pen Zi Hong | 覆盆子红 | `#AC1F18` | 熟宣 | 苋菜红 | `fupenzihong-light` / `fupenzihong-dark` |
 | Cang Bi | 苍碧 | `#2A52BE` | 雪青 | 猩红 | `cangbi-light` / `cangbi-dark` |
-| Xiong Huang | 雄黄 | `#FF9900` | 赭纸 | 绀青 | `xionghuang-light` / `xionghuang-dark` |
+| Xiong Huang | 雄黄 ⭐ | `#FF9900` | 赭纸 | 绀青 | `xionghuang-light` / `xionghuang-dark` |
 | Hu Po Huang | 琥珀黄 | `#FEBA07` | 赭纸 | 绀青 | `hupohuang-light` / `hupohuang-dark` |
 | Wei Zi | 魏紫 | `#7E1671` | 雪青 | 魏紫·深 | `weizi-light` / `weizi-dark` |
 | Gan Lan Huang Lü | 橄榄黄绿 | `#BEC936` | 素绢 | 魏紫 | `ganlanhuanglv-light` / `ganlanhuanglv-dark` |
@@ -101,54 +92,40 @@ Anchors per paper family: 素绢 12 · 熟宣 14 · 雪青 17 · 赭纸 6. Withi
 | Yan Ying Zi | 烟萦紫 | `#8A4B9C` | 雪青 | 烟萦紫·深 | `yanyingzi-light` / `yanyingzi-dark` |
 | Mei Ge | 韎韐 | `#A5441B` | 熟宣 | 蟹蝥红 | `meige-light` / `meige-dark` |
 | Li Shou | 綟绶 | `#6B8E23` | 素绢 | 暗紫苑红 | `lishou-light` / `lishou-dark` |
-| Zi Teng Luo | 紫藤萝 | `#9B8AE8` | 雪青 | 淡罂粟红 | `zitengluo-light` / `zitengluo-dark` |
+| Zi Teng Luo | 紫藤萝 ⭐ | `#9B8AE8` | 雪青 | 淡罂粟红 | `zitengluo-light` / `zitengluo-dark` |
 | Han Xiu Lü | 汉绣绿 | `#2E7D32` | 素绢 | 绛紫 | `hanxiulv-light` / `hanxiulv-dark` |
 | An Zi Yuan Hong | 暗紫苑红 | `#82202B` | 熟宣 | 殷红 | `anziyuanhong-light` / `anziyuanhong-dark` |
 | Xin Lü | 新绿 | `#6CC788` | 素绢 | 茜裙 | `xinlv-light` / `xinlv-dark` |
-| Ling Meng Hong | 菱锰红 ⭐ | `#D276A3` | 熟宣 | 苋菜紫 | `lingmenghong-light` / `lingmenghong-dark` |
-| Man Tian Xing Zi | 满天星紫 | `#2E317C` | 雪青 | 栗紫 | `mantianxingzi-light` / `mantianxingzi-dark` |
+| Ling Meng Hong | 菱锰红 | `#D276A3` | 熟宣 | 苋菜紫 | `lingmenghong-light` / `lingmenghong-dark` |
+| Man Tian Xing Zi | 满天星紫 ⭐ | `#2E317C` | 雪青 | 栗紫 | `mantianxingzi-light` / `mantianxingzi-dark` |
 | Kong Que Lan | 孔雀蓝 | `#0EB0C9` | 雪青 | 胭脂红 | `kongquelan-light` / `kongquelan-dark` |
-| Bao Shi Lan | 宝石蓝 | `#2486B9` | 雪青 | 朱墙 | `baoshilan-light` / `baoshilan-dark` |
+| Bao Shi Lan | 宝石蓝 ⭐ | `#2486B9` | 雪青 | 朱墙 | `baoshilan-light` / `baoshilan-dark` |
 | Mei Die Lü | 美蝶绿 | `#12AA9C` | 素绢 | 枫叶红 | `meidielv-light` / `meidielv-dark` |
 | Bian Dou Zi | 扁豆紫 | `#A35C8F` | 雪青 | 扁豆紫·深 | `biandouzi-light` / `biandouzi-dark` |
-| Qian Zi Teng Luo | 浅紫藤萝 ⭐ | `#D1B3FF` | 雪青 | 杏子 | `qianzitengluo-light` / `qianzitengluo-dark` |
+| Qian Zi Teng Luo | 浅紫藤萝 | `#D1B3FF` | 雪青 | 杏子 | `qianzitengluo-light` / `qianzitengluo-dark` |
 | Qing Fan Lü | 青矾绿 | `#2C9678` | 素绢 | 汉绣红 | `qingfanlv-light` / `qingfanlv-dark` |
-| Bi Luo Chun Lü | 碧螺春绿 | `#867018` | 赭纸 | 苍碧 | `biluochunlv-light` / `biluochunlv-dark` |
-| Gan Lan Shi Lü | 橄榄石绿 | `#B2CF87` | 素绢 | 酢酱草红 | `ganlanshilv-light` / `ganlanshilv-dark` |
-| Fen Tuan Hua Hong | 粉团花红 | `#EC9BAD` | 熟宣 | 锦葵红 | `fentuanhuahong-light` / `fentuanhuahong-dark` |
+| Bi Luo Chun Lü | 碧螺春绿 ⭐ | `#867018` | 赭纸 | 苍碧 | `biluochunlv-light` / `biluochunlv-dark` |
+| Gan Lan Shi Lü | 橄榄石绿 ⭐ | `#B2CF87` | 素绢 | 酢酱草红 | `ganlanshilv-light` / `ganlanshilv-dark` |
+| Fen Tuan Hua Hong | 粉团花红 ⭐ | `#EC9BAD` | 熟宣 | 锦葵红 | `fentuanhuahong-light` / `fentuanhuahong-dark` |
 | He Ye Lü | 荷叶绿 ⭐ | `#1A6840` | 素绢 | 栗紫 | `heyelv-light` / `heyelv-dark` |
 | Shi Lü | 石绿 | `#57C3C2` | 素绢 | 银红 | `shilv-light` / `shilv-dark` |
 | Zha Ye Zong | 柞叶棕 | `#692A1B` | 熟宣 | 栗棕 | `zhayezong-light` / `zhayezong-dark` |
-| Chang Chun Hua Lan | 长春花蓝 | `#7EC0EE` | 雪青 | 香叶红 | `changchunhualan-light` / `changchunhualan-dark` |
+| Chang Chun Hua Lan | 长春花蓝 ⭐ | `#7EC0EE` | 雪青 | 香叶红 | `changchunhualan-light` / `changchunhualan-dark` |
 | Shan Geng Zi | 山梗紫 | `#61649F` | 雪青 | 满江红 | `shangengzi-light` / `shangengzi-dark` |
 | Yan Lan | 鷃蓝 | `#144A74` | 雪青 | 枣红 | `yanlan-light` / `yanlan-dark` |
-| Fen Lü | 粉绿 ⭐ | `#83CBAC` | 素绢 | 梅红 | `fenlv-light` / `fenlv-dark` |
+| Fen Lü | 粉绿 | `#83CBAC` | 素绢 | 梅红 | `fenlv-light` / `fenlv-dark` |
 | Yu Qin Lan | 玉鈫蓝 | `#126E82` | 雪青 | 赭石 | `yuqinlan-light` / `yuqinlan-dark` |
 | Pi Bian | 皮弁 | `#8B5D33` | 赭纸 | 石青 | `pibian-light` / `pibian-dark` |
 | Gan Lan Lü | 橄榄绿 | `#5E5314` | 赭纸 | 满天星紫 | `ganlanlv-light` / `ganlanlv-dark` |
-| Dai Zi | 黛紫 ⭐ | `#5D3A6F` | 雪青 | 黛紫·深 | `daizi-light` / `daizi-dark` |
+| Dai Zi | 黛紫 | `#5D3A6F` | 雪青 | 黛紫·深 | `daizi-light` / `daizi-dark` |
 
 The roster is whatever the generator emits; it is not maintained by hand.
 
 </details>
 
-## Configuration
-
-Under the plugin's row in `cordis.yml`:
-
-```yaml
-config:
-  defaultTheme: zhuqing-light   # theme applied at boot (optional)
-  remember: true                # remember the pick in localStorage
-  hashSelector: true            # honour #theme=<id> deep links
-  settingsOrder: 40             # settings page position in the nav
-```
-
-A malformed value is dropped and falls back to its default rather than failing the load — one bad preference should not cost you the whole pack.
-
 ## Development
 
-Requirements: Node.js 20+ (`pnpm test` runs `.ts` directly and needs 23.6+) and pnpm.
+Requirements: Node.js 20+ and pnpm 10.15 (declared through `packageManager`). Tests use `tsx`, so the same command works on Node 20 and newer.
 
 ```sh
 git clone https://github.com/nevertoday/dsh-theme-plugin
@@ -161,9 +138,11 @@ dsh --profile web
 - `-w` is required because the profile directory is a pnpm workspace root. `add` links the directory and appends the package to `dsh.profile.bundles`; the loader then reads `lib/client.js` from your working copy, so `pnpm build` is what makes changes visible.
 - The repo ships an `.npmrc` with `auto-install-peers=false`. **Without it pnpm ≥ 9 cannot install**: it tries to fetch the optional `@deepseek-ai/*` peers, and one of them depends on a package that was never published.
 - `pnpm build` needs `tsdown`; `node scripts/build-esbuild.mjs` is the fallback.
-- Committing `lib/` is optional. It costs a 564 KB bundle plus an 820 KB sourcemap showing up as changes after every build.
+- Committing `lib/` is optional. The primary build is currently about 566 KB plus an 822 KB sourcemap; both builders are held below 610 KB / 910 KB release budgets.
 
-**Gates** — `pnpm check` (2254 contrast rows plus invariants) and `pnpm test` (46 tests, including a load-time lock on `lib/client.js`). Neither needs a running harness.
+DSH 0.1's client boot manifest does not carry host plugin config, so this package intentionally exposes no `cordis.yml` config block. User choices enter through the picker or `#theme=` and persist in the browser.
+
+**Gates** — `pnpm check` (2254 contrast rows plus invariants) and `pnpm test` (50 tests, including a load-time lock on `lib/client.js`). Neither needs a running harness.
 
 **Regenerating the themes** — `pnpm generate` reads the color data and OKLab math from the [中国传统色](https://github.com/nevertoday/zhongguo-traditional-colors) repository. Point it there:
 
@@ -171,7 +150,7 @@ dsh --profile web
 ZH_COLORS_REPO=/path/to/zhongguo-traditional-colors pnpm generate
 ```
 
-It also looks one directory up and at a sibling checkout, so a conventional layout needs no environment variable. The generator is deterministic — no clock, no randomness — so an unchanged input must reproduce byte-identical output.
+It also looks one directory up and at a sibling checkout, so a conventional layout needs no environment variable. The two executable inputs are pinned by SHA-256 to upstream revision `3f5fc62`; review and update those fingerprints before accepting an upstream change. The generator is deterministic — no clock, no randomness — so an unchanged input must reproduce byte-identical output.
 
 ## License
 
