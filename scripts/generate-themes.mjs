@@ -298,6 +298,88 @@ function linkOf(rec, fam) {
   return rec.hex;
 }
 
+/* ── 6b. 语法配色（--shiki-token-*，层E）──
+ * 宿主的高亮器是 shiki 的 css-variables 主题（ui-theme/lib/styles/shiki.css）：
+ * 九个 --shiki-token-* 变量，亮值挂 :root、暗值挂 body[data-ds-dark-theme]；
+ * 我们的令牌以内联样式写进 body，级联上必赢，所以语法配色不需要注入样式表，
+ * 只是九个新令牌。--shiki-foreground/background 在宿主表里已别名到我们的
+ * label-primary / markdown-code-block，不重复下发。
+ *
+ * 推导哲学与终端配色同宗（正本清源）：五个彩色槽的**色相目标取宿主默认值的色相**
+ * （keyword 品红 / string 绿 / constant 蓝 / function 紫 / parameter 橙 ——
+ * 程序员的语义直觉不该为文化让路），颜色本人从 742 名册里点名真实传统色；
+ * 锚色色相离某槽足够近时由锚色本人占槽（竹青主题的字符串就是竹青）。
+ * comment / punctuation 不是彩色槽，走墨梯（与 label-tertiary / label-secondary
+ * 同源，只对代码底重走对比度门）。全部九个对 markdown-code-block ≥ 4.5。 */
+const SYN_SLOTS = [                          // 顺序即点名顺序（先定者先占名册）
+  ['keyword',   hueOf('#d6336c')],
+  ['string',    hueOf('#2f9e44')],
+  ['constant',  hueOf('#1c7ed6')],
+  ['function',  hueOf('#6741d9')],
+  ['parameter', hueOf('#e8590c')],
+];
+const SYN_L = { light: 0.50, dark: 0.72 };   // 与 READABLE_L 同理：按模式的可读明度
+const SYN_ANCHOR_MAXD = 24;   // 锚色占槽（锚色露脸）的色相判据
+const SYN_PICK_MAXD   = 25;   // 名册点名的色相窗
+const SYN_SEP_MIN     = 15;   // 五槽两两最小色相分离（生成侧过滤 + 两侧闸门断言）
+const VOCAB_SHIKI = ['constant', 'string', 'comment', 'keyword', 'parameter', 'function',
+  'string-expression', 'punctuation', 'link'].map(k => `--shiki-token-${k}`);
+function synOf(targetHue, excludeIds, takenHues, mode) {
+  const cands = ALL().filter(r =>
+    !excludeIds.has(r.id)
+    && hueDist(hueOf(r.hex), targetHue) <= SYN_PICK_MAXD
+    && takenHues.every(h => hueDist(hueOf(r.hex), h) >= SYN_SEP_MIN));
+  return argminById(cands, r =>
+      hueDist(hueOf(r.hex), targetHue)
+    + Math.max(0, 0.10 - chromaOf(r.hex)) * 300   // 太灰强罚：语法色是要跳出来的
+    + Math.abs(Lof(r.hex) - SYN_L[mode]) * 25);
+}
+/* 名册点不到人时在目标色相上合成（742 色下几乎走不到；走到即 degraded）。
+ * 合成色相还要避开已占色相，否则兜底反而把 SYN_SEP_MIN 自己踩穿。 */
+function synFallbackHue(targetHue, takenHues) {
+  for (let step = 0; step <= 12; step++) {
+    for (const dir of [1, -1]) {
+      const h = (targetHue + dir * 3 * step + 360) % 360;
+      if (takenHues.every(t => hueDist(h, t) >= SYN_SEP_MIN)) return h;
+      if (step === 0) break;                     // step 0 两个方向同值，只试一次
+    }
+  }
+  return targetHue;
+}
+
+/* ── 6c. 六档（tier）—— 「今天想怎么工作」的可算划分 ──
+ *
+ * 这一层解决的是选择入口，不是配色：49 个色名对不懂传统色的人不构成选项。
+ * 早先的设计是「五个模式各挑一套主题当代表」，结果面板里只有五行有标签、
+ * 其余空着 —— 读起来像数据缺失。改成**划分**之后，词汇量仍是六个，但每套
+ * 主题恰好属于一档，于是标签既没有空洞，又能反过来当筛选维度用。
+ *
+ * 六档是这批数据的自然粒度：再切第七刀，无论切哪儿都会切出 1–3 套的瘦档，
+ * 那就不再是「类」而是「名」了。等名册扩到 60+ 锚色、某档胖到 15+ 再切不迟。
+ *
+ * 判据只用锚色的 OKLab 明度/彩度/色相，所以它是**算出来的**，可复算、可断言。
+ * 档名（心流/禅定/…）是编辑主张，但那是六条主张，不是 49 条。
+ *
+ *   L < 0.50 ─┬─ C < 0.13 → 夜航（暗而静）
+ *             └─ C ≥ 0.13 → 爆肝（暗而烈）
+ *   C < 0.115 ───────────→ 禅定（淡而静）
+ *   暖(h<120 或 h≥315) ─┬─ L < 0.71 → 攻坚（暖而烈）
+ *                       └─ L ≥ 0.71 → 收工（暖而明）
+ *   冷 ─────────────────→ 心流（冷而浓）
+ *
+ * 阈值被七个哨兵钉死（见 scripts/check-contrast.mjs 的不变量 7）：树被改坏时
+ * 哨兵会掉出来报警，而档名可以随便换 —— 断言绑的是树，不是词。 */
+const TIER_WARM = h => h < 120 || h >= 315;
+function tierOf(hex) {
+  const o = hexOklab(hex), C = chromaOf(hex), h = hueOf(hex);
+  if (o.L < 0.50) return C < 0.13 ? '夜航' : '爆肝';
+  if (C < 0.115) return '禅定';
+  if (TIER_WARM(h)) return o.L < 0.71 ? '攻坚' : '收工';
+  return '心流';
+}
+/** 展示顺序照「程序员的一天」排：心流 → 禅定 → 攻坚 → 爆肝 → 夜航 → 收工。 */
+const TIER_ORDER = ['心流', '禅定', '攻坚', '爆肝', '夜航', '收工'];
+
 /* ── 7. 锚色遴选（DESIGN §1.1 + SPEC §3.11）── */
 const CURATED = ['竹青', '朱红', '群青', '藤黄', '黛蓝', '胭脂红', '天青', '茜色', '黛紫', '绛紫'];
 const annotated = ALL().map(rec => {
@@ -939,6 +1021,51 @@ function buildTheme(anchorRec, mode) {
     T[P('state-warn-label')] = rgbStr(ens(atL(WRNr.hex, 0.70), BG, 4.5, 'state-warn-label'));
   }
 
+  /* ── 层E · 语法（--shiki-token-*，两模式共用同一段推导）── */
+  const codeBg = parseRgb(T[P('markdown-code-block')]);
+  // 锚色露脸：五槽中色相最近且 ≤ SYN_ANCHOR_MAXD 的那个槽归锚色本人。
+  let synAnchorSlot = null, synAnchorD = Infinity;
+  for (const [slot, h] of SYN_SLOTS) {
+    const d = hueDist(aHue, h);
+    if (d <= SYN_ANCHOR_MAXD && d < synAnchorD) { synAnchorSlot = slot; synAnchorD = d; }
+  }
+  const synExcl = new Set([SEAL.rec.id, anchorRec.id]);  // 印与锚不得被点作它槽
+  const synTaken = synAnchorSlot !== null ? [aHue] : [];
+  const synNames = {}, synHex = {};
+  for (const [slot, targetHue] of SYN_SLOTS) {
+    let rec;
+    if (slot === synAnchorSlot) {
+      rec = anchorRec;
+    } else {
+      rec = synOf(targetHue, synExcl, synTaken, mode);
+      if (rec) {
+        synExcl.add(rec.id);
+      } else {
+        // 名册点不到人：目标色相（避开已占）上合成，放弃了「真实传统色」的立意。
+        const h = synFallbackHue(targetHue, synTaken);
+        rec = { id: null, name: null,
+          hex: oklabHex({ L: SYN_L[mode], a: 0.11 * Math.cos(rad(h)), b: 0.11 * Math.sin(rad(h)) }) };
+        if (!degraded.includes('syntax')) degraded.push('syntax');
+      }
+      synTaken.push(hueOf(rec.hex));
+    }
+    const hex = ens(rec.hex, codeBg, 4.5, `shiki-${slot}`);
+    synHex[slot] = hex;
+    synNames[slot] = rec.name;
+    T[`--shiki-token-${slot}`] = rgbStr(hex);
+  }
+  {
+    // string-expression：string 的同支变奏（亮压深、暗提亮），关系照抄宿主默认。
+    const s = synHex.string;
+    const varL = mode === 'light' ? Math.max(0.02, Lof(s) - 0.045) : Math.min(0.95, Lof(s) + 0.05);
+    T['--shiki-token-string-expression'] = rgbStr(ens(atL(s, varL), codeBg, 4.5, 'shiki-string-expression'));
+  }
+  // link 在代码块里极罕见，且宿主默认与 constant 几乎同色：同值，不另立门户。
+  T['--shiki-token-link'] = T['--shiki-token-constant'];
+  // comment / punctuation：墨，不是彩 —— 三级/次级墨对代码底重走 4.5 门。
+  T['--shiki-token-comment'] = rgbStr(ens(parseRgb(T[P('label-tertiary')]), codeBg, 4.5, 'shiki-comment'));
+  T['--shiki-token-punctuation'] = rgbStr(ens(parseRgb(T[P('label-secondary')]), codeBg, 4.5, 'shiki-punctuation'));
+
   /* ── 面积纪律的编译期式断言（SPEC §4.2，「一色到底」后改写）──
    *
    * 旧律是「锚色永不做 fill，印色永不做 label」。前半句现已作废：焦点那一笔
@@ -969,6 +1096,8 @@ function buildTheme(anchorRec, mode) {
     sealName: SEAL.name, sealHex: SEAL.hex, sealWhy: SEAL.why, sealRel: SEAL.rel,
     linkHex: LINK,
     errName: ERRr.name, sucName: SUCr.name, wrnName: WRNr.name,
+    synNames, synAnchorSlot,
+    tier: tierOf(anchorRec.hex),
   };
   return { tokens: T, nudged, degraded, structural };
 }
@@ -1009,6 +1138,8 @@ function checkMatrix(tokens, mode) {
     [P('brand-primary'), S('sidebar-fill'), 3.0],
     [P('button-info-fill'), P('bg-base'), 3.0],
     [S('bubble'), P('bg-base'), 1.04], // 可见边界（自定，非 WCAG）
+    // 层E · 语法：九个 --shiki-token-* 全部踩在代码底上，AA 同样是地板。
+    ...VOCAB_SHIKI.map(k => [k, P('markdown-code-block'), 4.5]),
   ];
   const fails = [];
   for (const [fg, bg, floor] of rows) {
@@ -1026,6 +1157,14 @@ function checkMatrix(tokens, mode) {
   for (const k of [P('button-primary-fill'), P('button-info-fill')]) {
     const cf = window.ZH_COLOR_CORE.chromaOf(g(k));
     if (cf < cBig * FOCUS_C_RATIO) fails.push(`${k} 彩度 ${cf.toFixed(4)} < 最大面 ${cBig.toFixed(4)} × ${FOCUS_C_RATIO}`);
+  }
+  /* 不变量：语法五彩槽两两色相分离 ≥ SYN_SEP_MIN —— 高亮的意义就是「一眼分清
+   * 五种东西」，两槽撞色相当于少了一种语法。ens 只动明度不动色相，分离在门后仍成立。 */
+  const synHues = SYN_SLOTS.map(([slot]) => hueOf(g(`--shiki-token-${slot}`)));
+  for (let i = 0; i < synHues.length; i++) for (let j = i + 1; j < synHues.length; j++) {
+    const d = hueDist(synHues[i], synHues[j]);
+    if (d < SYN_SEP_MIN - 1e-9)
+      fails.push(`语法槽 ${SYN_SLOTS[i][0]}/${SYN_SLOTS[j][0]} 色相分离 ${d.toFixed(1)}° < ${SYN_SEP_MIN}°`);
   }
   // 不变量：亮模式层次方向（现状四同值白的回归护栏）
   if (mode === 'light') {
@@ -1076,6 +1215,10 @@ const VOCAB_SPECIFIC = [
 ];
 const VOCAB = new Set([...VOCAB_ALIAS.map(P), ...VOCAB_SPECIFIC.map(S)]);
 if (VOCAB.size !== 89) throw new Error(`词表应为 89 个，实为 ${VOCAB.size}`);
+/* 层E 的九个 --shiki-token-* 是词表的第二段：宿主 shiki.css 的 css-variables
+ * 主题消费它们（foreground/background 已别名到 --dsw-*，不在此列）。 */
+const FULL_VOCAB = new Set([...VOCAB, ...VOCAB_SHIKI]);
+if (FULL_VOCAB.size !== 98) throw new Error(`完整词表应为 98 个（89 --dsw + 9 --shiki），实为 ${FULL_VOCAB.size}`);
 
 const keptSigs = { light: [], dark: [] };
 const themes = [];
@@ -1094,8 +1237,8 @@ for (const a of anchors) {
   for (const mode of ['light', 'dark']) {
     const { tokens, nudged, degraded, structural } = buildTheme(rec, mode);
     const names = Object.keys(tokens);
-    const missing = [...VOCAB].filter(v => !tokens[v]);
-    const extra = names.filter(n => !VOCAB.has(n));
+    const missing = [...FULL_VOCAB].filter(v => !tokens[v]);
+    const extra = names.filter(n => !FULL_VOCAB.has(n));
     if (missing.length || extra.length) { bad = `${mode}: token 覆盖 缺${missing.length}(${missing[0] || ''}) 多${extra.length}(${extra[0] || ''})`; break; }
     const fails = checkMatrix(tokens, mode);
     if (fails.length) { bad = `${mode}: ${fails[0]}`; break; }
@@ -1167,10 +1310,11 @@ const curatedEligible = new Set(
     .filter(([, pair]) => pair.length === 2 && pair.every(theme => theme.degraded.length === 0))
     .map(([hex]) => hex),
 );
-const anchorOf = new Map();          // anchorHex → { L, a, b, name }
+const tierByAnchor = new Map([...pairByAnchor].map(([hex, pair]) => [hex, pair[0].tier]));
+const anchorOf = new Map();          // anchorHex → { L, a, b, name, tier }
 for (const a of kept) {
   if (curatedEligible.has(a.rec.hex)) {
-    anchorOf.set(a.rec.hex, { L: a.L, a: a.a, b: a.b, name: a.rec.name });
+    anchorOf.set(a.rec.hex, { L: a.L, a: a.a, b: a.b, name: a.rec.name, tier: tierByAnchor.get(a.rec.hex) });
   }
 }
 
@@ -1180,16 +1324,38 @@ for (const n of CURATED) {
   if (hit && !curatedHex.includes(hit[0])) curatedHex.push(hit[0]);
 }
 const dist = (p, q) => Math.hypot(p.L - q.L, p.a - q.a, p.b - q.b);
-while (curatedHex.length < CURATED_TARGET && curatedHex.length < anchorOf.size) {
+/** 与已选集合的最小距离；集合为空时取 +∞（第一枚随便选都不算"挤"）。 */
+const spreadOf = v => (curatedHex.length === 0
+  ? Infinity
+  : Math.min(...curatedHex.map(h => dist(v, anchorOf.get(h)))));
+/** 从候选里挑"离已选集合最远"的一枚，并列时按色名升序 —— 全程确定性。 */
+function farthest(candidates) {
   let best = null, bestScore = -Infinity;
-  for (const [hex, v] of anchorOf) {
-    if (curatedHex.includes(hex)) continue;
-    const near = Math.min(...curatedHex.map(h => dist(v, anchorOf.get(h))));
+  for (const [hex, v] of candidates) {
+    const near = spreadOf(v);
     if (near > bestScore + 1e-12
       || (near > bestScore - 1e-12 && best && v.name < anchorOf.get(best).name)) {
       best = hex; bestScore = near;
     }
   }
+  return best;
+}
+
+/* ①·5 每档至少一枚 —— 六档是面板的筛选维度，而精选是默认视图：
+ * 某档在默认视图里一个代表都没有，用户就看不到这个标签存在，
+ * 那一档实际上等于不存在（实测「爆肝」原本就是这个处境）。
+ * 补法仍是最远点，所以它不破坏「12 色在色彩空间里铺开」的立意。 */
+const tierGap = [];
+for (const tier of TIER_ORDER) {
+  if (curatedHex.some(hex => anchorOf.get(hex).tier === tier)) continue;
+  const pool = [...anchorOf].filter(([hex, v]) => v.tier === tier && !curatedHex.includes(hex));
+  const pick = farthest(pool);
+  // 整档都被质量闸挡在门外时不硬凑：宁可让闸门报出来，也不把降级主题当代表作。
+  if (pick) curatedHex.push(pick); else tierGap.push(tier);
+}
+
+while (curatedHex.length < CURATED_TARGET && curatedHex.length < anchorOf.size) {
+  const best = farthest([...anchorOf].filter(([hex]) => !curatedHex.includes(hex)));
   if (!best) break;
   curatedHex.push(best);
 }
@@ -1206,6 +1372,18 @@ writeFileSync(outDir + 'preview/themes.json', JSON.stringify(themes, null, 2) + 
 
 console.log(`纸 · 帘 · 印 —— 家族分布（主题数）：${Object.entries(famCount).map(([k, v]) => `${k} ${v}`).join(' · ')}`);
 console.log(`印色来源：${Object.entries(sealWhy).map(([k, v]) => `${k} ${v}`).join(' · ')}`);
+/* 六档分布按「程序员的一天」的顺序打印 —— 某档过瘦（< 4）就是该重新切树的信号。 */
+{
+  const byTier = {};
+  for (const t of themes.filter(x => x.colorScheme === 'light')) byTier[t.tier] = (byTier[t.tier] || 0) + 1;
+  console.log(`六档（锚色数，按一天的顺序）：${TIER_ORDER.map(k => `${k} ${byTier[k] || 0}`).join(' → ')}`);
+  const curatedByTier = {};
+  for (const t of themes.filter(x => x.colorScheme === 'light' && x.curated)) {
+    (curatedByTier[t.tier] ??= []).push(t.nameZh.replace(/·[亮暗]$/, ''));
+  }
+  console.log(`精选覆盖六档：${TIER_ORDER.map(k => `${k} ${(curatedByTier[k] || []).length}`).join(' · ')}`);
+  if (tierGap.length) console.log(`  ⚠︎ 无合格候选、精选覆盖不到的档：${tierGap.join(' ')}`);
+}
 console.log(`纸相共线旋转（paperHueAlt 兜底）：${tally.paperRotated} 套`);
 console.log(`全局状态色兜底池命中（应为 0，非 0 说明族内取色失灵）：err ${globalHits.err} · suc ${globalHits.suc} · wrn ${globalHits.wrn}`);
 console.log(`  兜底池常量：ERR=${GLOBAL_ERR.name}(${GLOBAL_ERR.hex}) SUC=${GLOBAL_SUC.name}(${GLOBAL_SUC.hex}) WRN=${GLOBAL_WRN.name}(${GLOBAL_WRN.hex})`);

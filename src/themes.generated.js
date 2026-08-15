@@ -19,6 +19,15 @@ export const THEMES = [
     "errName": "殷红",
     "sucName": "玉髓绿",
     "wrnName": "蜴蜊绿",
+    "synNames": {
+      "keyword": "菜头紫",
+      "string": "竹青",
+      "constant": "靛青",
+      "function": "紫藤萝",
+      "parameter": "韎韐"
+    },
+    "synAnchorSlot": "string",
+    "tier": "心流",
     "identityShiftDL": 0.0378,
     "degraded": [
       "bubbleChroma"
@@ -112,7 +121,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(131,94,29)",
       "--dsw-alias-state-warn-secondary": "rgb(155,117,55)",
       "--dsw-alias-state-warn-tertiary": "rgb(253,240,222)",
-      "--dsw-alias-state-warn-label": "rgb(144,106,43)"
+      "--dsw-alias-state-warn-label": "rgb(144,106,43)",
+      "--shiki-token-keyword": "rgb(149,28,72)",
+      "--shiki-token-string": "rgb(0,131,73)",
+      "--shiki-token-constant": "rgb(22,97,171)",
+      "--shiki-token-function": "rgb(120,101,192)",
+      "--shiki-token-parameter": "rgb(165,68,27)",
+      "--shiki-token-string-expression": "rgb(0,117,60)",
+      "--shiki-token-link": "rgb(22,97,171)",
+      "--shiki-token-comment": "rgb(103,112,105)",
+      "--shiki-token-punctuation": "rgb(73,82,74)"
     },
     "curated": false
   },
@@ -135,6 +153,15 @@ export const THEMES = [
     "errName": "殷红",
     "sucName": "玉髓绿",
     "wrnName": "蜴蜊绿",
+    "synNames": {
+      "keyword": "淡绛红",
+      "string": "竹青",
+      "constant": "蓝色",
+      "function": "紫藤萝",
+      "parameter": "法螺红"
+    },
+    "synAnchorSlot": "string",
+    "tier": "心流",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -226,7 +253,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(131,94,29)",
       "--dsw-alias-state-warn-secondary": "rgb(149,111,49)",
       "--dsw-alias-state-warn-tertiary": "rgb(52,44,33)",
-      "--dsw-alias-state-warn-label": "rgb(191,151,89)"
+      "--dsw-alias-state-warn-label": "rgb(191,151,89)",
+      "--shiki-token-keyword": "rgb(236,118,150)",
+      "--shiki-token-string": "rgb(0,168,107)",
+      "--shiki-token-constant": "rgb(74,141,218)",
+      "--shiki-token-function": "rgb(155,138,232)",
+      "--shiki-token-parameter": "rgb(238,128,85)",
+      "--shiki-token-string-expression": "rgb(42,184,122)",
+      "--shiki-token-link": "rgb(74,141,218)",
+      "--shiki-token-comment": "rgb(132,142,133)",
+      "--shiki-token-punctuation": "rgb(163,172,164)"
     },
     "curated": false
   },
@@ -249,6 +285,15 @@ export const THEMES = [
     "errName": "蜻蜓红",
     "sucName": "新绿",
     "wrnName": "鼬黄",
+    "synNames": {
+      "keyword": "菜头紫",
+      "string": "汉绣绿",
+      "constant": "靛青",
+      "function": "紫藤萝",
+      "parameter": "朱红"
+    },
+    "synAnchorSlot": "parameter",
+    "tier": "攻坚",
     "identityShiftDL": 0.0391,
     "degraded": [],
     "tokens": {
@@ -340,7 +385,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(185,120,0)",
       "--dsw-alias-state-warn-secondary": "rgb(211,145,48)",
       "--dsw-alias-state-warn-tertiary": "rgb(255,239,204)",
-      "--dsw-alias-state-warn-label": "rgb(149,86,0)"
+      "--dsw-alias-state-warn-label": "rgb(149,86,0)",
+      "--shiki-token-keyword": "rgb(149,28,72)",
+      "--shiki-token-string": "rgb(46,125,50)",
+      "--shiki-token-constant": "rgb(22,97,171)",
+      "--shiki-token-function": "rgb(108,90,179)",
+      "--shiki-token-parameter": "rgb(208,52,0)",
+      "--shiki-token-string-expression": "rgb(30,112,36)",
+      "--shiki-token-link": "rgb(22,97,171)",
+      "--shiki-token-comment": "rgb(126,104,95)",
+      "--shiki-token-punctuation": "rgb(94,74,65)"
     },
     "curated": true
   },
@@ -363,6 +417,15 @@ export const THEMES = [
     "errName": "火焰红",
     "sucName": "新绿",
     "wrnName": "鼬黄",
+    "synNames": {
+      "keyword": "淡绛红",
+      "string": "玉髓绿",
+      "constant": "蓝色",
+      "function": "紫藤萝",
+      "parameter": "朱红"
+    },
+    "synAnchorSlot": "parameter",
+    "tier": "攻坚",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -454,7 +517,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(252,183,10)",
       "--dsw-alias-state-warn-secondary": "rgb(255,203,54)",
       "--dsw-alias-state-warn-tertiary": "rgb(57,44,20)",
-      "--dsw-alias-state-warn-label": "rgb(211,144,0)"
+      "--dsw-alias-state-warn-label": "rgb(211,144,0)",
+      "--shiki-token-keyword": "rgb(236,118,150)",
+      "--shiki-token-string": "rgb(65,179,73)",
+      "--shiki-token-constant": "rgb(74,141,218)",
+      "--shiki-token-function": "rgb(155,138,232)",
+      "--shiki-token-parameter": "rgb(237,81,38)",
+      "--shiki-token-string-expression": "rgb(83,195,89)",
+      "--shiki-token-link": "rgb(74,141,218)",
+      "--shiki-token-comment": "rgb(157,134,124)",
+      "--shiki-token-punctuation": "rgb(186,164,155)"
     },
     "curated": true
   },
@@ -477,6 +549,15 @@ export const THEMES = [
     "errName": "苋菜红",
     "sucName": "宝石绿",
     "wrnName": "新禾绿",
+    "synNames": {
+      "keyword": "菜头紫",
+      "string": "汉绣绿",
+      "constant": "群青",
+      "function": "紫藤萝",
+      "parameter": "韎韐"
+    },
+    "synAnchorSlot": "constant",
+    "tier": "心流",
     "identityShiftDL": 0,
     "degraded": [
       "bubbleChroma"
@@ -570,7 +651,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(159,127,0)",
       "--dsw-alias-state-warn-secondary": "rgb(184,152,47)",
       "--dsw-alias-state-warn-tertiary": "rgb(251,242,208)",
-      "--dsw-alias-state-warn-label": "rgb(130,98,0)"
+      "--dsw-alias-state-warn-label": "rgb(130,98,0)",
+      "--shiki-token-keyword": "rgb(149,28,72)",
+      "--shiki-token-string": "rgb(46,125,50)",
+      "--shiki-token-constant": "rgb(23,114,180)",
+      "--shiki-token-function": "rgb(120,101,192)",
+      "--shiki-token-parameter": "rgb(165,68,27)",
+      "--shiki-token-string-expression": "rgb(30,112,36)",
+      "--shiki-token-link": "rgb(23,114,180)",
+      "--shiki-token-comment": "rgb(99,110,124)",
+      "--shiki-token-punctuation": "rgb(69,81,93)"
     },
     "curated": false
   },
@@ -593,6 +683,15 @@ export const THEMES = [
     "errName": "苋菜红",
     "sucName": "宝石绿",
     "wrnName": "新禾绿",
+    "synNames": {
+      "keyword": "淡绛红",
+      "string": "玉髓绿",
+      "constant": "群青",
+      "function": "紫藤萝",
+      "parameter": "法螺红"
+    },
+    "synAnchorSlot": "constant",
+    "tier": "心流",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -684,7 +783,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(210,177,22)",
       "--dsw-alias-state-warn-secondary": "rgb(230,196,56)",
       "--dsw-alias-state-warn-tertiary": "rgb(52,46,22)",
-      "--dsw-alias-state-warn-label": "rgb(188,156,0)"
+      "--dsw-alias-state-warn-label": "rgb(188,156,0)",
+      "--shiki-token-keyword": "rgb(236,118,150)",
+      "--shiki-token-string": "rgb(65,179,73)",
+      "--shiki-token-constant": "rgb(55,138,206)",
+      "--shiki-token-function": "rgb(155,138,232)",
+      "--shiki-token-parameter": "rgb(238,128,85)",
+      "--shiki-token-string-expression": "rgb(83,195,89)",
+      "--shiki-token-link": "rgb(55,138,206)",
+      "--shiki-token-comment": "rgb(127,140,154)",
+      "--shiki-token-punctuation": "rgb(158,170,183)"
     },
     "curated": false
   },
@@ -707,6 +815,15 @@ export const THEMES = [
     "errName": "莓酱红",
     "sucName": "新绿",
     "wrnName": "金棕",
+    "synNames": {
+      "keyword": "菜头紫",
+      "string": "汉绣绿",
+      "constant": "靛青",
+      "function": "紫藤萝",
+      "parameter": "韎韐"
+    },
+    "synAnchorSlot": null,
+    "tier": "收工",
     "identityShiftDL": 0.2746,
     "degraded": [],
     "tokens": {
@@ -798,7 +915,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(171,122,0)",
       "--dsw-alias-state-warn-secondary": "rgb(197,146,47)",
       "--dsw-alias-state-warn-tertiary": "rgb(255,240,212)",
-      "--dsw-alias-state-warn-label": "rgb(140,91,0)"
+      "--dsw-alias-state-warn-label": "rgb(140,91,0)",
+      "--shiki-token-keyword": "rgb(149,28,72)",
+      "--shiki-token-string": "rgb(46,125,50)",
+      "--shiki-token-constant": "rgb(22,97,171)",
+      "--shiki-token-function": "rgb(120,101,192)",
+      "--shiki-token-parameter": "rgb(165,68,27)",
+      "--shiki-token-string-expression": "rgb(30,112,36)",
+      "--shiki-token-link": "rgb(22,97,171)",
+      "--shiki-token-comment": "rgb(119,108,90)",
+      "--shiki-token-punctuation": "rgb(88,78,60)"
     },
     "curated": false
   },
@@ -821,6 +947,15 @@ export const THEMES = [
     "errName": "莓酱红",
     "sucName": "新绿",
     "wrnName": "金棕",
+    "synNames": {
+      "keyword": "淡绛红",
+      "string": "玉髓绿",
+      "constant": "蓝色",
+      "function": "紫藤萝",
+      "parameter": "法螺红"
+    },
+    "synAnchorSlot": null,
+    "tier": "收工",
     "identityShiftDL": 0,
     "degraded": [
       "bubbleChroma"
@@ -914,7 +1049,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(184,134,11)",
       "--dsw-alias-state-warn-secondary": "rgb(203,153,45)",
       "--dsw-alias-state-warn-tertiary": "rgb(54,44,26)",
-      "--dsw-alias-state-warn-label": "rgb(199,149,40)"
+      "--dsw-alias-state-warn-label": "rgb(199,149,40)",
+      "--shiki-token-keyword": "rgb(236,118,150)",
+      "--shiki-token-string": "rgb(65,179,73)",
+      "--shiki-token-constant": "rgb(74,141,218)",
+      "--shiki-token-function": "rgb(155,138,232)",
+      "--shiki-token-parameter": "rgb(238,128,85)",
+      "--shiki-token-string-expression": "rgb(83,195,89)",
+      "--shiki-token-link": "rgb(74,141,218)",
+      "--shiki-token-comment": "rgb(149,137,117)",
+      "--shiki-token-punctuation": "rgb(179,168,150)"
     },
     "curated": false
   },
@@ -937,6 +1081,15 @@ export const THEMES = [
     "errName": "醋",
     "sucName": "綟绶",
     "wrnName": "綟绶",
+    "synNames": {
+      "keyword": "绛紫",
+      "string": "汉绣绿",
+      "constant": "靛青",
+      "function": "紫藤萝",
+      "parameter": "韎韐"
+    },
+    "synAnchorSlot": "keyword",
+    "tier": "夜航",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -1028,7 +1181,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(107,142,35)",
       "--dsw-alias-state-warn-secondary": "rgb(130,167,64)",
       "--dsw-alias-state-warn-tertiary": "rgb(235,247,218)",
-      "--dsw-alias-state-warn-label": "rgb(82,115,0)"
+      "--dsw-alias-state-warn-label": "rgb(82,115,0)",
+      "--shiki-token-keyword": "rgb(142,53,74)",
+      "--shiki-token-string": "rgb(46,125,50)",
+      "--shiki-token-constant": "rgb(22,97,171)",
+      "--shiki-token-function": "rgb(108,90,179)",
+      "--shiki-token-parameter": "rgb(165,68,27)",
+      "--shiki-token-string-expression": "rgb(30,112,36)",
+      "--shiki-token-link": "rgb(22,97,171)",
+      "--shiki-token-comment": "rgb(124,104,102)",
+      "--shiki-token-punctuation": "rgb(93,74,72)"
     },
     "curated": true
   },
@@ -1051,6 +1213,15 @@ export const THEMES = [
     "errName": "茜裙",
     "sucName": "綟绶",
     "wrnName": "綟绶",
+    "synNames": {
+      "keyword": "绛紫",
+      "string": "玉髓绿",
+      "constant": "蓝色",
+      "function": "紫藤萝",
+      "parameter": "法螺红"
+    },
+    "synAnchorSlot": "keyword",
+    "tier": "夜航",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -1142,7 +1313,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(107,142,35)",
       "--dsw-alias-state-warn-secondary": "rgb(124,161,57)",
       "--dsw-alias-state-warn-tertiary": "rgb(41,49,30)",
-      "--dsw-alias-state-warn-label": "rgb(137,173,71)"
+      "--dsw-alias-state-warn-label": "rgb(137,173,71)",
+      "--shiki-token-keyword": "rgb(209,112,131)",
+      "--shiki-token-string": "rgb(65,179,73)",
+      "--shiki-token-constant": "rgb(74,141,218)",
+      "--shiki-token-function": "rgb(155,138,232)",
+      "--shiki-token-parameter": "rgb(238,128,85)",
+      "--shiki-token-string-expression": "rgb(83,195,89)",
+      "--shiki-token-link": "rgb(74,141,218)",
+      "--shiki-token-comment": "rgb(156,134,131)",
+      "--shiki-token-punctuation": "rgb(185,164,161)"
     },
     "curated": true
   },
@@ -1165,6 +1345,15 @@ export const THEMES = [
     "errName": "萝卜红",
     "sucName": "玉髓绿",
     "wrnName": "淡橘橙",
+    "synNames": {
+      "keyword": "菜头紫",
+      "string": "汉绣绿",
+      "constant": "靛青",
+      "function": "紫云",
+      "parameter": "韎韐"
+    },
+    "synAnchorSlot": "function",
+    "tier": "心流",
     "identityShiftDL": 0,
     "degraded": [
       "bubbleChroma"
@@ -1258,7 +1447,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(197,114,0)",
       "--dsw-alias-state-warn-secondary": "rgb(224,139,48)",
       "--dsw-alias-state-warn-tertiary": "rgb(255,237,206)",
-      "--dsw-alias-state-warn-label": "rgb(172,90,0)"
+      "--dsw-alias-state-warn-label": "rgb(172,90,0)",
+      "--shiki-token-keyword": "rgb(149,28,72)",
+      "--shiki-token-string": "rgb(46,125,50)",
+      "--shiki-token-constant": "rgb(22,97,171)",
+      "--shiki-token-function": "rgb(160,32,240)",
+      "--shiki-token-parameter": "rgb(165,68,27)",
+      "--shiki-token-string-expression": "rgb(30,112,36)",
+      "--shiki-token-link": "rgb(22,97,171)",
+      "--shiki-token-comment": "rgb(110,107,122)",
+      "--shiki-token-punctuation": "rgb(79,77,91)"
     },
     "curated": false
   },
@@ -1281,6 +1479,15 @@ export const THEMES = [
     "errName": "萝卜红",
     "sucName": "玉髓绿",
     "wrnName": "淡橘橙",
+    "synNames": {
+      "keyword": "淡绛红",
+      "string": "玉髓绿",
+      "constant": "蓝色",
+      "function": "紫云",
+      "parameter": "法螺红"
+    },
+    "synAnchorSlot": "function",
+    "tier": "心流",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -1372,7 +1579,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(251,164,20)",
       "--dsw-alias-state-warn-secondary": "rgb(255,183,56)",
       "--dsw-alias-state-warn-tertiary": "rgb(59,42,21)",
-      "--dsw-alias-state-warn-label": "rgb(221,136,0)"
+      "--dsw-alias-state-warn-label": "rgb(221,136,0)",
+      "--shiki-token-keyword": "rgb(236,118,150)",
+      "--shiki-token-string": "rgb(65,179,73)",
+      "--shiki-token-constant": "rgb(74,141,218)",
+      "--shiki-token-function": "rgb(198,85,255)",
+      "--shiki-token-parameter": "rgb(238,128,85)",
+      "--shiki-token-string-expression": "rgb(83,195,89)",
+      "--shiki-token-link": "rgb(74,141,218)",
+      "--shiki-token-comment": "rgb(140,137,154)",
+      "--shiki-token-punctuation": "rgb(169,167,183)"
     },
     "curated": false
   },
@@ -1395,6 +1611,15 @@ export const THEMES = [
     "errName": "枸枢红",
     "sucName": "鲜绿",
     "wrnName": "明黄",
+    "synNames": {
+      "keyword": "玫红色",
+      "string": "汉绣绿",
+      "constant": "靛青",
+      "function": "紫藤萝",
+      "parameter": "韎韐"
+    },
+    "synAnchorSlot": "keyword",
+    "tier": "攻坚",
     "identityShiftDL": 0,
     "degraded": [
       "bubbleChroma"
@@ -1488,7 +1713,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(164,125,0)",
       "--dsw-alias-state-warn-secondary": "rgb(189,150,47)",
       "--dsw-alias-state-warn-tertiary": "rgb(253,242,201)",
-      "--dsw-alias-state-warn-label": "rgb(135,96,0)"
+      "--dsw-alias-state-warn-label": "rgb(135,96,0)",
+      "--shiki-token-keyword": "rgb(210,0,92)",
+      "--shiki-token-string": "rgb(46,125,50)",
+      "--shiki-token-constant": "rgb(22,97,171)",
+      "--shiki-token-function": "rgb(108,90,179)",
+      "--shiki-token-parameter": "rgb(165,68,27)",
+      "--shiki-token-string-expression": "rgb(30,112,36)",
+      "--shiki-token-link": "rgb(22,97,171)",
+      "--shiki-token-comment": "rgb(125,103,103)",
+      "--shiki-token-punctuation": "rgb(94,73,73)"
     },
     "curated": false
   },
@@ -1511,6 +1745,15 @@ export const THEMES = [
     "errName": "枸枢红",
     "sucName": "柳绿",
     "wrnName": "明黄",
+    "synNames": {
+      "keyword": "玫红色",
+      "string": "玉髓绿",
+      "constant": "蓝色",
+      "function": "紫藤萝",
+      "parameter": "法螺红"
+    },
+    "synAnchorSlot": "keyword",
+    "tier": "攻坚",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -1602,7 +1845,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(255,215,0)",
       "--dsw-alias-state-warn-secondary": "rgb(255,219,21)",
       "--dsw-alias-state-warn-tertiary": "rgb(53,46,17)",
-      "--dsw-alias-state-warn-label": "rgb(194,154,0)"
+      "--dsw-alias-state-warn-label": "rgb(194,154,0)",
+      "--shiki-token-keyword": "rgb(255,0,127)",
+      "--shiki-token-string": "rgb(65,179,73)",
+      "--shiki-token-constant": "rgb(74,141,218)",
+      "--shiki-token-function": "rgb(155,138,232)",
+      "--shiki-token-parameter": "rgb(238,128,85)",
+      "--shiki-token-string-expression": "rgb(83,195,89)",
+      "--shiki-token-link": "rgb(74,141,218)",
+      "--shiki-token-comment": "rgb(157,133,132)",
+      "--shiki-token-punctuation": "rgb(186,163,163)"
     },
     "curated": false
   },
@@ -1625,6 +1877,15 @@ export const THEMES = [
     "errName": "唐菖蒲红",
     "sucName": "宝石绿",
     "wrnName": "蟹壳红",
+    "synNames": {
+      "keyword": "淡曙红",
+      "string": "汉绣绿",
+      "constant": "靛青",
+      "function": "紫藤萝",
+      "parameter": "韎韐"
+    },
+    "synAnchorSlot": "keyword",
+    "tier": "攻坚",
     "identityShiftDL": 0,
     "degraded": [
       "bubbleChroma"
@@ -1718,7 +1979,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(214,93,17)",
       "--dsw-alias-state-warn-secondary": "rgb(242,118,53)",
       "--dsw-alias-state-warn-tertiary": "rgb(255,232,214)",
-      "--dsw-alias-state-warn-label": "rgb(189,70,0)"
+      "--dsw-alias-state-warn-label": "rgb(189,70,0)",
+      "--shiki-token-keyword": "rgb(223,9,58)",
+      "--shiki-token-string": "rgb(46,125,50)",
+      "--shiki-token-constant": "rgb(22,97,171)",
+      "--shiki-token-function": "rgb(108,90,179)",
+      "--shiki-token-parameter": "rgb(165,68,27)",
+      "--shiki-token-string-expression": "rgb(30,112,36)",
+      "--shiki-token-link": "rgb(22,97,171)",
+      "--shiki-token-comment": "rgb(126,104,98)",
+      "--shiki-token-punctuation": "rgb(95,74,68)"
     },
     "curated": false
   },
@@ -1741,6 +2011,15 @@ export const THEMES = [
     "errName": "唐菖蒲红",
     "sucName": "宝石绿",
     "wrnName": "蟹壳红",
+    "synNames": {
+      "keyword": "淡曙红",
+      "string": "玉髓绿",
+      "constant": "蓝色",
+      "function": "紫藤萝",
+      "parameter": "法螺红"
+    },
+    "synAnchorSlot": "keyword",
+    "tier": "攻坚",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -1832,7 +2111,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(242,118,53)",
       "--dsw-alias-state-warn-secondary": "rgb(255,137,74)",
       "--dsw-alias-state-warn-tertiary": "rgb(64,39,27)",
-      "--dsw-alias-state-warn-label": "rgb(242,118,53)"
+      "--dsw-alias-state-warn-label": "rgb(242,118,53)",
+      "--shiki-token-keyword": "rgb(253,58,82)",
+      "--shiki-token-string": "rgb(65,179,73)",
+      "--shiki-token-constant": "rgb(74,141,218)",
+      "--shiki-token-function": "rgb(155,138,232)",
+      "--shiki-token-parameter": "rgb(238,128,85)",
+      "--shiki-token-string-expression": "rgb(83,195,89)",
+      "--shiki-token-link": "rgb(74,141,218)",
+      "--shiki-token-comment": "rgb(158,133,127)",
+      "--shiki-token-punctuation": "rgb(187,164,158)"
     },
     "curated": false
   },
@@ -1855,6 +2143,15 @@ export const THEMES = [
     "errName": "夹竹桃红",
     "sucName": "荠麦绿",
     "wrnName": "初熟杏黄",
+    "synNames": {
+      "keyword": "菜头紫",
+      "string": "汉绣绿",
+      "constant": "绀青",
+      "function": "紫藤萝",
+      "parameter": "韎韐"
+    },
+    "synAnchorSlot": "constant",
+    "tier": "心流",
     "identityShiftDL": 0.0403,
     "degraded": [
       "bubbleChroma"
@@ -1948,7 +2245,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(182,125,0)",
       "--dsw-alias-state-warn-secondary": "rgb(208,150,48)",
       "--dsw-alias-state-warn-tertiary": "rgb(255,240,207)",
-      "--dsw-alias-state-warn-label": "rgb(144,89,0)"
+      "--dsw-alias-state-warn-label": "rgb(144,89,0)",
+      "--shiki-token-keyword": "rgb(149,28,72)",
+      "--shiki-token-string": "rgb(46,125,50)",
+      "--shiki-token-constant": "rgb(57,106,227)",
+      "--shiki-token-function": "rgb(120,101,192)",
+      "--shiki-token-parameter": "rgb(165,68,27)",
+      "--shiki-token-string-expression": "rgb(30,112,36)",
+      "--shiki-token-link": "rgb(57,106,227)",
+      "--shiki-token-comment": "rgb(105,109,124)",
+      "--shiki-token-punctuation": "rgb(75,79,93)"
     },
     "curated": false
   },
@@ -1971,6 +2277,15 @@ export const THEMES = [
     "errName": "夹竹桃红",
     "sucName": "荠麦绿",
     "wrnName": "初熟杏黄",
+    "synNames": {
+      "keyword": "淡绛红",
+      "string": "玉髓绿",
+      "constant": "绀青",
+      "function": "紫藤萝",
+      "parameter": "法螺红"
+    },
+    "synAnchorSlot": "constant",
+    "tier": "心流",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -2062,7 +2377,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(248,188,49)",
       "--dsw-alias-state-warn-secondary": "rgb(255,208,75)",
       "--dsw-alias-state-warn-tertiary": "rgb(55,44,22)",
-      "--dsw-alias-state-warn-label": "rgb(205,147,0)"
+      "--dsw-alias-state-warn-label": "rgb(205,147,0)",
+      "--shiki-token-keyword": "rgb(236,118,150)",
+      "--shiki-token-string": "rgb(65,179,73)",
+      "--shiki-token-constant": "rgb(79,132,255)",
+      "--shiki-token-function": "rgb(155,138,232)",
+      "--shiki-token-parameter": "rgb(238,128,85)",
+      "--shiki-token-string-expression": "rgb(83,195,89)",
+      "--shiki-token-link": "rgb(79,132,255)",
+      "--shiki-token-comment": "rgb(134,138,154)",
+      "--shiki-token-punctuation": "rgb(165,169,184)"
     },
     "curated": false
   },
@@ -2085,6 +2409,15 @@ export const THEMES = [
     "errName": "霜叶红",
     "sucName": "鲜绿",
     "wrnName": "蝶黄",
+    "synNames": {
+      "keyword": "玫瑰紫",
+      "string": "汉绣绿",
+      "constant": "靛青",
+      "function": "紫藤萝",
+      "parameter": "韎韐"
+    },
+    "synAnchorSlot": "keyword",
+    "tier": "攻坚",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -2176,7 +2509,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(151,139,0)",
       "--dsw-alias-state-warn-secondary": "rgb(176,164,48)",
       "--dsw-alias-state-warn-tertiary": "rgb(246,244,208)",
-      "--dsw-alias-state-warn-label": "rgb(116,104,0)"
+      "--dsw-alias-state-warn-label": "rgb(116,104,0)",
+      "--shiki-token-keyword": "rgb(186,47,123)",
+      "--shiki-token-string": "rgb(46,125,50)",
+      "--shiki-token-constant": "rgb(22,97,171)",
+      "--shiki-token-function": "rgb(108,90,179)",
+      "--shiki-token-parameter": "rgb(165,68,27)",
+      "--shiki-token-string-expression": "rgb(30,112,36)",
+      "--shiki-token-link": "rgb(22,97,171)",
+      "--shiki-token-comment": "rgb(124,104,106)",
+      "--shiki-token-punctuation": "rgb(93,73,75)"
     },
     "curated": false
   },
@@ -2199,6 +2541,15 @@ export const THEMES = [
     "errName": "霜叶红",
     "sucName": "鲜绿",
     "wrnName": "蝶黄",
+    "synNames": {
+      "keyword": "玫瑰紫",
+      "string": "玉髓绿",
+      "constant": "蓝色",
+      "function": "紫藤萝",
+      "parameter": "法螺红"
+    },
+    "synAnchorSlot": "keyword",
+    "tier": "攻坚",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -2290,7 +2641,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(226,216,73)",
       "--dsw-alias-state-warn-secondary": "rgb(237,228,87)",
       "--dsw-alias-state-warn-tertiary": "rgb(49,47,23)",
-      "--dsw-alias-state-warn-label": "rgb(173,163,0)"
+      "--dsw-alias-state-warn-label": "rgb(173,163,0)",
+      "--shiki-token-keyword": "rgb(228,88,159)",
+      "--shiki-token-string": "rgb(65,179,73)",
+      "--shiki-token-constant": "rgb(74,141,218)",
+      "--shiki-token-function": "rgb(155,138,232)",
+      "--shiki-token-parameter": "rgb(238,128,85)",
+      "--shiki-token-string-expression": "rgb(83,195,89)",
+      "--shiki-token-link": "rgb(74,141,218)",
+      "--shiki-token-comment": "rgb(156,133,135)",
+      "--shiki-token-punctuation": "rgb(186,164,166)"
     },
     "curated": false
   },
@@ -2313,6 +2673,15 @@ export const THEMES = [
     "errName": "鹅血石红",
     "sucName": "玉髓绿",
     "wrnName": "山鸡黄",
+    "synNames": {
+      "keyword": "菜头紫",
+      "string": "鹦鹉绿",
+      "constant": "靛青",
+      "function": "紫藤萝",
+      "parameter": "韎韐"
+    },
+    "synAnchorSlot": "string",
+    "tier": "心流",
     "identityShiftDL": 0.0806,
     "degraded": [],
     "tokens": {
@@ -2404,9 +2773,18 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(170,127,17)",
       "--dsw-alias-state-warn-secondary": "rgb(196,152,54)",
       "--dsw-alias-state-warn-tertiary": "rgb(254,240,214)",
-      "--dsw-alias-state-warn-label": "rgb(148,105,0)"
+      "--dsw-alias-state-warn-label": "rgb(148,105,0)",
+      "--shiki-token-keyword": "rgb(149,28,72)",
+      "--shiki-token-string": "rgb(40,124,0)",
+      "--shiki-token-constant": "rgb(22,97,171)",
+      "--shiki-token-function": "rgb(120,101,192)",
+      "--shiki-token-parameter": "rgb(165,68,27)",
+      "--shiki-token-string-expression": "rgb(23,110,0)",
+      "--shiki-token-link": "rgb(22,97,171)",
+      "--shiki-token-comment": "rgb(104,111,108)",
+      "--shiki-token-punctuation": "rgb(74,81,78)"
     },
-    "curated": true
+    "curated": false
   },
   {
     "id": "yingwulv-dark",
@@ -2427,6 +2805,15 @@ export const THEMES = [
     "errName": "鹅血石红",
     "sucName": "玉髓绿",
     "wrnName": "山鸡黄",
+    "synNames": {
+      "keyword": "淡绛红",
+      "string": "鹦鹉绿",
+      "constant": "蓝色",
+      "function": "紫藤萝",
+      "parameter": "法螺红"
+    },
+    "synAnchorSlot": "string",
+    "tier": "心流",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -2518,9 +2905,18 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(183,139,38)",
       "--dsw-alias-state-warn-secondary": "rgb(202,158,61)",
       "--dsw-alias-state-warn-tertiary": "rgb(53,45,28)",
-      "--dsw-alias-state-warn-label": "rgb(195,151,53)"
+      "--dsw-alias-state-warn-label": "rgb(195,151,53)",
+      "--shiki-token-keyword": "rgb(236,118,150)",
+      "--shiki-token-string": "rgb(91,174,35)",
+      "--shiki-token-constant": "rgb(74,141,218)",
+      "--shiki-token-function": "rgb(155,138,232)",
+      "--shiki-token-parameter": "rgb(238,128,85)",
+      "--shiki-token-string-expression": "rgb(107,190,56)",
+      "--shiki-token-link": "rgb(74,141,218)",
+      "--shiki-token-comment": "rgb(133,141,137)",
+      "--shiki-token-punctuation": "rgb(164,171,168)"
     },
-    "curated": true
+    "curated": false
   },
   {
     "id": "boluohong-light",
@@ -2541,6 +2937,15 @@ export const THEMES = [
     "errName": "淡曙红",
     "sucName": "新绿",
     "wrnName": "佛手黄",
+    "synNames": {
+      "keyword": "菜头紫",
+      "string": "汉绣绿",
+      "constant": "靛青",
+      "function": "紫藤萝",
+      "parameter": "菠萝红"
+    },
+    "synAnchorSlot": "parameter",
+    "tier": "收工",
     "identityShiftDL": 0.1189,
     "degraded": [
       "bubbleChroma"
@@ -2634,7 +3039,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(163,125,0)",
       "--dsw-alias-state-warn-secondary": "rgb(188,149,47)",
       "--dsw-alias-state-warn-tertiary": "rgb(253,242,202)",
-      "--dsw-alias-state-warn-label": "rgb(134,96,0)"
+      "--dsw-alias-state-warn-label": "rgb(134,96,0)",
+      "--shiki-token-keyword": "rgb(149,28,72)",
+      "--shiki-token-string": "rgb(46,125,50)",
+      "--shiki-token-constant": "rgb(22,97,171)",
+      "--shiki-token-function": "rgb(108,90,179)",
+      "--shiki-token-parameter": "rgb(196,69,0)",
+      "--shiki-token-string-expression": "rgb(30,112,36)",
+      "--shiki-token-link": "rgb(22,97,171)",
+      "--shiki-token-comment": "rgb(123,106,94)",
+      "--shiki-token-punctuation": "rgb(92,75,64)"
     },
     "curated": false
   },
@@ -2657,6 +3071,15 @@ export const THEMES = [
     "errName": "淡曙红",
     "sucName": "新绿",
     "wrnName": "佛手黄",
+    "synNames": {
+      "keyword": "淡绛红",
+      "string": "玉髓绿",
+      "constant": "蓝色",
+      "function": "紫藤萝",
+      "parameter": "菠萝红"
+    },
+    "synAnchorSlot": "parameter",
+    "tier": "收工",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -2748,7 +3171,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(254,215,26)",
       "--dsw-alias-state-warn-secondary": "rgb(255,220,37)",
       "--dsw-alias-state-warn-tertiary": "rgb(53,46,18)",
-      "--dsw-alias-state-warn-label": "rgb(193,155,0)"
+      "--dsw-alias-state-warn-label": "rgb(193,155,0)",
+      "--shiki-token-keyword": "rgb(236,118,150)",
+      "--shiki-token-string": "rgb(65,179,73)",
+      "--shiki-token-constant": "rgb(74,141,218)",
+      "--shiki-token-function": "rgb(155,138,232)",
+      "--shiki-token-parameter": "rgb(252,121,48)",
+      "--shiki-token-string-expression": "rgb(83,195,89)",
+      "--shiki-token-link": "rgb(74,141,218)",
+      "--shiki-token-comment": "rgb(155,135,123)",
+      "--shiki-token-punctuation": "rgb(184,165,154)"
     },
     "curated": false
   },
@@ -2771,6 +3203,15 @@ export const THEMES = [
     "errName": "枫丹",
     "sucName": "玉髓绿",
     "wrnName": "杏黄",
+    "synNames": {
+      "keyword": "菜头紫",
+      "string": "汉绣绿",
+      "constant": "靛青",
+      "function": "紫藤萝",
+      "parameter": "覆盆子红"
+    },
+    "synAnchorSlot": "parameter",
+    "tier": "爆肝",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -2862,9 +3303,18 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(201,104,0)",
       "--dsw-alias-state-warn-secondary": "rgb(228,129,47)",
       "--dsw-alias-state-warn-tertiary": "rgb(255,235,209)",
-      "--dsw-alias-state-warn-label": "rgb(178,83,0)"
+      "--dsw-alias-state-warn-label": "rgb(178,83,0)",
+      "--shiki-token-keyword": "rgb(149,28,72)",
+      "--shiki-token-string": "rgb(46,125,50)",
+      "--shiki-token-constant": "rgb(22,97,171)",
+      "--shiki-token-function": "rgb(108,90,179)",
+      "--shiki-token-parameter": "rgb(172,31,24)",
+      "--shiki-token-string-expression": "rgb(30,112,36)",
+      "--shiki-token-link": "rgb(22,97,171)",
+      "--shiki-token-comment": "rgb(126,104,96)",
+      "--shiki-token-punctuation": "rgb(95,74,66)"
     },
-    "curated": false
+    "curated": true
   },
   {
     "id": "fupenzihong-dark",
@@ -2885,6 +3335,15 @@ export const THEMES = [
     "errName": "淡菽红",
     "sucName": "玉髓绿",
     "wrnName": "杏黄",
+    "synNames": {
+      "keyword": "淡绛红",
+      "string": "玉髓绿",
+      "constant": "蓝色",
+      "function": "紫藤萝",
+      "parameter": "覆盆子红"
+    },
+    "synAnchorSlot": "parameter",
+    "tier": "爆肝",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -2976,9 +3435,18 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(242,142,22)",
       "--dsw-alias-state-warn-secondary": "rgb(255,161,54)",
       "--dsw-alias-state-warn-tertiary": "rgb(61,41,23)",
-      "--dsw-alias-state-warn-label": "rgb(229,130,0)"
+      "--dsw-alias-state-warn-label": "rgb(229,130,0)",
+      "--shiki-token-keyword": "rgb(236,118,150)",
+      "--shiki-token-string": "rgb(65,179,73)",
+      "--shiki-token-constant": "rgb(74,141,218)",
+      "--shiki-token-function": "rgb(155,138,232)",
+      "--shiki-token-parameter": "rgb(228,88,74)",
+      "--shiki-token-string-expression": "rgb(83,195,89)",
+      "--shiki-token-link": "rgb(74,141,218)",
+      "--shiki-token-comment": "rgb(158,133,125)",
+      "--shiki-token-punctuation": "rgb(187,164,156)"
     },
-    "curated": false
+    "curated": true
   },
   {
     "id": "cangbi-light",
@@ -2999,6 +3467,15 @@ export const THEMES = [
     "errName": "蟹蝥红",
     "sucName": "鹦鹉绿",
     "wrnName": "芥黄",
+    "synNames": {
+      "keyword": "菜头紫",
+      "string": "汉绣绿",
+      "constant": "苍碧",
+      "function": "紫藤萝",
+      "parameter": "韎韐"
+    },
+    "synAnchorSlot": "constant",
+    "tier": "爆肝",
     "identityShiftDL": 0,
     "degraded": [
       "bubbleChroma"
@@ -3092,7 +3569,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(178,127,0)",
       "--dsw-alias-state-warn-secondary": "rgb(204,152,48)",
       "--dsw-alias-state-warn-tertiary": "rgb(255,240,208)",
-      "--dsw-alias-state-warn-label": "rgb(141,91,0)"
+      "--dsw-alias-state-warn-label": "rgb(141,91,0)",
+      "--shiki-token-keyword": "rgb(149,28,72)",
+      "--shiki-token-string": "rgb(46,125,50)",
+      "--shiki-token-constant": "rgb(42,82,190)",
+      "--shiki-token-function": "rgb(120,101,192)",
+      "--shiki-token-parameter": "rgb(165,68,27)",
+      "--shiki-token-string-expression": "rgb(30,112,36)",
+      "--shiki-token-link": "rgb(42,82,190)",
+      "--shiki-token-comment": "rgb(105,109,124)",
+      "--shiki-token-punctuation": "rgb(75,79,93)"
     },
     "curated": false
   },
@@ -3115,6 +3601,15 @@ export const THEMES = [
     "errName": "蟹蝥红",
     "sucName": "鹦鹉绿",
     "wrnName": "芥黄",
+    "synNames": {
+      "keyword": "淡绛红",
+      "string": "玉髓绿",
+      "constant": "苍碧",
+      "function": "紫藤萝",
+      "parameter": "法螺红"
+    },
+    "synAnchorSlot": "constant",
+    "tier": "爆肝",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -3206,7 +3701,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(217,164,14)",
       "--dsw-alias-state-warn-secondary": "rgb(237,183,52)",
       "--dsw-alias-state-warn-tertiary": "rgb(55,44,23)",
-      "--dsw-alias-state-warn-label": "rgb(201,149,0)"
+      "--dsw-alias-state-warn-label": "rgb(201,149,0)",
+      "--shiki-token-keyword": "rgb(236,118,150)",
+      "--shiki-token-string": "rgb(65,179,73)",
+      "--shiki-token-constant": "rgb(86,132,245)",
+      "--shiki-token-function": "rgb(155,138,232)",
+      "--shiki-token-parameter": "rgb(238,128,85)",
+      "--shiki-token-string-expression": "rgb(83,195,89)",
+      "--shiki-token-link": "rgb(86,132,245)",
+      "--shiki-token-comment": "rgb(134,138,154)",
+      "--shiki-token-punctuation": "rgb(165,169,184)"
     },
     "curated": false
   },
@@ -3229,6 +3733,15 @@ export const THEMES = [
     "errName": "樱桃红",
     "sucName": "玉髓绿",
     "wrnName": "橙皮黄",
+    "synNames": {
+      "keyword": "菜头紫",
+      "string": "汉绣绿",
+      "constant": "靛青",
+      "function": "紫藤萝",
+      "parameter": "雄黄"
+    },
+    "synAnchorSlot": "parameter",
+    "tier": "收工",
     "identityShiftDL": 0.156,
     "degraded": [],
     "tokens": {
@@ -3320,7 +3833,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(198,111,0)",
       "--dsw-alias-state-warn-secondary": "rgb(225,136,47)",
       "--dsw-alias-state-warn-tertiary": "rgb(255,237,206)",
-      "--dsw-alias-state-warn-label": "rgb(174,88,0)"
+      "--dsw-alias-state-warn-label": "rgb(174,88,0)",
+      "--shiki-token-keyword": "rgb(149,28,72)",
+      "--shiki-token-string": "rgb(46,125,50)",
+      "--shiki-token-constant": "rgb(22,97,171)",
+      "--shiki-token-function": "rgb(108,90,179)",
+      "--shiki-token-parameter": "rgb(173,78,0)",
+      "--shiki-token-string-expression": "rgb(30,112,36)",
+      "--shiki-token-link": "rgb(22,97,171)",
+      "--shiki-token-comment": "rgb(124,106,91)",
+      "--shiki-token-punctuation": "rgb(93,75,61)"
     },
     "curated": true
   },
@@ -3343,6 +3865,15 @@ export const THEMES = [
     "errName": "樱桃红",
     "sucName": "玉髓绿",
     "wrnName": "橙皮黄",
+    "synNames": {
+      "keyword": "淡绛红",
+      "string": "玉髓绿",
+      "constant": "蓝色",
+      "function": "紫藤萝",
+      "parameter": "雄黄"
+    },
+    "synAnchorSlot": "parameter",
+    "tier": "收工",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -3434,7 +3965,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(252,161,4)",
       "--dsw-alias-state-warn-secondary": "rgb(255,180,50)",
       "--dsw-alias-state-warn-tertiary": "rgb(60,42,21)",
-      "--dsw-alias-state-warn-label": "rgb(224,135,0)"
+      "--dsw-alias-state-warn-label": "rgb(224,135,0)",
+      "--shiki-token-keyword": "rgb(236,118,150)",
+      "--shiki-token-string": "rgb(65,179,73)",
+      "--shiki-token-constant": "rgb(74,141,218)",
+      "--shiki-token-function": "rgb(155,138,232)",
+      "--shiki-token-parameter": "rgb(255,153,0)",
+      "--shiki-token-string-expression": "rgb(83,195,89)",
+      "--shiki-token-link": "rgb(74,141,218)",
+      "--shiki-token-comment": "rgb(155,135,120)",
+      "--shiki-token-punctuation": "rgb(184,166,151)"
     },
     "curated": true
   },
@@ -3457,6 +3997,15 @@ export const THEMES = [
     "errName": "柿红",
     "sucName": "柠檬绿",
     "wrnName": "鸡蛋黄",
+    "synNames": {
+      "keyword": "菜头紫",
+      "string": "汉绣绿",
+      "constant": "靛青",
+      "function": "紫藤萝",
+      "parameter": "韎韐"
+    },
+    "synAnchorSlot": null,
+    "tier": "收工",
     "identityShiftDL": 0.2349,
     "degraded": [],
     "tokens": {
@@ -3548,7 +4097,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(185,119,0)",
       "--dsw-alias-state-warn-secondary": "rgb(211,144,47)",
       "--dsw-alias-state-warn-tertiary": "rgb(255,239,205)",
-      "--dsw-alias-state-warn-label": "rgb(149,86,0)"
+      "--dsw-alias-state-warn-label": "rgb(149,86,0)",
+      "--shiki-token-keyword": "rgb(149,28,72)",
+      "--shiki-token-string": "rgb(46,125,50)",
+      "--shiki-token-constant": "rgb(22,97,171)",
+      "--shiki-token-function": "rgb(108,90,179)",
+      "--shiki-token-parameter": "rgb(165,68,27)",
+      "--shiki-token-string-expression": "rgb(30,112,36)",
+      "--shiki-token-link": "rgb(22,97,171)",
+      "--shiki-token-comment": "rgb(121,107,90)",
+      "--shiki-token-punctuation": "rgb(90,77,60)"
     },
     "curated": false
   },
@@ -3571,6 +4129,15 @@ export const THEMES = [
     "errName": "柿红",
     "sucName": "柠檬绿",
     "wrnName": "鸡蛋黄",
+    "synNames": {
+      "keyword": "淡绛红",
+      "string": "玉髓绿",
+      "constant": "蓝色",
+      "function": "紫藤萝",
+      "parameter": "法螺红"
+    },
+    "synAnchorSlot": null,
+    "tier": "收工",
     "identityShiftDL": 0,
     "degraded": [
       "bubbleChroma"
@@ -3664,7 +4231,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(251,182,18)",
       "--dsw-alias-state-warn-secondary": "rgb(255,202,57)",
       "--dsw-alias-state-warn-tertiary": "rgb(57,43,20)",
-      "--dsw-alias-state-warn-label": "rgb(211,144,0)"
+      "--dsw-alias-state-warn-label": "rgb(211,144,0)",
+      "--shiki-token-keyword": "rgb(236,118,150)",
+      "--shiki-token-string": "rgb(65,179,73)",
+      "--shiki-token-constant": "rgb(74,141,218)",
+      "--shiki-token-function": "rgb(155,138,232)",
+      "--shiki-token-parameter": "rgb(238,128,85)",
+      "--shiki-token-string-expression": "rgb(83,195,89)",
+      "--shiki-token-link": "rgb(74,141,218)",
+      "--shiki-token-comment": "rgb(152,137,118)",
+      "--shiki-token-punctuation": "rgb(181,167,150)"
     },
     "curated": false
   },
@@ -3687,6 +4263,15 @@ export const THEMES = [
     "errName": "菜头紫",
     "sucName": "玉髓绿",
     "wrnName": "蜴蜊绿",
+    "synNames": {
+      "keyword": "菜头紫",
+      "string": "汉绣绿",
+      "constant": "靛青",
+      "function": "紫藤萝",
+      "parameter": "韎韐"
+    },
+    "synAnchorSlot": null,
+    "tier": "爆肝",
     "identityShiftDL": 0,
     "degraded": [
       "seal"
@@ -3780,7 +4365,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(131,94,29)",
       "--dsw-alias-state-warn-secondary": "rgb(155,117,55)",
       "--dsw-alias-state-warn-tertiary": "rgb(253,240,222)",
-      "--dsw-alias-state-warn-label": "rgb(132,94,29)"
+      "--dsw-alias-state-warn-label": "rgb(132,94,29)",
+      "--shiki-token-keyword": "rgb(149,28,72)",
+      "--shiki-token-string": "rgb(46,125,50)",
+      "--shiki-token-constant": "rgb(22,97,171)",
+      "--shiki-token-function": "rgb(120,101,192)",
+      "--shiki-token-parameter": "rgb(165,68,27)",
+      "--shiki-token-string-expression": "rgb(30,112,36)",
+      "--shiki-token-link": "rgb(22,97,171)",
+      "--shiki-token-comment": "rgb(113,106,118)",
+      "--shiki-token-punctuation": "rgb(84,76,87)"
     },
     "curated": false
   },
@@ -3803,6 +4397,15 @@ export const THEMES = [
     "errName": "菜头紫",
     "sucName": "玉髓绿",
     "wrnName": "蜴蜊绿",
+    "synNames": {
+      "keyword": "淡绛红",
+      "string": "玉髓绿",
+      "constant": "蓝色",
+      "function": "紫藤萝",
+      "parameter": "法螺红"
+    },
+    "synAnchorSlot": null,
+    "tier": "爆肝",
     "identityShiftDL": 0.2211,
     "degraded": [
       "seal"
@@ -3896,7 +4499,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(131,94,29)",
       "--dsw-alias-state-warn-secondary": "rgb(149,111,49)",
       "--dsw-alias-state-warn-tertiary": "rgb(52,44,33)",
-      "--dsw-alias-state-warn-label": "rgb(191,151,89)"
+      "--dsw-alias-state-warn-label": "rgb(191,151,89)",
+      "--shiki-token-keyword": "rgb(236,118,150)",
+      "--shiki-token-string": "rgb(65,179,73)",
+      "--shiki-token-constant": "rgb(74,141,218)",
+      "--shiki-token-function": "rgb(155,138,232)",
+      "--shiki-token-parameter": "rgb(238,128,85)",
+      "--shiki-token-string-expression": "rgb(83,195,89)",
+      "--shiki-token-link": "rgb(74,141,218)",
+      "--shiki-token-comment": "rgb(144,136,149)",
+      "--shiki-token-punctuation": "rgb(174,166,179)"
     },
     "curated": false
   },
@@ -3919,6 +4531,15 @@ export const THEMES = [
     "errName": "丹紫红",
     "sucName": "鹦鹉绿",
     "wrnName": "风帆黄",
+    "synNames": {
+      "keyword": "菜头紫",
+      "string": "汉绣绿",
+      "constant": "靛青",
+      "function": "紫藤萝",
+      "parameter": "韎韐"
+    },
+    "synAnchorSlot": null,
+    "tier": "收工",
     "identityShiftDL": 0.1966,
     "degraded": [],
     "tokens": {
@@ -4010,7 +4631,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(193,120,0)",
       "--dsw-alias-state-warn-secondary": "rgb(220,145,48)",
       "--dsw-alias-state-warn-tertiary": "rgb(255,237,211)",
-      "--dsw-alias-state-warn-label": "rgb(165,94,0)"
+      "--dsw-alias-state-warn-label": "rgb(165,94,0)",
+      "--shiki-token-keyword": "rgb(149,28,72)",
+      "--shiki-token-string": "rgb(46,125,50)",
+      "--shiki-token-constant": "rgb(22,97,171)",
+      "--shiki-token-function": "rgb(120,101,192)",
+      "--shiki-token-parameter": "rgb(165,68,27)",
+      "--shiki-token-string-expression": "rgb(30,112,36)",
+      "--shiki-token-link": "rgb(22,97,171)",
+      "--shiki-token-comment": "rgb(108,111,102)",
+      "--shiki-token-punctuation": "rgb(78,81,72)"
     },
     "curated": false
   },
@@ -4033,6 +4663,15 @@ export const THEMES = [
     "errName": "丹紫红",
     "sucName": "鹦鹉绿",
     "wrnName": "风帆黄",
+    "synNames": {
+      "keyword": "淡绛红",
+      "string": "玉髓绿",
+      "constant": "蓝色",
+      "function": "紫藤萝",
+      "parameter": "法螺红"
+    },
+    "synAnchorSlot": null,
+    "tier": "收工",
     "identityShiftDL": 0,
     "degraded": [
       "bubbleChroma"
@@ -4126,7 +4765,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(220,145,35)",
       "--dsw-alias-state-warn-secondary": "rgb(240,164,61)",
       "--dsw-alias-state-warn-tertiary": "rgb(58,43,25)",
-      "--dsw-alias-state-warn-label": "rgb(215,140,26)"
+      "--dsw-alias-state-warn-label": "rgb(215,140,26)",
+      "--shiki-token-keyword": "rgb(236,118,150)",
+      "--shiki-token-string": "rgb(65,179,73)",
+      "--shiki-token-constant": "rgb(74,141,218)",
+      "--shiki-token-function": "rgb(155,138,232)",
+      "--shiki-token-parameter": "rgb(238,128,85)",
+      "--shiki-token-string-expression": "rgb(83,195,89)",
+      "--shiki-token-link": "rgb(74,141,218)",
+      "--shiki-token-comment": "rgb(138,141,131)",
+      "--shiki-token-punctuation": "rgb(168,171,162)"
     },
     "curated": false
   },
@@ -4149,6 +4797,15 @@ export const THEMES = [
     "errName": "朱墙",
     "sucName": "宝石绿",
     "wrnName": "姜黄",
+    "synNames": {
+      "keyword": "菜头紫",
+      "string": "汉绣绿",
+      "constant": "靛青",
+      "function": "紫藤萝",
+      "parameter": "火砖红"
+    },
+    "synAnchorSlot": "parameter",
+    "tier": "攻坚",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -4240,7 +4897,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(162,129,0)",
       "--dsw-alias-state-warn-secondary": "rgb(187,154,47)",
       "--dsw-alias-state-warn-tertiary": "rgb(251,242,206)",
-      "--dsw-alias-state-warn-label": "rgb(131,98,0)"
+      "--dsw-alias-state-warn-label": "rgb(131,98,0)",
+      "--shiki-token-keyword": "rgb(149,28,72)",
+      "--shiki-token-string": "rgb(46,125,50)",
+      "--shiki-token-constant": "rgb(22,97,171)",
+      "--shiki-token-function": "rgb(108,90,179)",
+      "--shiki-token-parameter": "rgb(178,73,0)",
+      "--shiki-token-string-expression": "rgb(30,112,36)",
+      "--shiki-token-link": "rgb(22,97,171)",
+      "--shiki-token-comment": "rgb(123,106,94)",
+      "--shiki-token-punctuation": "rgb(92,75,64)"
     },
     "curated": false
   },
@@ -4263,6 +4929,15 @@ export const THEMES = [
     "errName": "朱墙",
     "sucName": "宝石绿",
     "wrnName": "姜黄",
+    "synNames": {
+      "keyword": "淡绛红",
+      "string": "玉髓绿",
+      "constant": "蓝色",
+      "function": "紫藤萝",
+      "parameter": "火砖红"
+    },
+    "synAnchorSlot": "parameter",
+    "tier": "攻坚",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -4354,7 +5029,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(226,192,39)",
       "--dsw-alias-state-warn-secondary": "rgb(246,212,68)",
       "--dsw-alias-state-warn-tertiary": "rgb(52,46,22)",
-      "--dsw-alias-state-warn-label": "rgb(189,156,0)"
+      "--dsw-alias-state-warn-label": "rgb(189,156,0)",
+      "--shiki-token-keyword": "rgb(236,118,150)",
+      "--shiki-token-string": "rgb(65,179,73)",
+      "--shiki-token-constant": "rgb(74,141,218)",
+      "--shiki-token-function": "rgb(155,138,232)",
+      "--shiki-token-parameter": "rgb(219,110,53)",
+      "--shiki-token-string-expression": "rgb(83,195,89)",
+      "--shiki-token-link": "rgb(74,141,218)",
+      "--shiki-token-comment": "rgb(155,135,123)",
+      "--shiki-token-punctuation": "rgb(184,165,154)"
     },
     "curated": false
   },
@@ -4377,6 +5061,15 @@ export const THEMES = [
     "errName": "朱砂红",
     "sucName": "柳绿",
     "wrnName": "鲑鱼红",
+    "synNames": {
+      "keyword": "香叶红",
+      "string": "汉绣绿",
+      "constant": "靛青",
+      "function": "紫藤萝",
+      "parameter": "韎韐"
+    },
+    "synAnchorSlot": "keyword",
+    "tier": "收工",
     "identityShiftDL": 0.1205,
     "degraded": [],
     "tokens": {
@@ -4468,7 +5161,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(199,119,50)",
       "--dsw-alias-state-warn-secondary": "rgb(226,144,77)",
       "--dsw-alias-state-warn-tertiary": "rgb(255,236,217)",
-      "--dsw-alias-state-warn-label": "rgb(168,90,8)"
+      "--dsw-alias-state-warn-label": "rgb(168,90,8)",
+      "--shiki-token-keyword": "rgb(185,75,84)",
+      "--shiki-token-string": "rgb(46,125,50)",
+      "--shiki-token-constant": "rgb(22,97,171)",
+      "--shiki-token-function": "rgb(108,90,179)",
+      "--shiki-token-parameter": "rgb(165,68,27)",
+      "--shiki-token-string-expression": "rgb(30,112,36)",
+      "--shiki-token-link": "rgb(22,97,171)",
+      "--shiki-token-comment": "rgb(124,104,99)",
+      "--shiki-token-punctuation": "rgb(93,74,70)"
     },
     "curated": false
   },
@@ -4491,6 +5193,15 @@ export const THEMES = [
     "errName": "朱砂红",
     "sucName": "柳绿",
     "wrnName": "鲑鱼红",
+    "synNames": {
+      "keyword": "香叶红",
+      "string": "玉髓绿",
+      "constant": "蓝色",
+      "function": "紫藤萝",
+      "parameter": "法螺红"
+    },
+    "synAnchorSlot": "keyword",
+    "tier": "收工",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -4582,7 +5293,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(240,156,90)",
       "--dsw-alias-state-warn-secondary": "rgb(255,175,109)",
       "--dsw-alias-state-warn-tertiary": "rgb(58,42,30)",
-      "--dsw-alias-state-warn-label": "rgb(218,136,69)"
+      "--dsw-alias-state-warn-label": "rgb(218,136,69)",
+      "--shiki-token-keyword": "rgb(240,124,130)",
+      "--shiki-token-string": "rgb(65,179,73)",
+      "--shiki-token-constant": "rgb(74,141,218)",
+      "--shiki-token-function": "rgb(155,138,232)",
+      "--shiki-token-parameter": "rgb(238,128,85)",
+      "--shiki-token-string-expression": "rgb(83,195,89)",
+      "--shiki-token-link": "rgb(74,141,218)",
+      "--shiki-token-comment": "rgb(156,134,129)",
+      "--shiki-token-punctuation": "rgb(185,164,159)"
     },
     "curated": false
   },
@@ -4605,6 +5325,15 @@ export const THEMES = [
     "errName": "火泥棕",
     "sucName": "綟绶",
     "wrnName": "暗金",
+    "synNames": {
+      "keyword": "菜头紫",
+      "string": "汉绣绿",
+      "constant": "靛青",
+      "function": "紫藤萝",
+      "parameter": "韎韐"
+    },
+    "synAnchorSlot": null,
+    "tier": "攻坚",
     "identityShiftDL": 0,
     "degraded": [
       "seal"
@@ -4698,7 +5427,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(156,139,77)",
       "--dsw-alias-state-warn-secondary": "rgb(181,164,101)",
       "--dsw-alias-state-warn-tertiary": "rgb(247,242,223)",
-      "--dsw-alias-state-warn-label": "rgb(117,101,38)"
+      "--dsw-alias-state-warn-label": "rgb(117,101,38)",
+      "--shiki-token-keyword": "rgb(149,28,72)",
+      "--shiki-token-string": "rgb(46,125,50)",
+      "--shiki-token-constant": "rgb(22,97,171)",
+      "--shiki-token-function": "rgb(108,90,179)",
+      "--shiki-token-parameter": "rgb(165,68,27)",
+      "--shiki-token-string-expression": "rgb(30,112,36)",
+      "--shiki-token-link": "rgb(22,97,171)",
+      "--shiki-token-comment": "rgb(111,107,121)",
+      "--shiki-token-punctuation": "rgb(81,77,90)"
     },
     "curated": false
   },
@@ -4721,6 +5459,15 @@ export const THEMES = [
     "errName": "火泥棕",
     "sucName": "荠麦绿",
     "wrnName": "暗金",
+    "synNames": {
+      "keyword": "淡绛红",
+      "string": "玉髓绿",
+      "constant": "蓝色",
+      "function": "紫藤萝",
+      "parameter": "法螺红"
+    },
+    "synAnchorSlot": null,
+    "tier": "攻坚",
     "identityShiftDL": 0,
     "degraded": [
       "seal"
@@ -4814,7 +5561,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(156,139,77)",
       "--dsw-alias-state-warn-secondary": "rgb(175,157,95)",
       "--dsw-alias-state-warn-tertiary": "rgb(49,46,34)",
-      "--dsw-alias-state-warn-label": "rgb(175,158,96)"
+      "--dsw-alias-state-warn-label": "rgb(175,158,96)",
+      "--shiki-token-keyword": "rgb(236,118,150)",
+      "--shiki-token-string": "rgb(65,179,73)",
+      "--shiki-token-constant": "rgb(74,141,218)",
+      "--shiki-token-function": "rgb(155,138,232)",
+      "--shiki-token-parameter": "rgb(238,128,85)",
+      "--shiki-token-string-expression": "rgb(83,195,89)",
+      "--shiki-token-link": "rgb(74,141,218)",
+      "--shiki-token-comment": "rgb(142,136,152)",
+      "--shiki-token-punctuation": "rgb(172,167,181)"
     },
     "curated": false
   },
@@ -4837,6 +5593,15 @@ export const THEMES = [
     "errName": "朱墙",
     "sucName": "新绿",
     "wrnName": "碧螺春绿",
+    "synNames": {
+      "keyword": "菜头紫",
+      "string": "汉绣绿",
+      "constant": "靛青",
+      "function": "紫藤萝",
+      "parameter": "韎韐"
+    },
+    "synAnchorSlot": "parameter",
+    "tier": "攻坚",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -4928,7 +5693,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(134,112,24)",
       "--dsw-alias-state-warn-secondary": "rgb(158,136,54)",
       "--dsw-alias-state-warn-tertiary": "rgb(249,242,219)",
-      "--dsw-alias-state-warn-label": "rgb(122,100,1)"
+      "--dsw-alias-state-warn-label": "rgb(122,100,1)",
+      "--shiki-token-keyword": "rgb(149,28,72)",
+      "--shiki-token-string": "rgb(46,125,50)",
+      "--shiki-token-constant": "rgb(22,97,171)",
+      "--shiki-token-function": "rgb(108,90,179)",
+      "--shiki-token-parameter": "rgb(165,68,27)",
+      "--shiki-token-string-expression": "rgb(30,112,36)",
+      "--shiki-token-link": "rgb(22,97,171)",
+      "--shiki-token-comment": "rgb(124,105,95)",
+      "--shiki-token-punctuation": "rgb(93,75,65)"
     },
     "curated": false
   },
@@ -4951,6 +5725,15 @@ export const THEMES = [
     "errName": "尖晶玉红",
     "sucName": "新绿",
     "wrnName": "碧螺春绿",
+    "synNames": {
+      "keyword": "淡绛红",
+      "string": "玉髓绿",
+      "constant": "蓝色",
+      "function": "紫藤萝",
+      "parameter": "韎韐"
+    },
+    "synAnchorSlot": "parameter",
+    "tier": "攻坚",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -5042,7 +5825,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(134,112,24)",
       "--dsw-alias-state-warn-secondary": "rgb(152,130,47)",
       "--dsw-alias-state-warn-tertiary": "rgb(50,46,31)",
-      "--dsw-alias-state-warn-label": "rgb(180,157,76)"
+      "--dsw-alias-state-warn-label": "rgb(180,157,76)",
+      "--shiki-token-keyword": "rgb(236,118,150)",
+      "--shiki-token-string": "rgb(65,179,73)",
+      "--shiki-token-constant": "rgb(74,141,218)",
+      "--shiki-token-function": "rgb(155,138,232)",
+      "--shiki-token-parameter": "rgb(205,105,66)",
+      "--shiki-token-string-expression": "rgb(83,195,89)",
+      "--shiki-token-link": "rgb(74,141,218)",
+      "--shiki-token-comment": "rgb(155,135,124)",
+      "--shiki-token-punctuation": "rgb(184,165,155)"
     },
     "curated": false
   },
@@ -5065,6 +5857,15 @@ export const THEMES = [
     "errName": "菜头紫",
     "sucName": "宝石绿",
     "wrnName": "碧螺春绿",
+    "synNames": {
+      "keyword": "菜头紫",
+      "string": "綟绶",
+      "constant": "靛青",
+      "function": "紫藤萝",
+      "parameter": "韎韐"
+    },
+    "synAnchorSlot": "string",
+    "tier": "心流",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -5156,7 +5957,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(134,112,24)",
       "--dsw-alias-state-warn-secondary": "rgb(158,136,54)",
       "--dsw-alias-state-warn-tertiary": "rgb(249,242,219)",
-      "--dsw-alias-state-warn-label": "rgb(122,100,1)"
+      "--dsw-alias-state-warn-label": "rgb(122,100,1)",
+      "--shiki-token-keyword": "rgb(149,28,72)",
+      "--shiki-token-string": "rgb(84,118,0)",
+      "--shiki-token-constant": "rgb(22,97,171)",
+      "--shiki-token-function": "rgb(120,101,192)",
+      "--shiki-token-parameter": "rgb(165,68,27)",
+      "--shiki-token-string-expression": "rgb(72,105,0)",
+      "--shiki-token-link": "rgb(22,97,171)",
+      "--shiki-token-comment": "rgb(106,111,107)",
+      "--shiki-token-punctuation": "rgb(75,81,77)"
     },
     "curated": false
   },
@@ -5179,6 +5989,15 @@ export const THEMES = [
     "errName": "菜头紫",
     "sucName": "宝石绿",
     "wrnName": "碧螺春绿",
+    "synNames": {
+      "keyword": "淡绛红",
+      "string": "綟绶",
+      "constant": "蓝色",
+      "function": "紫藤萝",
+      "parameter": "法螺红"
+    },
+    "synAnchorSlot": "string",
+    "tier": "心流",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -5270,7 +6089,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(134,112,24)",
       "--dsw-alias-state-warn-secondary": "rgb(152,130,47)",
       "--dsw-alias-state-warn-tertiary": "rgb(50,46,31)",
-      "--dsw-alias-state-warn-label": "rgb(180,157,76)"
+      "--dsw-alias-state-warn-label": "rgb(180,157,76)",
+      "--shiki-token-keyword": "rgb(236,118,150)",
+      "--shiki-token-string": "rgb(119,154,50)",
+      "--shiki-token-constant": "rgb(74,141,218)",
+      "--shiki-token-function": "rgb(155,138,232)",
+      "--shiki-token-parameter": "rgb(238,128,85)",
+      "--shiki-token-string-expression": "rgb(134,170,67)",
+      "--shiki-token-link": "rgb(74,141,218)",
+      "--shiki-token-comment": "rgb(135,141,137)",
+      "--shiki-token-punctuation": "rgb(165,171,167)"
     },
     "curated": false
   },
@@ -5293,6 +6121,15 @@ export const THEMES = [
     "errName": "颊红",
     "sucName": "荠麦绿",
     "wrnName": "浅驼色",
+    "synNames": {
+      "keyword": "菜头紫",
+      "string": "汉绣绿",
+      "constant": "靛青",
+      "function": "紫藤萝",
+      "parameter": "韎韐"
+    },
+    "synAnchorSlot": "function",
+    "tier": "心流",
     "identityShiftDL": 0.0788,
     "degraded": [],
     "tokens": {
@@ -5384,7 +6221,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(162,131,62)",
       "--dsw-alias-state-warn-secondary": "rgb(187,155,87)",
       "--dsw-alias-state-warn-tertiary": "rgb(251,241,221)",
-      "--dsw-alias-state-warn-label": "rgb(127,97,23)"
+      "--dsw-alias-state-warn-label": "rgb(127,97,23)",
+      "--shiki-token-keyword": "rgb(149,28,72)",
+      "--shiki-token-string": "rgb(46,125,50)",
+      "--shiki-token-constant": "rgb(22,97,171)",
+      "--shiki-token-function": "rgb(120,101,192)",
+      "--shiki-token-parameter": "rgb(165,68,27)",
+      "--shiki-token-string-expression": "rgb(30,112,36)",
+      "--shiki-token-link": "rgb(22,97,171)",
+      "--shiki-token-comment": "rgb(107,109,122)",
+      "--shiki-token-punctuation": "rgb(77,78,91)"
     },
     "curated": true
   },
@@ -5407,6 +6253,15 @@ export const THEMES = [
     "errName": "颊红",
     "sucName": "荠麦绿",
     "wrnName": "浅驼色",
+    "synNames": {
+      "keyword": "淡绛红",
+      "string": "玉髓绿",
+      "constant": "蓝色",
+      "function": "紫藤萝",
+      "parameter": "法螺红"
+    },
+    "synAnchorSlot": "function",
+    "tier": "心流",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -5498,7 +6353,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(226,193,124)",
       "--dsw-alias-state-warn-secondary": "rgb(246,212,143)",
       "--dsw-alias-state-warn-tertiary": "rgb(51,45,32)",
-      "--dsw-alias-state-warn-label": "rgb(186,154,85)"
+      "--dsw-alias-state-warn-label": "rgb(186,154,85)",
+      "--shiki-token-keyword": "rgb(236,118,150)",
+      "--shiki-token-string": "rgb(65,179,73)",
+      "--shiki-token-constant": "rgb(74,141,218)",
+      "--shiki-token-function": "rgb(155,138,232)",
+      "--shiki-token-parameter": "rgb(238,128,85)",
+      "--shiki-token-string-expression": "rgb(83,195,89)",
+      "--shiki-token-link": "rgb(74,141,218)",
+      "--shiki-token-comment": "rgb(136,138,154)",
+      "--shiki-token-punctuation": "rgb(167,168,183)"
     },
     "curated": true
   },
@@ -5521,6 +6385,15 @@ export const THEMES = [
     "errName": "橡树棕",
     "sucName": "玉髓绿",
     "wrnName": "苍黄",
+    "synNames": {
+      "keyword": "菜头紫",
+      "string": "汉绣绿",
+      "constant": "靛青",
+      "function": "紫藤萝",
+      "parameter": "韎韐"
+    },
+    "synAnchorSlot": "string",
+    "tier": "心流",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -5612,9 +6485,18 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(128,99,50)",
       "--dsw-alias-state-warn-secondary": "rgb(152,122,73)",
       "--dsw-alias-state-warn-tertiary": "rgb(250,240,225)",
-      "--dsw-alias-state-warn-label": "rgb(138,108,59)"
+      "--dsw-alias-state-warn-label": "rgb(138,108,59)",
+      "--shiki-token-keyword": "rgb(149,28,72)",
+      "--shiki-token-string": "rgb(46,125,50)",
+      "--shiki-token-constant": "rgb(22,97,171)",
+      "--shiki-token-function": "rgb(120,101,192)",
+      "--shiki-token-parameter": "rgb(165,68,27)",
+      "--shiki-token-string-expression": "rgb(30,112,36)",
+      "--shiki-token-link": "rgb(22,97,171)",
+      "--shiki-token-comment": "rgb(105,111,103)",
+      "--shiki-token-punctuation": "rgb(75,82,73)"
     },
-    "curated": false
+    "curated": true
   },
   {
     "id": "hanxiulv-dark",
@@ -5635,6 +6517,15 @@ export const THEMES = [
     "errName": "橡树棕",
     "sucName": "柳绿",
     "wrnName": "苍黄",
+    "synNames": {
+      "keyword": "淡绛红",
+      "string": "汉绣绿",
+      "constant": "蓝色",
+      "function": "紫藤萝",
+      "parameter": "法螺红"
+    },
+    "synAnchorSlot": "string",
+    "tier": "心流",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -5726,9 +6617,18 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(128,99,50)",
       "--dsw-alias-state-warn-secondary": "rgb(146,116,67)",
       "--dsw-alias-state-warn-tertiary": "rgb(51,45,35)",
-      "--dsw-alias-state-warn-label": "rgb(184,153,103)"
+      "--dsw-alias-state-warn-label": "rgb(184,153,103)",
+      "--shiki-token-keyword": "rgb(236,118,150)",
+      "--shiki-token-string": "rgb(72,149,74)",
+      "--shiki-token-constant": "rgb(74,141,218)",
+      "--shiki-token-function": "rgb(155,138,232)",
+      "--shiki-token-parameter": "rgb(238,128,85)",
+      "--shiki-token-string-expression": "rgb(88,165,89)",
+      "--shiki-token-link": "rgb(74,141,218)",
+      "--shiki-token-comment": "rgb(134,142,132)",
+      "--shiki-token-punctuation": "rgb(164,172,163)"
     },
-    "curated": false
+    "curated": true
   },
   {
     "id": "anziyuanhong-light",
@@ -5749,6 +6649,15 @@ export const THEMES = [
     "errName": "霜叶红",
     "sucName": "孔雀绿",
     "wrnName": "岩石棕",
+    "synNames": {
+      "keyword": "暗紫苑红",
+      "string": "汉绣绿",
+      "constant": "靛青",
+      "function": "紫藤萝",
+      "parameter": "韎韐"
+    },
+    "synAnchorSlot": "keyword",
+    "tier": "爆肝",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -5840,7 +6749,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(150,77,34)",
       "--dsw-alias-state-warn-secondary": "rgb(176,100,59)",
       "--dsw-alias-state-warn-tertiary": "rgb(255,236,223)",
-      "--dsw-alias-state-warn-label": "rgb(165,91,49)"
+      "--dsw-alias-state-warn-label": "rgb(165,91,49)",
+      "--shiki-token-keyword": "rgb(130,32,43)",
+      "--shiki-token-string": "rgb(46,125,50)",
+      "--shiki-token-constant": "rgb(22,97,171)",
+      "--shiki-token-function": "rgb(108,90,179)",
+      "--shiki-token-parameter": "rgb(165,68,27)",
+      "--shiki-token-string-expression": "rgb(30,112,36)",
+      "--shiki-token-link": "rgb(22,97,171)",
+      "--shiki-token-comment": "rgb(126,104,98)",
+      "--shiki-token-punctuation": "rgb(95,73,69)"
     },
     "curated": false
   },
@@ -5863,6 +6781,15 @@ export const THEMES = [
     "errName": "霜叶红",
     "sucName": "孔雀绿",
     "wrnName": "芽绿",
+    "synNames": {
+      "keyword": "暗紫苑红",
+      "string": "玉髓绿",
+      "constant": "蓝色",
+      "function": "紫藤萝",
+      "parameter": "法螺红"
+    },
+    "synAnchorSlot": "keyword",
+    "tier": "爆肝",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -5954,7 +6881,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(150,194,78)",
       "--dsw-alias-state-warn-secondary": "rgb(169,214,98)",
       "--dsw-alias-state-warn-tertiary": "rgb(40,49,28)",
-      "--dsw-alias-state-warn-label": "rgb(132,175,57)"
+      "--dsw-alias-state-warn-label": "rgb(132,175,57)",
+      "--shiki-token-keyword": "rgb(210,106,109)",
+      "--shiki-token-string": "rgb(65,179,73)",
+      "--shiki-token-constant": "rgb(74,141,218)",
+      "--shiki-token-function": "rgb(155,138,232)",
+      "--shiki-token-parameter": "rgb(238,128,85)",
+      "--shiki-token-string-expression": "rgb(83,195,89)",
+      "--shiki-token-link": "rgb(74,141,218)",
+      "--shiki-token-comment": "rgb(158,133,128)",
+      "--shiki-token-punctuation": "rgb(187,164,158)"
     },
     "curated": false
   },
@@ -5977,6 +6913,15 @@ export const THEMES = [
     "errName": "山黎豆红",
     "sucName": "青绿",
     "wrnName": "淡灰绿",
+    "synNames": {
+      "keyword": "菜头紫",
+      "string": "新绿",
+      "constant": "靛青",
+      "function": "紫藤萝",
+      "parameter": "韎韐"
+    },
+    "synAnchorSlot": "string",
+    "tier": "心流",
     "identityShiftDL": 0.1605,
     "degraded": [],
     "tokens": {
@@ -6068,9 +7013,18 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(148,134,71)",
       "--dsw-alias-state-warn-secondary": "rgb(173,158,95)",
       "--dsw-alias-state-warn-tertiary": "rgb(247,242,223)",
-      "--dsw-alias-state-warn-label": "rgb(116,101,38)"
+      "--dsw-alias-state-warn-label": "rgb(116,101,38)",
+      "--shiki-token-keyword": "rgb(149,28,72)",
+      "--shiki-token-string": "rgb(22,124,66)",
+      "--shiki-token-constant": "rgb(22,97,171)",
+      "--shiki-token-function": "rgb(120,101,192)",
+      "--shiki-token-parameter": "rgb(165,68,27)",
+      "--shiki-token-string-expression": "rgb(0,111,53)",
+      "--shiki-token-link": "rgb(22,97,171)",
+      "--shiki-token-comment": "rgb(105,111,104)",
+      "--shiki-token-punctuation": "rgb(75,82,74)"
     },
-    "curated": false
+    "curated": true
   },
   {
     "id": "xinlv-dark",
@@ -6091,6 +7045,15 @@ export const THEMES = [
     "errName": "山黎豆红",
     "sucName": "毛绿",
     "wrnName": "淡灰绿",
+    "synNames": {
+      "keyword": "淡绛红",
+      "string": "新绿",
+      "constant": "蓝色",
+      "function": "紫藤萝",
+      "parameter": "法螺红"
+    },
+    "synAnchorSlot": "string",
+    "tier": "心流",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -6182,9 +7145,18 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(173,158,95)",
       "--dsw-alias-state-warn-secondary": "rgb(192,177,113)",
       "--dsw-alias-state-warn-tertiary": "rgb(49,46,34)",
-      "--dsw-alias-state-warn-label": "rgb(174,159,96)"
+      "--dsw-alias-state-warn-label": "rgb(174,159,96)",
+      "--shiki-token-keyword": "rgb(236,118,150)",
+      "--shiki-token-string": "rgb(108,199,136)",
+      "--shiki-token-constant": "rgb(74,141,218)",
+      "--shiki-token-function": "rgb(155,138,232)",
+      "--shiki-token-parameter": "rgb(238,128,85)",
+      "--shiki-token-string-expression": "rgb(124,215,151)",
+      "--shiki-token-link": "rgb(74,141,218)",
+      "--shiki-token-comment": "rgb(133,141,133)",
+      "--shiki-token-punctuation": "rgb(164,171,163)"
     },
-    "curated": false
+    "curated": true
   },
   {
     "id": "lingmenghong-light",
@@ -6205,6 +7177,15 @@ export const THEMES = [
     "errName": "银红",
     "sucName": "鲜绿",
     "wrnName": "槐花黄绿",
+    "synNames": {
+      "keyword": "菱锰红",
+      "string": "汉绣绿",
+      "constant": "靛青",
+      "function": "紫藤萝",
+      "parameter": "韎韐"
+    },
+    "synAnchorSlot": "keyword",
+    "tier": "攻坚",
     "identityShiftDL": 0.0787,
     "degraded": [],
     "tokens": {
@@ -6296,9 +7277,18 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(136,141,43)",
       "--dsw-alias-state-warn-secondary": "rgb(160,166,71)",
       "--dsw-alias-state-warn-tertiary": "rgb(242,245,218)",
-      "--dsw-alias-state-warn-label": "rgb(104,108,0)"
+      "--dsw-alias-state-warn-label": "rgb(104,108,0)",
+      "--shiki-token-keyword": "rgb(170,82,127)",
+      "--shiki-token-string": "rgb(46,125,50)",
+      "--shiki-token-constant": "rgb(22,97,171)",
+      "--shiki-token-function": "rgb(108,90,179)",
+      "--shiki-token-parameter": "rgb(165,68,27)",
+      "--shiki-token-string-expression": "rgb(30,112,36)",
+      "--shiki-token-link": "rgb(22,97,171)",
+      "--shiki-token-comment": "rgb(123,104,106)",
+      "--shiki-token-punctuation": "rgb(91,74,76)"
     },
-    "curated": false
+    "curated": true
   },
   {
     "id": "lingmenghong-dark",
@@ -6319,6 +7309,15 @@ export const THEMES = [
     "errName": "银红",
     "sucName": "柳绿",
     "wrnName": "槐花黄绿",
+    "synNames": {
+      "keyword": "菱锰红",
+      "string": "玉髓绿",
+      "constant": "蓝色",
+      "function": "紫藤萝",
+      "parameter": "法螺红"
+    },
+    "synAnchorSlot": "keyword",
+    "tier": "攻坚",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -6410,9 +7409,18 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(210,217,122)",
       "--dsw-alias-state-warn-secondary": "rgb(223,230,135)",
       "--dsw-alias-state-warn-tertiary": "rgb(46,47,30)",
-      "--dsw-alias-state-warn-label": "rgb(160,166,71)"
+      "--dsw-alias-state-warn-label": "rgb(160,166,71)",
+      "--shiki-token-keyword": "rgb(210,118,163)",
+      "--shiki-token-string": "rgb(65,179,73)",
+      "--shiki-token-constant": "rgb(74,141,218)",
+      "--shiki-token-function": "rgb(155,138,232)",
+      "--shiki-token-parameter": "rgb(238,128,85)",
+      "--shiki-token-string-expression": "rgb(83,195,89)",
+      "--shiki-token-link": "rgb(74,141,218)",
+      "--shiki-token-comment": "rgb(154,134,135)",
+      "--shiki-token-punctuation": "rgb(183,164,166)"
     },
-    "curated": false
+    "curated": true
   },
   {
     "id": "mantianxingzi-light",
@@ -6433,6 +7441,15 @@ export const THEMES = [
     "errName": "橡树棕",
     "sucName": "薄荷绿",
     "wrnName": "莱阳梨黄",
+    "synNames": {
+      "keyword": "菜头紫",
+      "string": "汉绣绿",
+      "constant": "靛青",
+      "function": "满天星紫",
+      "parameter": "韎韐"
+    },
+    "synAnchorSlot": "function",
+    "tier": "夜航",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -6524,7 +7541,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(129,95,37)",
       "--dsw-alias-state-warn-secondary": "rgb(153,118,62)",
       "--dsw-alias-state-warn-tertiary": "rgb(252,240,223)",
-      "--dsw-alias-state-warn-label": "rgb(129,95,38)"
+      "--dsw-alias-state-warn-label": "rgb(129,95,38)",
+      "--shiki-token-keyword": "rgb(149,28,72)",
+      "--shiki-token-string": "rgb(46,125,50)",
+      "--shiki-token-constant": "rgb(22,97,171)",
+      "--shiki-token-function": "rgb(46,49,124)",
+      "--shiki-token-parameter": "rgb(165,68,27)",
+      "--shiki-token-string-expression": "rgb(30,112,36)",
+      "--shiki-token-link": "rgb(22,97,171)",
+      "--shiki-token-comment": "rgb(104,109,125)",
+      "--shiki-token-punctuation": "rgb(74,79,93)"
     },
     "curated": true
   },
@@ -6547,6 +7573,15 @@ export const THEMES = [
     "errName": "橡树棕",
     "sucName": "芽绿",
     "wrnName": "莱阳梨黄",
+    "synNames": {
+      "keyword": "淡绛红",
+      "string": "玉髓绿",
+      "constant": "蓝色",
+      "function": "满天星紫",
+      "parameter": "法螺红"
+    },
+    "synAnchorSlot": "function",
+    "tier": "夜航",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -6638,7 +7673,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(129,95,37)",
       "--dsw-alias-state-warn-secondary": "rgb(147,112,56)",
       "--dsw-alias-state-warn-tertiary": "rgb(52,45,34)",
-      "--dsw-alias-state-warn-label": "rgb(188,152,95)"
+      "--dsw-alias-state-warn-label": "rgb(188,152,95)",
+      "--shiki-token-keyword": "rgb(236,118,150)",
+      "--shiki-token-string": "rgb(65,179,73)",
+      "--shiki-token-constant": "rgb(74,141,218)",
+      "--shiki-token-function": "rgb(120,131,214)",
+      "--shiki-token-parameter": "rgb(238,128,85)",
+      "--shiki-token-string-expression": "rgb(83,195,89)",
+      "--shiki-token-link": "rgb(74,141,218)",
+      "--shiki-token-comment": "rgb(133,138,155)",
+      "--shiki-token-punctuation": "rgb(164,169,185)"
     },
     "curated": true
   },
@@ -6661,6 +7705,15 @@ export const THEMES = [
     "errName": "萝卜红",
     "sucName": "鹦鹉绿",
     "wrnName": "橙皮黄",
+    "synNames": {
+      "keyword": "菜头紫",
+      "string": "汉绣绿",
+      "constant": "靛青",
+      "function": "紫藤萝",
+      "parameter": "韎韐"
+    },
+    "synAnchorSlot": null,
+    "tier": "心流",
     "identityShiftDL": 0.1101,
     "degraded": [],
     "tokens": {
@@ -6752,7 +7805,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(198,111,0)",
       "--dsw-alias-state-warn-secondary": "rgb(225,136,47)",
       "--dsw-alias-state-warn-tertiary": "rgb(255,237,206)",
-      "--dsw-alias-state-warn-label": "rgb(174,88,0)"
+      "--dsw-alias-state-warn-label": "rgb(174,88,0)",
+      "--shiki-token-keyword": "rgb(149,28,72)",
+      "--shiki-token-string": "rgb(46,125,50)",
+      "--shiki-token-constant": "rgb(22,97,171)",
+      "--shiki-token-function": "rgb(120,101,192)",
+      "--shiki-token-parameter": "rgb(165,68,27)",
+      "--shiki-token-string-expression": "rgb(30,112,36)",
+      "--shiki-token-link": "rgb(22,97,171)",
+      "--shiki-token-comment": "rgb(98,111,119)",
+      "--shiki-token-punctuation": "rgb(68,82,88)"
     },
     "curated": false
   },
@@ -6775,6 +7837,15 @@ export const THEMES = [
     "errName": "萝卜红",
     "sucName": "鹦鹉绿",
     "wrnName": "橙皮黄",
+    "synNames": {
+      "keyword": "淡绛红",
+      "string": "玉髓绿",
+      "constant": "蓝色",
+      "function": "紫藤萝",
+      "parameter": "法螺红"
+    },
+    "synAnchorSlot": null,
+    "tier": "心流",
     "identityShiftDL": 0,
     "degraded": [
       "bubbleChroma"
@@ -6868,7 +7939,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(252,161,4)",
       "--dsw-alias-state-warn-secondary": "rgb(255,180,50)",
       "--dsw-alias-state-warn-tertiary": "rgb(60,42,21)",
-      "--dsw-alias-state-warn-label": "rgb(224,135,0)"
+      "--dsw-alias-state-warn-label": "rgb(224,135,0)",
+      "--shiki-token-keyword": "rgb(236,118,150)",
+      "--shiki-token-string": "rgb(65,179,73)",
+      "--shiki-token-constant": "rgb(74,141,218)",
+      "--shiki-token-function": "rgb(155,138,232)",
+      "--shiki-token-parameter": "rgb(238,128,85)",
+      "--shiki-token-string-expression": "rgb(83,195,89)",
+      "--shiki-token-link": "rgb(74,141,218)",
+      "--shiki-token-comment": "rgb(127,142,150)",
+      "--shiki-token-punctuation": "rgb(158,172,179)"
     },
     "curated": false
   },
@@ -6891,6 +7971,15 @@ export const THEMES = [
     "errName": "胭脂晕",
     "sucName": "宝石绿",
     "wrnName": "草黄",
+    "synNames": {
+      "keyword": "菜头紫",
+      "string": "汉绣绿",
+      "constant": "宝石蓝",
+      "function": "紫藤萝",
+      "parameter": "韎韐"
+    },
+    "synAnchorSlot": "constant",
+    "tier": "心流",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -6982,7 +8071,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(159,130,0)",
       "--dsw-alias-state-warn-secondary": "rgb(184,155,47)",
       "--dsw-alias-state-warn-tertiary": "rgb(250,242,209)",
-      "--dsw-alias-state-warn-label": "rgb(128,99,0)"
+      "--dsw-alias-state-warn-label": "rgb(128,99,0)",
+      "--shiki-token-keyword": "rgb(149,28,72)",
+      "--shiki-token-string": "rgb(46,125,50)",
+      "--shiki-token-constant": "rgb(15,122,172)",
+      "--shiki-token-function": "rgb(120,101,192)",
+      "--shiki-token-parameter": "rgb(165,68,27)",
+      "--shiki-token-string-expression": "rgb(30,112,36)",
+      "--shiki-token-link": "rgb(15,122,172)",
+      "--shiki-token-comment": "rgb(99,110,122)",
+      "--shiki-token-punctuation": "rgb(69,81,90)"
     },
     "curated": true
   },
@@ -7005,6 +8103,15 @@ export const THEMES = [
     "errName": "胭脂晕",
     "sucName": "宝石绿",
     "wrnName": "草黄",
+    "synNames": {
+      "keyword": "淡绛红",
+      "string": "玉髓绿",
+      "constant": "宝石蓝",
+      "function": "紫藤萝",
+      "parameter": "法螺红"
+    },
+    "synAnchorSlot": "constant",
+    "tier": "心流",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -7096,7 +8203,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(210,180,44)",
       "--dsw-alias-state-warn-secondary": "rgb(230,199,70)",
       "--dsw-alias-state-warn-tertiary": "rgb(51,46,24)",
-      "--dsw-alias-state-warn-label": "rgb(186,156,0)"
+      "--dsw-alias-state-warn-label": "rgb(186,156,0)",
+      "--shiki-token-keyword": "rgb(236,118,150)",
+      "--shiki-token-string": "rgb(65,179,73)",
+      "--shiki-token-constant": "rgb(52,146,198)",
+      "--shiki-token-function": "rgb(155,138,232)",
+      "--shiki-token-parameter": "rgb(238,128,85)",
+      "--shiki-token-string-expression": "rgb(83,195,89)",
+      "--shiki-token-link": "rgb(52,146,198)",
+      "--shiki-token-comment": "rgb(129,141,153)",
+      "--shiki-token-punctuation": "rgb(159,171,182)"
     },
     "curated": true
   },
@@ -7119,6 +8235,15 @@ export const THEMES = [
     "errName": "覆盆子红",
     "sucName": "孔雀绿",
     "wrnName": "新禾绿",
+    "synNames": {
+      "keyword": "菜头紫",
+      "string": "汉绣绿",
+      "constant": "靛青",
+      "function": "紫藤萝",
+      "parameter": "韎韐"
+    },
+    "synAnchorSlot": null,
+    "tier": "禅定",
     "identityShiftDL": 0.0746,
     "degraded": [],
     "tokens": {
@@ -7210,7 +8335,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(159,127,0)",
       "--dsw-alias-state-warn-secondary": "rgb(184,152,47)",
       "--dsw-alias-state-warn-tertiary": "rgb(251,242,208)",
-      "--dsw-alias-state-warn-label": "rgb(130,98,0)"
+      "--dsw-alias-state-warn-label": "rgb(130,98,0)",
+      "--shiki-token-keyword": "rgb(149,28,72)",
+      "--shiki-token-string": "rgb(46,125,50)",
+      "--shiki-token-constant": "rgb(22,97,171)",
+      "--shiki-token-function": "rgb(120,101,192)",
+      "--shiki-token-parameter": "rgb(165,68,27)",
+      "--shiki-token-string-expression": "rgb(30,112,36)",
+      "--shiki-token-link": "rgb(22,97,171)",
+      "--shiki-token-comment": "rgb(103,111,108)",
+      "--shiki-token-punctuation": "rgb(73,82,77)"
     },
     "curated": false
   },
@@ -7233,6 +8367,15 @@ export const THEMES = [
     "errName": "覆盆子红",
     "sucName": "孔雀绿",
     "wrnName": "新禾绿",
+    "synNames": {
+      "keyword": "淡绛红",
+      "string": "玉髓绿",
+      "constant": "蓝色",
+      "function": "紫藤萝",
+      "parameter": "法螺红"
+    },
+    "synAnchorSlot": null,
+    "tier": "禅定",
     "identityShiftDL": 0,
     "degraded": [
       "bubbleChroma"
@@ -7326,7 +8469,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(210,177,22)",
       "--dsw-alias-state-warn-secondary": "rgb(230,196,56)",
       "--dsw-alias-state-warn-tertiary": "rgb(52,46,22)",
-      "--dsw-alias-state-warn-label": "rgb(188,156,0)"
+      "--dsw-alias-state-warn-label": "rgb(188,156,0)",
+      "--shiki-token-keyword": "rgb(236,118,150)",
+      "--shiki-token-string": "rgb(65,179,73)",
+      "--shiki-token-constant": "rgb(74,141,218)",
+      "--shiki-token-function": "rgb(155,138,232)",
+      "--shiki-token-parameter": "rgb(238,128,85)",
+      "--shiki-token-string-expression": "rgb(83,195,89)",
+      "--shiki-token-link": "rgb(74,141,218)",
+      "--shiki-token-comment": "rgb(131,141,136)",
+      "--shiki-token-punctuation": "rgb(162,171,166)"
     },
     "curated": false
   },
@@ -7349,6 +8501,15 @@ export const THEMES = [
     "errName": "胭脂泪",
     "sucName": "荷绿",
     "wrnName": "暗金",
+    "synNames": {
+      "keyword": "菜头紫",
+      "string": "汉绣绿",
+      "constant": "靛青",
+      "function": "紫藤萝",
+      "parameter": "韎韐"
+    },
+    "synAnchorSlot": null,
+    "tier": "禅定",
     "identityShiftDL": 0,
     "degraded": [
       "seal"
@@ -7442,7 +8603,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(156,139,77)",
       "--dsw-alias-state-warn-secondary": "rgb(181,164,101)",
       "--dsw-alias-state-warn-tertiary": "rgb(247,242,223)",
-      "--dsw-alias-state-warn-label": "rgb(117,101,38)"
+      "--dsw-alias-state-warn-label": "rgb(117,101,38)",
+      "--shiki-token-keyword": "rgb(149,28,72)",
+      "--shiki-token-string": "rgb(46,125,50)",
+      "--shiki-token-constant": "rgb(22,97,171)",
+      "--shiki-token-function": "rgb(120,101,192)",
+      "--shiki-token-parameter": "rgb(165,68,27)",
+      "--shiki-token-string-expression": "rgb(30,112,36)",
+      "--shiki-token-link": "rgb(22,97,171)",
+      "--shiki-token-comment": "rgb(114,106,117)",
+      "--shiki-token-punctuation": "rgb(84,76,87)"
     },
     "curated": false
   },
@@ -7465,6 +8635,15 @@ export const THEMES = [
     "errName": "胭脂泪",
     "sucName": "嘉陵水绿",
     "wrnName": "暗金",
+    "synNames": {
+      "keyword": "淡绛红",
+      "string": "玉髓绿",
+      "constant": "蓝色",
+      "function": "紫藤萝",
+      "parameter": "法螺红"
+    },
+    "synAnchorSlot": null,
+    "tier": "禅定",
     "identityShiftDL": 0,
     "degraded": [
       "seal"
@@ -7558,7 +8737,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(156,139,77)",
       "--dsw-alias-state-warn-secondary": "rgb(175,157,95)",
       "--dsw-alias-state-warn-tertiary": "rgb(49,46,34)",
-      "--dsw-alias-state-warn-label": "rgb(175,158,96)"
+      "--dsw-alias-state-warn-label": "rgb(175,158,96)",
+      "--shiki-token-keyword": "rgb(236,118,150)",
+      "--shiki-token-string": "rgb(65,179,73)",
+      "--shiki-token-constant": "rgb(74,141,218)",
+      "--shiki-token-function": "rgb(155,138,232)",
+      "--shiki-token-parameter": "rgb(238,128,85)",
+      "--shiki-token-string-expression": "rgb(83,195,89)",
+      "--shiki-token-link": "rgb(74,141,218)",
+      "--shiki-token-comment": "rgb(145,136,149)",
+      "--shiki-token-punctuation": "rgb(174,166,178)"
     },
     "curated": false
   },
@@ -7581,6 +8769,15 @@ export const THEMES = [
     "errName": "春梅红",
     "sucName": "嘉陵水绿",
     "wrnName": "豆汁黄",
+    "synNames": {
+      "keyword": "菜头紫",
+      "string": "汉绣绿",
+      "constant": "靛青",
+      "function": "浅紫藤萝",
+      "parameter": "韎韐"
+    },
+    "synAnchorSlot": "function",
+    "tier": "禅定",
     "identityShiftDL": 0.201,
     "degraded": [],
     "tokens": {
@@ -7672,9 +8869,18 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(146,131,95)",
       "--dsw-alias-state-warn-secondary": "rgb(171,155,118)",
       "--dsw-alias-state-warn-tertiary": "rgb(246,241,230)",
-      "--dsw-alias-state-warn-label": "rgb(114,100,66)"
+      "--dsw-alias-state-warn-label": "rgb(114,100,66)",
+      "--shiki-token-keyword": "rgb(149,28,72)",
+      "--shiki-token-string": "rgb(46,125,50)",
+      "--shiki-token-constant": "rgb(22,97,171)",
+      "--shiki-token-function": "rgb(123,94,163)",
+      "--shiki-token-parameter": "rgb(165,68,27)",
+      "--shiki-token-string-expression": "rgb(30,112,36)",
+      "--shiki-token-link": "rgb(22,97,171)",
+      "--shiki-token-comment": "rgb(109,108,121)",
+      "--shiki-token-punctuation": "rgb(78,78,90)"
     },
-    "curated": false
+    "curated": true
   },
   {
     "id": "qianzitengluo-dark",
@@ -7695,6 +8901,15 @@ export const THEMES = [
     "errName": "春梅红",
     "sucName": "嘉陵水绿",
     "wrnName": "豆汁黄",
+    "synNames": {
+      "keyword": "淡绛红",
+      "string": "玉髓绿",
+      "constant": "蓝色",
+      "function": "浅紫藤萝",
+      "parameter": "法螺红"
+    },
+    "synAnchorSlot": "function",
+    "tier": "禅定",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -7786,9 +9001,18 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(248,232,193)",
       "--dsw-alias-state-warn-secondary": "rgb(237,221,182)",
       "--dsw-alias-state-warn-tertiary": "rgb(49,46,38)",
-      "--dsw-alias-state-warn-label": "rgb(172,157,120)"
+      "--dsw-alias-state-warn-label": "rgb(172,157,120)",
+      "--shiki-token-keyword": "rgb(236,118,150)",
+      "--shiki-token-string": "rgb(65,179,73)",
+      "--shiki-token-constant": "rgb(74,141,218)",
+      "--shiki-token-function": "rgb(209,179,255)",
+      "--shiki-token-parameter": "rgb(238,128,85)",
+      "--shiki-token-string-expression": "rgb(83,195,89)",
+      "--shiki-token-link": "rgb(74,141,218)",
+      "--shiki-token-comment": "rgb(138,138,153)",
+      "--shiki-token-punctuation": "rgb(168,168,182)"
     },
-    "curated": false
+    "curated": true
   },
   {
     "id": "qingfanlv-light",
@@ -7809,6 +9033,15 @@ export const THEMES = [
     "errName": "醋",
     "sucName": "蟾绿",
     "wrnName": "粽叶绿",
+    "synNames": {
+      "keyword": "菜头紫",
+      "string": "青矾绿",
+      "constant": "靛青",
+      "function": "紫藤萝",
+      "parameter": "韎韐"
+    },
+    "synAnchorSlot": "string",
+    "tier": "禅定",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -7900,7 +9133,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(135,104,24)",
       "--dsw-alias-state-warn-secondary": "rgb(159,128,53)",
       "--dsw-alias-state-warn-tertiary": "rgb(251,241,220)",
-      "--dsw-alias-state-warn-label": "rgb(128,97,11)"
+      "--dsw-alias-state-warn-label": "rgb(128,97,11)",
+      "--shiki-token-keyword": "rgb(149,28,72)",
+      "--shiki-token-string": "rgb(0,126,97)",
+      "--shiki-token-constant": "rgb(22,97,171)",
+      "--shiki-token-function": "rgb(120,101,192)",
+      "--shiki-token-parameter": "rgb(165,68,27)",
+      "--shiki-token-string-expression": "rgb(0,113,84)",
+      "--shiki-token-link": "rgb(22,97,171)",
+      "--shiki-token-comment": "rgb(102,112,106)",
+      "--shiki-token-punctuation": "rgb(72,82,76)"
     },
     "curated": false
   },
@@ -7923,6 +9165,15 @@ export const THEMES = [
     "errName": "醋",
     "sucName": "蟾绿",
     "wrnName": "粽叶绿",
+    "synNames": {
+      "keyword": "淡绛红",
+      "string": "青矾绿",
+      "constant": "蓝色",
+      "function": "紫藤萝",
+      "parameter": "法螺红"
+    },
+    "synAnchorSlot": "string",
+    "tier": "禅定",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -8014,7 +9265,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(135,104,24)",
       "--dsw-alias-state-warn-secondary": "rgb(153,122,46)",
       "--dsw-alias-state-warn-tertiary": "rgb(51,45,31)",
-      "--dsw-alias-state-warn-label": "rgb(186,154,80)"
+      "--dsw-alias-state-warn-label": "rgb(186,154,80)",
+      "--shiki-token-keyword": "rgb(236,118,150)",
+      "--shiki-token-string": "rgb(44,150,120)",
+      "--shiki-token-constant": "rgb(74,141,218)",
+      "--shiki-token-function": "rgb(155,138,232)",
+      "--shiki-token-parameter": "rgb(238,128,85)",
+      "--shiki-token-string-expression": "rgb(63,166,135)",
+      "--shiki-token-link": "rgb(74,141,218)",
+      "--shiki-token-comment": "rgb(131,142,134)",
+      "--shiki-token-punctuation": "rgb(162,172,166)"
     },
     "curated": false
   },
@@ -8037,6 +9297,15 @@ export const THEMES = [
     "errName": "韎韐",
     "sucName": "宫殿绿",
     "wrnName": "灰绿",
+    "synNames": {
+      "keyword": "菜头紫",
+      "string": "汉绣绿",
+      "constant": "靛青",
+      "function": "紫藤萝",
+      "parameter": "韎韐"
+    },
+    "synAnchorSlot": null,
+    "tier": "禅定",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -8128,9 +9397,18 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(138,105,19)",
       "--dsw-alias-state-warn-secondary": "rgb(163,129,50)",
       "--dsw-alias-state-warn-tertiary": "rgb(251,241,219)",
-      "--dsw-alias-state-warn-label": "rgb(129,96,1)"
+      "--dsw-alias-state-warn-label": "rgb(129,96,1)",
+      "--shiki-token-keyword": "rgb(149,28,72)",
+      "--shiki-token-string": "rgb(46,125,50)",
+      "--shiki-token-constant": "rgb(22,97,171)",
+      "--shiki-token-function": "rgb(120,101,192)",
+      "--shiki-token-parameter": "rgb(165,68,27)",
+      "--shiki-token-string-expression": "rgb(30,112,36)",
+      "--shiki-token-link": "rgb(22,97,171)",
+      "--shiki-token-comment": "rgb(119,108,87)",
+      "--shiki-token-punctuation": "rgb(88,78,58)"
     },
-    "curated": true
+    "curated": false
   },
   {
     "id": "biluochunlv-dark",
@@ -8151,6 +9429,15 @@ export const THEMES = [
     "errName": "韎韐",
     "sucName": "宫殿绿",
     "wrnName": "鎏金",
+    "synNames": {
+      "keyword": "淡绛红",
+      "string": "玉髓绿",
+      "constant": "蓝色",
+      "function": "紫藤萝",
+      "parameter": "法螺红"
+    },
+    "synAnchorSlot": null,
+    "tier": "禅定",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -8242,9 +9529,18 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(212,175,55)",
       "--dsw-alias-state-warn-secondary": "rgb(232,194,78)",
       "--dsw-alias-state-warn-tertiary": "rgb(52,45,25)",
-      "--dsw-alias-state-warn-label": "rgb(191,154,21)"
+      "--dsw-alias-state-warn-label": "rgb(191,154,21)",
+      "--shiki-token-keyword": "rgb(236,118,150)",
+      "--shiki-token-string": "rgb(65,179,73)",
+      "--shiki-token-constant": "rgb(74,141,218)",
+      "--shiki-token-function": "rgb(155,138,232)",
+      "--shiki-token-parameter": "rgb(238,128,85)",
+      "--shiki-token-string-expression": "rgb(83,195,89)",
+      "--shiki-token-link": "rgb(74,141,218)",
+      "--shiki-token-comment": "rgb(149,137,115)",
+      "--shiki-token-punctuation": "rgb(180,168,148)"
     },
-    "curated": true
+    "curated": false
   },
   {
     "id": "ganlanshilv-light",
@@ -8265,6 +9561,15 @@ export const THEMES = [
     "errName": "莓红",
     "sucName": "柳绿",
     "wrnName": "蝶黄",
+    "synNames": {
+      "keyword": "菜头紫",
+      "string": "橄榄石绿",
+      "constant": "靛青",
+      "function": "紫藤萝",
+      "parameter": "韎韐"
+    },
+    "synAnchorSlot": "string",
+    "tier": "禅定",
     "identityShiftDL": 0.1999,
     "degraded": [],
     "tokens": {
@@ -8356,9 +9661,18 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(151,139,0)",
       "--dsw-alias-state-warn-secondary": "rgb(176,164,48)",
       "--dsw-alias-state-warn-tertiary": "rgb(246,244,208)",
-      "--dsw-alias-state-warn-label": "rgb(116,104,0)"
+      "--dsw-alias-state-warn-label": "rgb(116,104,0)",
+      "--shiki-token-keyword": "rgb(149,28,72)",
+      "--shiki-token-string": "rgb(94,120,50)",
+      "--shiki-token-constant": "rgb(22,97,171)",
+      "--shiki-token-function": "rgb(120,101,192)",
+      "--shiki-token-parameter": "rgb(165,68,27)",
+      "--shiki-token-string-expression": "rgb(82,107,36)",
+      "--shiki-token-link": "rgb(22,97,171)",
+      "--shiki-token-comment": "rgb(106,111,109)",
+      "--shiki-token-punctuation": "rgb(76,81,78)"
     },
-    "curated": true
+    "curated": false
   },
   {
     "id": "ganlanshilv-dark",
@@ -8379,6 +9693,15 @@ export const THEMES = [
     "errName": "莓红",
     "sucName": "柳绿",
     "wrnName": "蝶黄",
+    "synNames": {
+      "keyword": "淡绛红",
+      "string": "橄榄石绿",
+      "constant": "蓝色",
+      "function": "紫藤萝",
+      "parameter": "法螺红"
+    },
+    "synAnchorSlot": "string",
+    "tier": "禅定",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -8470,9 +9793,18 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(226,216,73)",
       "--dsw-alias-state-warn-secondary": "rgb(237,228,87)",
       "--dsw-alias-state-warn-tertiary": "rgb(49,47,23)",
-      "--dsw-alias-state-warn-label": "rgb(173,163,0)"
+      "--dsw-alias-state-warn-label": "rgb(173,163,0)",
+      "--shiki-token-keyword": "rgb(236,118,150)",
+      "--shiki-token-string": "rgb(178,207,135)",
+      "--shiki-token-constant": "rgb(74,141,218)",
+      "--shiki-token-function": "rgb(155,138,232)",
+      "--shiki-token-parameter": "rgb(238,128,85)",
+      "--shiki-token-string-expression": "rgb(194,223,151)",
+      "--shiki-token-link": "rgb(74,141,218)",
+      "--shiki-token-comment": "rgb(135,141,138)",
+      "--shiki-token-punctuation": "rgb(166,171,168)"
     },
-    "curated": true
+    "curated": false
   },
   {
     "id": "fentuanhuahong-light",
@@ -8493,6 +9825,15 @@ export const THEMES = [
     "errName": "淡曙红",
     "sucName": "新绿",
     "wrnName": "芦苇绿",
+    "synNames": {
+      "keyword": "粉团花红",
+      "string": "汉绣绿",
+      "constant": "靛青",
+      "function": "紫藤萝",
+      "parameter": "韎韐"
+    },
+    "synAnchorSlot": "keyword",
+    "tier": "禅定",
     "identityShiftDL": 0.1612,
     "degraded": [],
     "tokens": {
@@ -8584,9 +9925,18 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(122,145,59)",
       "--dsw-alias-state-warn-secondary": "rgb(146,170,84)",
       "--dsw-alias-state-warn-tertiary": "rgb(237,246,221)",
-      "--dsw-alias-state-warn-label": "rgb(91,112,20)"
+      "--dsw-alias-state-warn-label": "rgb(91,112,20)",
+      "--shiki-token-keyword": "rgb(156,83,101)",
+      "--shiki-token-string": "rgb(46,125,50)",
+      "--shiki-token-constant": "rgb(22,97,171)",
+      "--shiki-token-function": "rgb(108,90,179)",
+      "--shiki-token-parameter": "rgb(165,68,27)",
+      "--shiki-token-string-expression": "rgb(30,112,36)",
+      "--shiki-token-link": "rgb(22,97,171)",
+      "--shiki-token-comment": "rgb(124,104,102)",
+      "--shiki-token-punctuation": "rgb(93,74,72)"
     },
-    "curated": true
+    "curated": false
   },
   {
     "id": "fentuanhuahong-dark",
@@ -8607,6 +9957,15 @@ export const THEMES = [
     "errName": "淡曙红",
     "sucName": "新绿",
     "wrnName": "芦苇绿",
+    "synNames": {
+      "keyword": "粉团花红",
+      "string": "玉髓绿",
+      "constant": "蓝色",
+      "function": "紫藤萝",
+      "parameter": "法螺红"
+    },
+    "synAnchorSlot": "keyword",
+    "tier": "禅定",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -8698,9 +10057,18 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(183,208,122)",
       "--dsw-alias-state-warn-secondary": "rgb(202,228,141)",
       "--dsw-alias-state-warn-tertiary": "rgb(43,48,32)",
-      "--dsw-alias-state-warn-label": "rgb(146,170,85)"
+      "--dsw-alias-state-warn-label": "rgb(146,170,85)",
+      "--shiki-token-keyword": "rgb(236,155,173)",
+      "--shiki-token-string": "rgb(65,179,73)",
+      "--shiki-token-constant": "rgb(74,141,218)",
+      "--shiki-token-function": "rgb(155,138,232)",
+      "--shiki-token-parameter": "rgb(238,128,85)",
+      "--shiki-token-string-expression": "rgb(83,195,89)",
+      "--shiki-token-link": "rgb(74,141,218)",
+      "--shiki-token-comment": "rgb(155,134,132)",
+      "--shiki-token-punctuation": "rgb(184,164,162)"
     },
-    "curated": true
+    "curated": false
   },
   {
     "id": "heyelv-light",
@@ -8721,6 +10089,15 @@ export const THEMES = [
     "errName": "暗玉紫",
     "sucName": "翠微",
     "wrnName": "橄榄绿",
+    "synNames": {
+      "keyword": "菜头紫",
+      "string": "荷叶绿",
+      "constant": "靛青",
+      "function": "紫藤萝",
+      "parameter": "韎韐"
+    },
+    "synAnchorSlot": "string",
+    "tier": "夜航",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -8812,9 +10189,18 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(94,83,20)",
       "--dsw-alias-state-warn-secondary": "rgb(117,106,46)",
       "--dsw-alias-state-warn-tertiary": "rgb(246,242,224)",
-      "--dsw-alias-state-warn-label": "rgb(113,102,43)"
+      "--dsw-alias-state-warn-label": "rgb(113,102,43)",
+      "--shiki-token-keyword": "rgb(149,28,72)",
+      "--shiki-token-string": "rgb(26,104,64)",
+      "--shiki-token-constant": "rgb(22,97,171)",
+      "--shiki-token-function": "rgb(120,101,192)",
+      "--shiki-token-parameter": "rgb(165,68,27)",
+      "--shiki-token-string-expression": "rgb(3,91,52)",
+      "--shiki-token-link": "rgb(22,97,171)",
+      "--shiki-token-comment": "rgb(104,112,104)",
+      "--shiki-token-punctuation": "rgb(73,82,74)"
     },
-    "curated": true
+    "curated": false
   },
   {
     "id": "heyelv-dark",
@@ -8835,6 +10221,15 @@ export const THEMES = [
     "errName": "暗玉紫",
     "sucName": "翠微",
     "wrnName": "橄榄绿",
+    "synNames": {
+      "keyword": "淡绛红",
+      "string": "荷叶绿",
+      "constant": "蓝色",
+      "function": "紫藤萝",
+      "parameter": "法螺红"
+    },
+    "synAnchorSlot": "string",
+    "tier": "夜航",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -8926,9 +10321,18 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(117,106,46)",
       "--dsw-alias-state-warn-secondary": "rgb(135,124,64)",
       "--dsw-alias-state-warn-tertiary": "rgb(48,46,34)",
-      "--dsw-alias-state-warn-label": "rgb(171,160,99)"
+      "--dsw-alias-state-warn-label": "rgb(171,160,99)",
+      "--shiki-token-keyword": "rgb(236,118,150)",
+      "--shiki-token-string": "rgb(79,152,109)",
+      "--shiki-token-constant": "rgb(74,141,218)",
+      "--shiki-token-function": "rgb(155,138,232)",
+      "--shiki-token-parameter": "rgb(238,128,85)",
+      "--shiki-token-string-expression": "rgb(95,168,124)",
+      "--shiki-token-link": "rgb(74,141,218)",
+      "--shiki-token-comment": "rgb(132,142,133)",
+      "--shiki-token-punctuation": "rgb(163,172,164)"
     },
-    "curated": true
+    "curated": false
   },
   {
     "id": "shilv-light",
@@ -8949,6 +10353,15 @@ export const THEMES = [
     "errName": "玉红",
     "sucName": "芽绿",
     "wrnName": "蝶黄",
+    "synNames": {
+      "keyword": "菜头紫",
+      "string": "汉绣绿",
+      "constant": "靛青",
+      "function": "紫藤萝",
+      "parameter": "韎韐"
+    },
+    "synAnchorSlot": null,
+    "tier": "禅定",
     "identityShiftDL": 0.159,
     "degraded": [],
     "tokens": {
@@ -9040,7 +10453,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(151,139,0)",
       "--dsw-alias-state-warn-secondary": "rgb(176,164,48)",
       "--dsw-alias-state-warn-tertiary": "rgb(246,244,208)",
-      "--dsw-alias-state-warn-label": "rgb(116,104,0)"
+      "--dsw-alias-state-warn-label": "rgb(116,104,0)",
+      "--shiki-token-keyword": "rgb(149,28,72)",
+      "--shiki-token-string": "rgb(46,125,50)",
+      "--shiki-token-constant": "rgb(22,97,171)",
+      "--shiki-token-function": "rgb(120,101,192)",
+      "--shiki-token-parameter": "rgb(165,68,27)",
+      "--shiki-token-string-expression": "rgb(30,112,36)",
+      "--shiki-token-link": "rgb(22,97,171)",
+      "--shiki-token-comment": "rgb(103,111,109)",
+      "--shiki-token-punctuation": "rgb(73,82,78)"
     },
     "curated": false
   },
@@ -9063,6 +10485,15 @@ export const THEMES = [
     "errName": "玉红",
     "sucName": "芽绿",
     "wrnName": "蝶黄",
+    "synNames": {
+      "keyword": "淡绛红",
+      "string": "玉髓绿",
+      "constant": "蓝色",
+      "function": "紫藤萝",
+      "parameter": "法螺红"
+    },
+    "synAnchorSlot": null,
+    "tier": "禅定",
     "identityShiftDL": 0,
     "degraded": [
       "bubbleChroma"
@@ -9156,7 +10587,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(226,216,73)",
       "--dsw-alias-state-warn-secondary": "rgb(237,228,87)",
       "--dsw-alias-state-warn-tertiary": "rgb(49,47,23)",
-      "--dsw-alias-state-warn-label": "rgb(173,163,0)"
+      "--dsw-alias-state-warn-label": "rgb(173,163,0)",
+      "--shiki-token-keyword": "rgb(236,118,150)",
+      "--shiki-token-string": "rgb(65,179,73)",
+      "--shiki-token-constant": "rgb(74,141,218)",
+      "--shiki-token-function": "rgb(155,138,232)",
+      "--shiki-token-parameter": "rgb(238,128,85)",
+      "--shiki-token-string-expression": "rgb(83,195,89)",
+      "--shiki-token-link": "rgb(74,141,218)",
+      "--shiki-token-comment": "rgb(131,141,137)",
+      "--shiki-token-punctuation": "rgb(162,171,167)"
     },
     "curated": false
   },
@@ -9179,6 +10619,15 @@ export const THEMES = [
     "errName": "蟹蝥红",
     "sucName": "荷绿",
     "wrnName": "粽叶绿",
+    "synNames": {
+      "keyword": "菜头紫",
+      "string": "汉绣绿",
+      "constant": "靛青",
+      "function": "紫藤萝",
+      "parameter": "柞叶棕"
+    },
+    "synAnchorSlot": "parameter",
+    "tier": "夜航",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -9270,7 +10719,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(135,104,24)",
       "--dsw-alias-state-warn-secondary": "rgb(159,128,53)",
       "--dsw-alias-state-warn-tertiary": "rgb(251,241,220)",
-      "--dsw-alias-state-warn-label": "rgb(128,97,11)"
+      "--dsw-alias-state-warn-label": "rgb(128,97,11)",
+      "--shiki-token-keyword": "rgb(149,28,72)",
+      "--shiki-token-string": "rgb(46,125,50)",
+      "--shiki-token-constant": "rgb(22,97,171)",
+      "--shiki-token-function": "rgb(108,90,179)",
+      "--shiki-token-parameter": "rgb(105,42,27)",
+      "--shiki-token-string-expression": "rgb(30,112,36)",
+      "--shiki-token-link": "rgb(22,97,171)",
+      "--shiki-token-comment": "rgb(126,104,95)",
+      "--shiki-token-punctuation": "rgb(94,74,65)"
     },
     "curated": false
   },
@@ -9293,6 +10751,15 @@ export const THEMES = [
     "errName": "蟹蝥红",
     "sucName": "荷绿",
     "wrnName": "粽叶绿",
+    "synNames": {
+      "keyword": "淡绛红",
+      "string": "玉髓绿",
+      "constant": "蓝色",
+      "function": "紫藤萝",
+      "parameter": "柞叶棕"
+    },
+    "synAnchorSlot": "parameter",
+    "tier": "夜航",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -9384,7 +10851,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(135,104,24)",
       "--dsw-alias-state-warn-secondary": "rgb(153,122,46)",
       "--dsw-alias-state-warn-tertiary": "rgb(51,45,31)",
-      "--dsw-alias-state-warn-label": "rgb(186,154,80)"
+      "--dsw-alias-state-warn-label": "rgb(186,154,80)",
+      "--shiki-token-keyword": "rgb(236,118,150)",
+      "--shiki-token-string": "rgb(65,179,73)",
+      "--shiki-token-constant": "rgb(74,141,218)",
+      "--shiki-token-function": "rgb(155,138,232)",
+      "--shiki-token-parameter": "rgb(194,122,104)",
+      "--shiki-token-string-expression": "rgb(83,195,89)",
+      "--shiki-token-link": "rgb(74,141,218)",
+      "--shiki-token-comment": "rgb(158,134,124)",
+      "--shiki-token-punctuation": "rgb(186,164,155)"
     },
     "curated": false
   },
@@ -9407,6 +10883,15 @@ export const THEMES = [
     "errName": "春梅红",
     "sucName": "莺儿",
     "wrnName": "茉莉黄",
+    "synNames": {
+      "keyword": "菜头紫",
+      "string": "汉绣绿",
+      "constant": "长春花蓝",
+      "function": "紫藤萝",
+      "parameter": "韎韐"
+    },
+    "synAnchorSlot": "constant",
+    "tier": "禅定",
     "identityShiftDL": 0.1989,
     "degraded": [],
     "tokens": {
@@ -9498,9 +10983,18 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(158,134,0)",
       "--dsw-alias-state-warn-secondary": "rgb(183,159,48)",
       "--dsw-alias-state-warn-tertiary": "rgb(249,242,213)",
-      "--dsw-alias-state-warn-label": "rgb(124,100,0)"
+      "--dsw-alias-state-warn-label": "rgb(124,100,0)",
+      "--shiki-token-keyword": "rgb(149,28,72)",
+      "--shiki-token-string": "rgb(46,125,50)",
+      "--shiki-token-constant": "rgb(52,118,160)",
+      "--shiki-token-function": "rgb(120,101,192)",
+      "--shiki-token-parameter": "rgb(165,68,27)",
+      "--shiki-token-string-expression": "rgb(30,112,36)",
+      "--shiki-token-link": "rgb(52,118,160)",
+      "--shiki-token-comment": "rgb(100,111,122)",
+      "--shiki-token-punctuation": "rgb(70,81,91)"
     },
-    "curated": true
+    "curated": false
   },
   {
     "id": "changchunhualan-dark",
@@ -9521,6 +11015,15 @@ export const THEMES = [
     "errName": "春梅红",
     "sucName": "莺儿",
     "wrnName": "茉莉黄",
+    "synNames": {
+      "keyword": "淡绛红",
+      "string": "玉髓绿",
+      "constant": "长春花蓝",
+      "function": "紫藤萝",
+      "parameter": "法螺红"
+    },
+    "synAnchorSlot": "constant",
+    "tier": "禅定",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -9612,9 +11115,18 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(248,223,114)",
       "--dsw-alias-state-warn-secondary": "rgb(247,222,113)",
       "--dsw-alias-state-warn-tertiary": "rgb(50,46,26)",
-      "--dsw-alias-state-warn-label": "rgb(182,158,40)"
+      "--dsw-alias-state-warn-label": "rgb(182,158,40)",
+      "--shiki-token-keyword": "rgb(236,118,150)",
+      "--shiki-token-string": "rgb(65,179,73)",
+      "--shiki-token-constant": "rgb(126,192,238)",
+      "--shiki-token-function": "rgb(155,138,232)",
+      "--shiki-token-parameter": "rgb(238,128,85)",
+      "--shiki-token-string-expression": "rgb(83,195,89)",
+      "--shiki-token-link": "rgb(126,192,238)",
+      "--shiki-token-comment": "rgb(129,141,153)",
+      "--shiki-token-punctuation": "rgb(160,171,182)"
     },
-    "curated": true
+    "curated": false
   },
   {
     "id": "shangengzi-light",
@@ -9635,6 +11147,15 @@ export const THEMES = [
     "errName": "烟红",
     "sucName": "宝石绿",
     "wrnName": "蝶黄",
+    "synNames": {
+      "keyword": "菜头紫",
+      "string": "汉绣绿",
+      "constant": "靛青",
+      "function": "山梗紫",
+      "parameter": "韎韐"
+    },
+    "synAnchorSlot": "function",
+    "tier": "禅定",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -9726,7 +11247,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(151,139,0)",
       "--dsw-alias-state-warn-secondary": "rgb(176,164,48)",
       "--dsw-alias-state-warn-tertiary": "rgb(246,244,208)",
-      "--dsw-alias-state-warn-label": "rgb(116,104,0)"
+      "--dsw-alias-state-warn-label": "rgb(116,104,0)",
+      "--shiki-token-keyword": "rgb(149,28,72)",
+      "--shiki-token-string": "rgb(46,125,50)",
+      "--shiki-token-constant": "rgb(22,97,171)",
+      "--shiki-token-function": "rgb(97,100,159)",
+      "--shiki-token-parameter": "rgb(165,68,27)",
+      "--shiki-token-string-expression": "rgb(30,112,36)",
+      "--shiki-token-link": "rgb(22,97,171)",
+      "--shiki-token-comment": "rgb(105,109,123)",
+      "--shiki-token-punctuation": "rgb(75,79,91)"
     },
     "curated": false
   },
@@ -9749,6 +11279,15 @@ export const THEMES = [
     "errName": "烟红",
     "sucName": "宝石绿",
     "wrnName": "蝶黄",
+    "synNames": {
+      "keyword": "淡绛红",
+      "string": "玉髓绿",
+      "constant": "蓝色",
+      "function": "山梗紫",
+      "parameter": "法螺红"
+    },
+    "synAnchorSlot": "function",
+    "tier": "禅定",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -9840,7 +11379,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(226,216,73)",
       "--dsw-alias-state-warn-secondary": "rgb(237,228,87)",
       "--dsw-alias-state-warn-tertiary": "rgb(49,47,23)",
-      "--dsw-alias-state-warn-label": "rgb(173,163,0)"
+      "--dsw-alias-state-warn-label": "rgb(173,163,0)",
+      "--shiki-token-keyword": "rgb(236,118,150)",
+      "--shiki-token-string": "rgb(65,179,73)",
+      "--shiki-token-constant": "rgb(74,141,218)",
+      "--shiki-token-function": "rgb(131,136,197)",
+      "--shiki-token-parameter": "rgb(238,128,85)",
+      "--shiki-token-string-expression": "rgb(83,195,89)",
+      "--shiki-token-link": "rgb(74,141,218)",
+      "--shiki-token-comment": "rgb(134,138,153)",
+      "--shiki-token-punctuation": "rgb(165,169,183)"
     },
     "curated": false
   },
@@ -9863,6 +11411,15 @@ export const THEMES = [
     "errName": "葡萄酱紫",
     "sucName": "莺儿",
     "wrnName": "碧螺春绿",
+    "synNames": {
+      "keyword": "菜头紫",
+      "string": "汉绣绿",
+      "constant": "鷃蓝",
+      "function": "紫藤萝",
+      "parameter": "韎韐"
+    },
+    "synAnchorSlot": "constant",
+    "tier": "夜航",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -9954,7 +11511,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(134,112,24)",
       "--dsw-alias-state-warn-secondary": "rgb(158,136,54)",
       "--dsw-alias-state-warn-tertiary": "rgb(249,242,219)",
-      "--dsw-alias-state-warn-label": "rgb(122,100,1)"
+      "--dsw-alias-state-warn-label": "rgb(122,100,1)",
+      "--shiki-token-keyword": "rgb(149,28,72)",
+      "--shiki-token-string": "rgb(46,125,50)",
+      "--shiki-token-constant": "rgb(20,74,116)",
+      "--shiki-token-function": "rgb(120,101,192)",
+      "--shiki-token-parameter": "rgb(165,68,27)",
+      "--shiki-token-string-expression": "rgb(30,112,36)",
+      "--shiki-token-link": "rgb(20,74,116)",
+      "--shiki-token-comment": "rgb(99,110,124)",
+      "--shiki-token-punctuation": "rgb(69,81,93)"
     },
     "curated": false
   },
@@ -9977,6 +11543,15 @@ export const THEMES = [
     "errName": "葡萄酱紫",
     "sucName": "莺儿",
     "wrnName": "碧螺春绿",
+    "synNames": {
+      "keyword": "淡绛红",
+      "string": "玉髓绿",
+      "constant": "鷃蓝",
+      "function": "紫藤萝",
+      "parameter": "法螺红"
+    },
+    "synAnchorSlot": "constant",
+    "tier": "夜航",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -10068,7 +11643,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(134,112,24)",
       "--dsw-alias-state-warn-secondary": "rgb(152,130,47)",
       "--dsw-alias-state-warn-tertiary": "rgb(50,46,31)",
-      "--dsw-alias-state-warn-label": "rgb(180,157,76)"
+      "--dsw-alias-state-warn-label": "rgb(180,157,76)",
+      "--shiki-token-keyword": "rgb(236,118,150)",
+      "--shiki-token-string": "rgb(65,179,73)",
+      "--shiki-token-constant": "rgb(92,144,191)",
+      "--shiki-token-function": "rgb(155,138,232)",
+      "--shiki-token-parameter": "rgb(238,128,85)",
+      "--shiki-token-string-expression": "rgb(83,195,89)",
+      "--shiki-token-link": "rgb(92,144,191)",
+      "--shiki-token-comment": "rgb(127,140,154)",
+      "--shiki-token-punctuation": "rgb(158,170,183)"
     },
     "curated": false
   },
@@ -10091,6 +11675,15 @@ export const THEMES = [
     "errName": "吊钟花红",
     "sucName": "玉髓绿",
     "wrnName": "浅褐色",
+    "synNames": {
+      "keyword": "菜头紫",
+      "string": "粉绿",
+      "constant": "靛青",
+      "function": "紫藤萝",
+      "parameter": "韎韐"
+    },
+    "synAnchorSlot": "string",
+    "tier": "禅定",
     "identityShiftDL": 0.2004,
     "degraded": [],
     "tokens": {
@@ -10182,7 +11775,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(159,131,92)",
       "--dsw-alias-state-warn-secondary": "rgb(184,155,116)",
       "--dsw-alias-state-warn-tertiary": "rgb(250,240,228)",
-      "--dsw-alias-state-warn-label": "rgb(136,108,70)"
+      "--dsw-alias-state-warn-label": "rgb(136,108,70)",
+      "--shiki-token-keyword": "rgb(149,28,72)",
+      "--shiki-token-string": "rgb(56,128,100)",
+      "--shiki-token-constant": "rgb(22,97,171)",
+      "--shiki-token-function": "rgb(120,101,192)",
+      "--shiki-token-parameter": "rgb(165,68,27)",
+      "--shiki-token-string-expression": "rgb(41,115,87)",
+      "--shiki-token-link": "rgb(22,97,171)",
+      "--shiki-token-comment": "rgb(104,111,106)",
+      "--shiki-token-punctuation": "rgb(74,82,76)"
     },
     "curated": false
   },
@@ -10205,6 +11807,15 @@ export const THEMES = [
     "errName": "吊钟花红",
     "sucName": "柳绿",
     "wrnName": "浅褐色",
+    "synNames": {
+      "keyword": "淡绛红",
+      "string": "粉绿",
+      "constant": "蓝色",
+      "function": "紫藤萝",
+      "parameter": "法螺红"
+    },
+    "synAnchorSlot": "string",
+    "tier": "禅定",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -10296,7 +11907,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(210,180,140)",
       "--dsw-alias-state-warn-secondary": "rgb(230,199,159)",
       "--dsw-alias-state-warn-tertiary": "rgb(51,45,37)",
-      "--dsw-alias-state-warn-label": "rgb(182,153,114)"
+      "--dsw-alias-state-warn-label": "rgb(182,153,114)",
+      "--shiki-token-keyword": "rgb(236,118,150)",
+      "--shiki-token-string": "rgb(131,203,172)",
+      "--shiki-token-constant": "rgb(74,141,218)",
+      "--shiki-token-function": "rgb(155,138,232)",
+      "--shiki-token-parameter": "rgb(238,128,85)",
+      "--shiki-token-string-expression": "rgb(147,219,188)",
+      "--shiki-token-link": "rgb(74,141,218)",
+      "--shiki-token-comment": "rgb(132,141,134)",
+      "--shiki-token-punctuation": "rgb(163,171,164)"
     },
     "curated": false
   },
@@ -10319,6 +11939,15 @@ export const THEMES = [
     "errName": "柞叶棕",
     "sucName": "鹦鹉绿",
     "wrnName": "灰绿",
+    "synNames": {
+      "keyword": "菜头紫",
+      "string": "汉绣绿",
+      "constant": "靛青",
+      "function": "紫藤萝",
+      "parameter": "韎韐"
+    },
+    "synAnchorSlot": null,
+    "tier": "夜航",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -10410,7 +12039,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(138,105,19)",
       "--dsw-alias-state-warn-secondary": "rgb(163,129,50)",
       "--dsw-alias-state-warn-tertiary": "rgb(251,241,219)",
-      "--dsw-alias-state-warn-label": "rgb(129,96,1)"
+      "--dsw-alias-state-warn-label": "rgb(129,96,1)",
+      "--shiki-token-keyword": "rgb(149,28,72)",
+      "--shiki-token-string": "rgb(46,125,50)",
+      "--shiki-token-constant": "rgb(22,97,171)",
+      "--shiki-token-function": "rgb(120,101,192)",
+      "--shiki-token-parameter": "rgb(165,68,27)",
+      "--shiki-token-string-expression": "rgb(30,112,36)",
+      "--shiki-token-link": "rgb(22,97,171)",
+      "--shiki-token-comment": "rgb(98,111,120)",
+      "--shiki-token-punctuation": "rgb(68,82,89)"
     },
     "curated": false
   },
@@ -10433,6 +12071,15 @@ export const THEMES = [
     "errName": "柞叶棕",
     "sucName": "鹦鹉绿",
     "wrnName": "灰绿",
+    "synNames": {
+      "keyword": "淡绛红",
+      "string": "玉髓绿",
+      "constant": "蓝色",
+      "function": "紫藤萝",
+      "parameter": "法螺红"
+    },
+    "synAnchorSlot": null,
+    "tier": "夜航",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -10524,7 +12171,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(138,105,19)",
       "--dsw-alias-state-warn-secondary": "rgb(156,123,43)",
       "--dsw-alias-state-warn-tertiary": "rgb(52,45,31)",
-      "--dsw-alias-state-warn-label": "rgb(188,153,76)"
+      "--dsw-alias-state-warn-label": "rgb(188,153,76)",
+      "--shiki-token-keyword": "rgb(236,118,150)",
+      "--shiki-token-string": "rgb(65,179,73)",
+      "--shiki-token-constant": "rgb(74,141,218)",
+      "--shiki-token-function": "rgb(155,138,232)",
+      "--shiki-token-parameter": "rgb(238,128,85)",
+      "--shiki-token-string-expression": "rgb(83,195,89)",
+      "--shiki-token-link": "rgb(74,141,218)",
+      "--shiki-token-comment": "rgb(126,141,150)",
+      "--shiki-token-punctuation": "rgb(157,171,179)"
     },
     "curated": false
   },
@@ -10547,6 +12203,15 @@ export const THEMES = [
     "errName": "汉绣红",
     "sucName": "柳苍",
     "wrnName": "苍黄",
+    "synNames": {
+      "keyword": "菜头紫",
+      "string": "汉绣绿",
+      "constant": "靛青",
+      "function": "紫藤萝",
+      "parameter": "皮弁"
+    },
+    "synAnchorSlot": "parameter",
+    "tier": "禅定",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -10638,7 +12303,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(128,99,50)",
       "--dsw-alias-state-warn-secondary": "rgb(152,122,73)",
       "--dsw-alias-state-warn-tertiary": "rgb(250,240,225)",
-      "--dsw-alias-state-warn-label": "rgb(126,96,47)"
+      "--dsw-alias-state-warn-label": "rgb(126,96,47)",
+      "--shiki-token-keyword": "rgb(149,28,72)",
+      "--shiki-token-string": "rgb(46,125,50)",
+      "--shiki-token-constant": "rgb(22,97,171)",
+      "--shiki-token-function": "rgb(108,90,179)",
+      "--shiki-token-parameter": "rgb(139,93,51)",
+      "--shiki-token-string-expression": "rgb(30,112,36)",
+      "--shiki-token-link": "rgb(22,97,171)",
+      "--shiki-token-comment": "rgb(126,105,89)",
+      "--shiki-token-punctuation": "rgb(94,75,59)"
     },
     "curated": false
   },
@@ -10661,6 +12335,15 @@ export const THEMES = [
     "errName": "汉绣红",
     "sucName": "葱绿",
     "wrnName": "苍黄",
+    "synNames": {
+      "keyword": "淡绛红",
+      "string": "玉髓绿",
+      "constant": "蓝色",
+      "function": "紫藤萝",
+      "parameter": "皮弁"
+    },
+    "synAnchorSlot": "parameter",
+    "tier": "禅定",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -10752,7 +12435,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(128,99,50)",
       "--dsw-alias-state-warn-secondary": "rgb(146,116,67)",
       "--dsw-alias-state-warn-tertiary": "rgb(51,45,35)",
-      "--dsw-alias-state-warn-label": "rgb(184,153,103)"
+      "--dsw-alias-state-warn-label": "rgb(184,153,103)",
+      "--shiki-token-keyword": "rgb(236,118,150)",
+      "--shiki-token-string": "rgb(65,179,73)",
+      "--shiki-token-constant": "rgb(74,141,218)",
+      "--shiki-token-function": "rgb(155,138,232)",
+      "--shiki-token-parameter": "rgb(177,128,86)",
+      "--shiki-token-string-expression": "rgb(83,195,89)",
+      "--shiki-token-link": "rgb(74,141,218)",
+      "--shiki-token-comment": "rgb(158,134,118)",
+      "--shiki-token-punctuation": "rgb(186,165,149)"
     },
     "curated": false
   },
@@ -10775,6 +12467,15 @@ export const THEMES = [
     "errName": "岩石棕",
     "sucName": "宫殿绿",
     "wrnName": "山鸡黄",
+    "synNames": {
+      "keyword": "菜头紫",
+      "string": "汉绣绿",
+      "constant": "靛青",
+      "function": "紫藤萝",
+      "parameter": "韎韐"
+    },
+    "synAnchorSlot": null,
+    "tier": "夜航",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -10866,9 +12567,18 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(170,127,17)",
       "--dsw-alias-state-warn-secondary": "rgb(196,152,54)",
       "--dsw-alias-state-warn-tertiary": "rgb(254,240,214)",
-      "--dsw-alias-state-warn-label": "rgb(136,93,0)"
+      "--dsw-alias-state-warn-label": "rgb(136,93,0)",
+      "--shiki-token-keyword": "rgb(149,28,72)",
+      "--shiki-token-string": "rgb(46,125,50)",
+      "--shiki-token-constant": "rgb(22,97,171)",
+      "--shiki-token-function": "rgb(120,101,192)",
+      "--shiki-token-parameter": "rgb(165,68,27)",
+      "--shiki-token-string-expression": "rgb(30,112,36)",
+      "--shiki-token-link": "rgb(22,97,171)",
+      "--shiki-token-comment": "rgb(118,109,87)",
+      "--shiki-token-punctuation": "rgb(87,78,58)"
     },
-    "curated": false
+    "curated": true
   },
   {
     "id": "ganlanlv-dark",
@@ -10889,6 +12599,15 @@ export const THEMES = [
     "errName": "岩石棕",
     "sucName": "芽绿",
     "wrnName": "山鸡黄",
+    "synNames": {
+      "keyword": "淡绛红",
+      "string": "玉髓绿",
+      "constant": "蓝色",
+      "function": "紫藤萝",
+      "parameter": "法螺红"
+    },
+    "synAnchorSlot": null,
+    "tier": "夜航",
     "identityShiftDL": 0,
     "degraded": [],
     "tokens": {
@@ -10980,9 +12699,18 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(183,139,38)",
       "--dsw-alias-state-warn-secondary": "rgb(202,158,61)",
       "--dsw-alias-state-warn-tertiary": "rgb(53,45,28)",
-      "--dsw-alias-state-warn-label": "rgb(195,151,53)"
+      "--dsw-alias-state-warn-label": "rgb(195,151,53)",
+      "--shiki-token-keyword": "rgb(236,118,150)",
+      "--shiki-token-string": "rgb(65,179,73)",
+      "--shiki-token-constant": "rgb(74,141,218)",
+      "--shiki-token-function": "rgb(155,138,232)",
+      "--shiki-token-parameter": "rgb(238,128,85)",
+      "--shiki-token-string-expression": "rgb(83,195,89)",
+      "--shiki-token-link": "rgb(74,141,218)",
+      "--shiki-token-comment": "rgb(148,138,115)",
+      "--shiki-token-punctuation": "rgb(178,169,148)"
     },
-    "curated": false
+    "curated": true
   },
   {
     "id": "daizi-light",
@@ -11003,6 +12731,15 @@ export const THEMES = [
     "errName": "火岩棕",
     "sucName": "綟绶",
     "wrnName": "蟹壳灰",
+    "synNames": {
+      "keyword": "菜头紫",
+      "string": "汉绣绿",
+      "constant": "靛青",
+      "function": "紫藤萝",
+      "parameter": "韎韐"
+    },
+    "synAnchorSlot": null,
+    "tier": "夜航",
     "identityShiftDL": 0,
     "degraded": [
       "seal"
@@ -11096,7 +12833,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(105,94,69)",
       "--dsw-alias-state-warn-secondary": "rgb(128,117,91)",
       "--dsw-alias-state-warn-tertiary": "rgb(245,241,233)",
-      "--dsw-alias-state-warn-label": "rgb(112,101,76)"
+      "--dsw-alias-state-warn-label": "rgb(112,101,76)",
+      "--shiki-token-keyword": "rgb(149,28,72)",
+      "--shiki-token-string": "rgb(46,125,50)",
+      "--shiki-token-constant": "rgb(22,97,171)",
+      "--shiki-token-function": "rgb(120,101,192)",
+      "--shiki-token-parameter": "rgb(165,68,27)",
+      "--shiki-token-string-expression": "rgb(30,112,36)",
+      "--shiki-token-link": "rgb(22,97,171)",
+      "--shiki-token-comment": "rgb(111,107,121)",
+      "--shiki-token-punctuation": "rgb(81,77,90)"
     },
     "curated": false
   },
@@ -11119,6 +12865,15 @@ export const THEMES = [
     "errName": "火岩棕",
     "sucName": "荠麦绿",
     "wrnName": "苹果绿",
+    "synNames": {
+      "keyword": "淡绛红",
+      "string": "玉髓绿",
+      "constant": "蓝色",
+      "function": "紫藤萝",
+      "parameter": "法螺红"
+    },
+    "synAnchorSlot": null,
+    "tier": "夜航",
     "identityShiftDL": 0,
     "degraded": [
       "seal"
@@ -11212,7 +12967,16 @@ export const THEMES = [
       "--dsw-alias-state-warn-primary": "rgb(186,207,101)",
       "--dsw-alias-state-warn-secondary": "rgb(205,227,121)",
       "--dsw-alias-state-warn-tertiary": "rgb(44,48,29)",
-      "--dsw-alias-state-warn-label": "rgb(150,170,62)"
+      "--dsw-alias-state-warn-label": "rgb(150,170,62)",
+      "--shiki-token-keyword": "rgb(236,118,150)",
+      "--shiki-token-string": "rgb(65,179,73)",
+      "--shiki-token-constant": "rgb(74,141,218)",
+      "--shiki-token-function": "rgb(155,138,232)",
+      "--shiki-token-parameter": "rgb(238,128,85)",
+      "--shiki-token-string-expression": "rgb(83,195,89)",
+      "--shiki-token-link": "rgb(74,141,218)",
+      "--shiki-token-comment": "rgb(140,136,152)",
+      "--shiki-token-punctuation": "rgb(171,167,182)"
     },
     "curated": false
   }

@@ -21,7 +21,9 @@
  *   1 帘的彩度不得低于 0.045（R1，「帘比现状更淡」是断言不是希望）
  *   2 印色彩度 > 最大面彩度 × 1.6（「屏上最艳的一块只有主按钮」必须可测）
  *   3 亮模式 bg 四层的层次方向与拆开（现状四同值白的回归护栏）
- *   4 token 覆盖完整性 89/89（缺一个失败；出现词表外的名字失败，防「编造 token」）
+ *   4 token 覆盖完整性 98/98（89 --dsw + 9 --shiki；缺一个失败；出现词表外的名字失败，防「编造 token」）
+ *   5 语法五彩槽（keyword/string/constant/function/parameter）两两色相分离 ≥ 15°
+ *   5b 锚色露脸：锚色色相落进某个语法槽的窗（≤ 24°）时，该槽必须是锚色本人
  * 以及近同检查：token 图 SHA-1 唯一 + 主题间最小距离（4 维签名色，同 colorScheme）。
  *
  * 用法：node scripts/check-contrast.mjs  （非零退出码 = 有失败）
@@ -84,6 +86,10 @@ const PAIRS = [
   [A('label-primary-foreground'), A('button-primary-hover'), 4.5],           // 20 印色解耦后 hover 独立派生
   [A('state-business-primary'), A('bg-base'), 4.5],                          // 21
   [A('brand-primary'), SP('sidebar-fill'), 3.0],                             // 22 帘上的品牌色
+  /* ── 层E · 语法（--shiki-token-* vs 代码底）——九个槽全是代码块里的文字 ── */
+  ...['constant', 'string', 'comment', 'keyword', 'parameter', 'function',
+      'string-expression', 'punctuation', 'link']
+    .map(k => [`--shiki-token-${k}`, A('markdown-code-block'), 4.5]),        // 23–31
 ];
 /* 亮模式专属：反色浮层上的字（暗模式的浮层实际用 label-primary，故不设行）。 */
 const PAIRS_LIGHT = [
@@ -91,8 +97,9 @@ const PAIRS_LIGHT = [
   [A('label-primary-inverted'), A('tooltip-bg'), 4.5],
 ];
 
-/* 不变量 4 的词表 —— oracle 侧独立一份（89 个：alias 78 + specific 11），
- * 逐字抄自 harness-ref/design-platform.css，与生成器不共享。 */
+/* 不变量 4 的词表 —— oracle 侧独立一份（98 个：alias 78 + specific 11 +
+ * shiki 9），--dsw-* 逐字抄自 harness-ref/design-platform.css，--shiki-token-*
+ * 逐字抄自 ui-theme/lib/styles/shiki.css，与生成器不共享。 */
 const VOCAB = new Set([
   'bg-base', 'bg-layer-1', 'bg-layer-2', 'bg-layer-3', 'bg-mask-1', 'bg-mask-2', 'bg-mask-3',
   'bg-mask-drop', 'bg-mask-photo', 'bg-module-platform', 'bg-multi-select', 'bg-overlay', 'bg-skeleton',
@@ -116,7 +123,12 @@ const VOCAB = new Set([
 ].map(A).concat([
   'bubble', 'bubble-highlight', 'input-major', 'login-input', 'menu', 'selector', 'sidebar-fill',
   'sidebar-nav-item-active', 'sidebar-nav-item-active-accent', 'sidebar-nav-item-hover', 'tip',
-].map(SP)));
+].map(SP)).concat([
+  /* 层E：宿主 shiki.css（css-variables 主题）消费的九个语法槽。
+   * foreground/background 在宿主表里已别名到 --dsw-*，不该出现在这里。 */
+  'constant', 'string', 'comment', 'keyword', 'parameter', 'function',
+  'string-expression', 'punctuation', 'link',
+].map(k => `--shiki-token-${k}`)));
 
 let failThemes = 0, failRows = 0, totalRows = 0, failInv = 0;
 const fails = [];
@@ -191,6 +203,91 @@ for (const t of themes) {
   }
 }
 
+/* ── 不变量 5：语法五彩槽两两色相分离 ≥ 15° ──
+ * 高亮的意义就是「一眼分清五种东西」，两槽撞色相当于少了一种语法。
+ * 与生成器的 SYN_SEP_MIN 必须一致 —— 刻意重复而不 import。 */
+const SYN_SEP_MIN = 15;
+const SYN_CHROMATIC = ['keyword', 'string', 'constant', 'function', 'parameter'];
+for (const t of themes) {
+  const hues = SYN_CHROMATIC.map(k => Hof(t.tokens[`--shiki-token-${k}`]));
+  for (let i = 0; i < hues.length; i++) for (let j = i + 1; j < hues.length; j++) {
+    const d = hueDist(hues[i], hues[j]);
+    if (d < SYN_SEP_MIN - 1e-9)
+      fail(`${t.id}: 语法槽 ${SYN_CHROMATIC[i]}/${SYN_CHROMATIC[j]} 色相分离 ${d.toFixed(1)}° < ${SYN_SEP_MIN}° — 两种语法撞色`);
+  }
+}
+
+/* ── 不变量 5b：锚色露脸 ──
+ * 锚色色相落进某个语法槽的窗（≤ 24°，取最近的槽）时，该槽必须是锚色本人的色相
+ * （容差 18°，与焦点闸同源：sRGB 压深的色域漂移不算背叛）。这是「化学反应」
+ * 发生在代码块里的可测形式：竹青主题的字符串必须是竹青，不是随便一种绿。
+ * 槽的目标色相取宿主 shiki.css 亮色默认值 —— oracle 侧独立取值，不 import。 */
+const SYN_TARGETS = { keyword: '#d6336c', string: '#2f9e44', constant: '#1c7ed6', function: '#6741d9', parameter: '#e8590c' };
+const SYN_ANCHOR_MAXD = 24, SYN_ANCHOR_TOL = 18;
+for (const t of themes) {
+  const aHue = hexHue(t.anchorHex);
+  let slot = null, best = Infinity;
+  for (const [k, hex] of Object.entries(SYN_TARGETS)) {
+    const d = hueDist(aHue, hexHue(hex));
+    if (d <= SYN_ANCHOR_MAXD && d < best) { slot = k; best = d; }
+  }
+  if (slot === null) continue;
+  const d = hueDist(Hof(t.tokens[`--shiki-token-${slot}`]), aHue);
+  if (d > SYN_ANCHOR_TOL)
+    fail(`${t.id}: 锚色该在语法槽 ${slot} 露脸（锚距槽 ${best.toFixed(1)}°），实际槽色相偏离锚 ${d.toFixed(1)}° > ${SYN_ANCHOR_TOL}°`);
+}
+
+/* ── 不变量 7：六档（tier）是一份可算的划分，不是手工贴的标签 ──
+ * 判定树在这里**独立重写一遍**（不 import 生成器），因为这层的价值就在于
+ * 「哪套属于哪档」是能复算的事实。七个哨兵把四条切线钉死：树被改坏时它们会掉出来，
+ * 而档名随便换 —— 断言绑的是树，不是词。 */
+const TIER_VOCAB = ['心流', '禅定', '攻坚', '爆肝', '夜航', '收工'];
+const tierExpect = hex => {
+  const rgb = [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16));
+  const [L, a, b] = oklab(rgb);
+  const C = Math.hypot(a, b);
+  const h = (Math.atan2(b, a) * 180 / Math.PI + 360) % 360;
+  if (L < 0.50) return C < 0.13 ? '夜航' : '爆肝';
+  if (C < 0.115) return '禅定';
+  if (h < 120 || h >= 315) return L < 0.71 ? '攻坚' : '收工';
+  return '心流';
+};
+for (const t of themes) {
+  if (!TIER_VOCAB.includes(t.tier)) { fail(`${t.id}: tier「${t.tier}」不在六档词表里`); continue; }
+  const want = tierExpect(t.anchorHex);
+  if (t.tier !== want) fail(`${t.id}: tier 记作「${t.tier}」，但按锚色 ${t.anchorHex} 重算应为「${want}」`);
+}
+/* 亮暗孪生同档 —— 档由锚色决定，与明暗无关。 */
+{
+  const byAnchor = new Map();
+  for (const t of themes) {
+    const seen = byAnchor.get(t.anchorHex);
+    if (seen !== undefined && seen !== t.tier) fail(`${t.anchorHex}: 亮暗两套的 tier 不一致（${seen} vs ${t.tier}）`);
+    byAnchor.set(t.anchorHex, t.tier);
+  }
+}
+/* 七个哨兵：四条切线各有人把守，改坏即报警。 */
+{
+  const SENTINELS = [
+    ['群青', '心流'], ['碧螺春绿', '禅定'], ['朱红', '攻坚'],
+    ['满天星紫', '夜航'], ['雄黄', '收工'], ['覆盆子红', '爆肝'], ['黛紫', '夜航'],
+  ];
+  for (const [name, want] of SENTINELS) {
+    const t = themes.find(x => x.nameZh === `${name}·亮`);
+    if (t === undefined) fail(`哨兵 ${name} 不在名册里 —— 六档的阈值失去了把守`);
+    else if (t.tier !== want) fail(`哨兵 ${name} 应属「${want}」，实际「${t.tier}」—— 判定树被改动了`);
+  }
+}
+/* 每档都得是「类」而不是「名」：太瘦就该重新切树（六档是这批数据的自然粒度）。 */
+{
+  const count = {};
+  for (const t of themes.filter(x => x.colorScheme === 'light')) count[t.tier] = (count[t.tier] || 0) + 1;
+  for (const k of TIER_VOCAB) {
+    const n = count[k] || 0;
+    if (n < 4) fail(`档「${k}」只有 ${n} 套锚色 —— 少于 4 就不再是一类，而是给某几套起了个名`);
+  }
+}
+
 /* ── 不变量 6：精选是一份有效的短名单 ── */
 {
   const curated = themes.filter(t => t.curated);
@@ -199,6 +296,11 @@ for (const t of themes) {
   if (light.length < 8 || light.length > 16) fail(`精选锚色数 ${light.length} 不在 8–16 —— 太少不成库，太多就不是编辑`);
   const fams = new Set(light.map(t => t.family));
   if (fams.size !== 4) fail(`精选只覆盖 ${fams.size} 个纸家族（应为 4）：${[...fams].join(' ')}`);
+  /* 六档每档都得有精选代表 —— 精选是默认视图，某档在这里一个代表都没有，
+   * 用户就看不到那个标签存在，那一档实际上等于不存在。 */
+  const tiersHit = new Set(light.map(t => t.tier));
+  const missing = TIER_VOCAB.filter(k => !tiersHit.has(k));
+  if (missing.length) fail(`精选覆盖不到这些档：${missing.join(' ')} —— 默认视图里看不见的档等于不存在`);
   for (const t of curated) {
     if (t.degraded.length > 0) fail(`${t.id}: 精选主题含降级项 ${t.degraded.join(' / ')}`);
   }
@@ -271,7 +373,7 @@ for (let i = 0; i < themes.length; i++) for (let j = i + 1; j < themes.length; j
 if (fails.length) console.log(fails.join('\n'));
 console.log(`主题数：${themes.length}（light ${themes.filter(t => t.colorScheme === 'light').length} / dark ${themes.filter(t => t.colorScheme === 'dark').length}）`);
 console.log(`对比度检查：${totalRows - failRows}/${totalRows} 行通过 · 失败主题 ${failThemes}`);
-console.log(`不变量检查（帘彩度 / 唯一焦点 / 层次方向 / token 覆盖）：失败 ${failInv}`);
+console.log(`不变量检查（帘彩度 / 唯一焦点 / 语法分离 / 锚色露脸 / 六档判定树 / 层次方向 / token 覆盖）：失败 ${failInv}`);
 console.log(`token 图 SHA-1 重复：${dupes}`);
 console.log(preview === undefined
   ? '发货件 ↔ 预览件一致性：已跳过（本次没有 preview/themes.json）'

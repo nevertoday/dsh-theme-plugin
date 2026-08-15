@@ -41,19 +41,31 @@ console.log('README 事实核对');
 const light = A.filter(t => t.colorScheme === 'light');
 check('锚色数', '49', light.length, both.includes('49') && light.length === 49);
 check('主题数', '98', A.length, A.length === 98);
-check('令牌数', '89', Object.keys(A[0].tokens).length, Object.keys(A[0].tokens).length === 89);
+check('令牌数', '98', Object.keys(A[0].tokens).length,
+  Object.keys(A[0].tokens).length === 98 && both.includes('89 个 `--dsw-*`') && both.includes('9 个 `--shiki-token-*`'));
 check('精选数', '12', light.filter(t => t.curated).length, light.filter(t => t.curated).length === 12);
 
 // 对比度行数 / 测试数（跑一次真的）
 const chk = execFileSync('node', ['scripts/check-contrast.mjs'], { encoding: 'utf8' });
 const rows = (chk.match(/(\d+)\/(\d+) 行通过/) || [])[2];
-check('对比度行数', '2254', rows, rows === '2254' && both.includes('2254'));
+check('对比度行数', '3136', rows, rows === '3136' && both.includes('3136'));
 // 测试数静态点算，不 spawn `pnpm test`：本脚本已并入 pnpm check，而 prepublishOnly
 // 里 test 与 check 各跑一次 —— 再套一层就是把测试跑三遍。
 const testFiles = readdirSync('test').filter(name => name.endsWith('.test.ts'));
 const testCount = testFiles.reduce((n, name) =>
   n + (readFileSync(`test/${name}`, 'utf8').match(/^test\(/gm) || []).length, 0);
-check('测试数', '50', testCount, testCount === 50 && both.includes(`${testCount} 个测试`) && both.includes(`${testCount} tests`));
+check('测试数', '60', testCount, testCount === 60 && both.includes(`${testCount} 个测试`) && both.includes(`${testCount} tests`));
+
+// 六档分布：README 里写的那一串必须与数据一致（顺序照「程序员的一天」）
+{
+  const ORDER = ['心流', '禅定', '攻坚', '爆肝', '夜航', '收工'];
+  const n = {};
+  for (const t of light) n[t.tier] = (n[t.tier] || 0) + 1;
+  const str = ORDER.map(k => `${k} ${n[k] || 0}`).join(' · ');
+  check('六档分布', '心流 11 · 禅定 12 · 攻坚 8 · 爆肝 4 · 夜航 8 · 收工 6', str, both.includes(str));
+  const thin = ORDER.filter(k => (n[k] || 0) < 4);
+  check('无瘦档（每档 ≥ 4）', '—', thin.length ? thin.join(' ') : '全部 ≥ 4', thin.length === 0);
+}
 
 // 四族纸彩度（README 顺序：素绢 熟宣 雪青 赭纸）
 const fam = {};
@@ -90,10 +102,10 @@ check('家族分布', '素绢 12 · 熟宣 14 · 雪青 17 · 赭纸 6', distStr
 // 体积：tsdown 与 esbuild fallback 的压缩策略不同，闸门守发布预算而不是某个
 // builder 的字节签名。README 仍记录主构建的典型体积，方便评估 review 噪音。
 const kb = p => Math.round(statSync(p).size / 1024);
-check('bundle 体积预算', '≤ 610 KB', kb('lib/client.js') + ' KB',
-  kb('lib/client.js') <= 610 && both.includes('610 KB'));
-check('sourcemap 体积预算', '≤ 910 KB', kb('lib/client.js.map') + ' KB',
-  kb('lib/client.js.map') <= 910 && both.includes('910 KB'));
+check('bundle 体积预算', '≤ 680 KB', kb('lib/client.js') + ' KB',
+  kb('lib/client.js') <= 680 && both.includes('680 KB'));
+check('sourcemap 体积预算', '≤ 1020 KB', kb('lib/client.js.map') + ' KB',
+  kb('lib/client.js.map') <= 1020 && both.includes('1020 KB'));
 
 // 最小主题距离
 const de = (chk.match(/最小主题距离[^：]*：([\d.]+)/) || [])[1];
@@ -121,6 +133,9 @@ const stale = [
   ['2208', /2208/],
   ['48 anchors', /48 anchors|48 个锚色|48 锚色/],
   ['553KB / 790KB', /553KB|790KB/],
+  ['2254 行对比度', /2254/],
+  ['旧发布预算 610/910', /610 KB|910 KB/],
+  ['89 个令牌的旧总数', /令牌词表（89 个）|\(89 tokens\)/],
   ['背景两两不同的假话', /No two of the \d+ themes share a background|没有两个共享背景/],
 ];
 console.log('\n  陈旧/失实表述残留：');

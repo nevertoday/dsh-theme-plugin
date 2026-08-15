@@ -15,6 +15,7 @@
 import { useEffect, useMemo, useState, type ReactNode } from 'react'
 import { fill } from './locales.ts'
 import { buildThemeGroups } from './theme-groups.ts'
+import { TIERS, TIER_COPY, isTier, type Tier } from './tiers.ts'
 
 /** 一行色名需要呈现的全部信息（apply() 从生成数据里裁出来）。 */
 export interface ThemeRow {
@@ -36,6 +37,8 @@ export interface ThemeRow {
   sealRel: string
   /** 是否属于 12 锚 / 24 套的精选（由生成器推导，见 §11.5）。 */
   curated: boolean
+  /** 六档之一：「今天想怎么工作」。由锚色算出，不是手工贴的。 */
+  tier: string
   /** 这套主题**实际交付**的三段：纸、帘、焦点。色卡画它们，不画锚色原值。 */
   paperHex: string
   veilHex: string
@@ -114,6 +117,7 @@ export function ThemeSection({
   const [scheme, setScheme] = useState<'light' | 'dark'>(initialScheme)
   const [query, setQuery] = useState('')
   const [showAll, setShowAll] = useState(false)
+  const [tier, setTier] = useState<Tier | undefined>(undefined)
 
   // 主题可以从别处被改（内置 Appearance 行、#theme= 深链、settings 读回），
   // 所以选中态永远跟服务的快照走，不本地记账。
@@ -126,9 +130,18 @@ export function ThemeSection({
   }, [preference, rows])
 
   const groups = useMemo(
-    () => buildThemeGroups(rows, scheme, query, showAll, t),
-    [rows, scheme, query, showAll, t],
+    () => buildThemeGroups(rows, scheme, query, showAll, t, tier),
+    [rows, scheme, query, showAll, t, tier],
   )
+  // 每档在当前明暗分支下的套数。写死数字会在名册变动后骗人，所以现算。
+  const tierCounts = useMemo(() => {
+    const counts = new Map<string, number>()
+    for (const row of rows) {
+      if (row.colorScheme !== scheme) continue
+      counts.set(row.tier, (counts.get(row.tier) ?? 0) + 1)
+    }
+    return counts
+  }, [rows, scheme])
   const shown = groups.reduce((total, group) => total + group.items.length, 0)
   const schemeTotal = rows.filter(row => row.colorScheme === scheme).length
   const currentRow = rows.find(r => r.id === preference)
@@ -181,6 +194,14 @@ export function ThemeSection({
           <div style={{ display: 'flex', flexDirection: 'column', gap: 3, minWidth: 0 }}>
             <div style={{ fontSize: 15, fontWeight: 700, letterSpacing: '.04em' }}>
               {currentRow.name}
+              {isTier(currentRow.tier) && (
+                <span style={{
+                  fontSize: 10.5, fontWeight: 600, letterSpacing: '.08em', marginLeft: 8,
+                  padding: '1px 6px', color: TOKEN.fg2, border: `1px solid ${TOKEN.line}`,
+                }}>
+                  {t(TIER_COPY[currentRow.tier].name)}
+                </span>
+              )}
               <span style={{ fontSize: 11, color: TOKEN.fg3, marginLeft: 8, fontWeight: 400 }}>
                 {currentRow.nameEn} · {currentRow.id}
               </span>
@@ -198,6 +219,58 @@ export function ThemeSection({
           </div>
         </section>
       )}
+
+      {/* 六档筛选条 —— 与明暗分段同一层的控件，不另起区块。
+        * 顺序照「程序员的一天」：心流(晨起) → 禅定(午后) → 攻坚(傍晚) →
+        * 爆肝(深夜) → 夜航(凌晨) → 收工(天亮)，再回到心流。 */}
+      <div
+        role="group"
+        aria-label={t('tierLabel')}
+        style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}
+      >
+        <button
+          type="button"
+          className="dshtz-seg-btn"
+          aria-pressed={tier === undefined}
+          onClick={() => { setTier(undefined) }}
+          style={{
+            border: `1px solid ${TOKEN.line}`, font: 'inherit', fontSize: 12,
+            padding: '4px 10px', cursor: 'pointer',
+          }}
+        >
+          {t('tierAll')}
+        </button>
+        {TIERS.map(key => {
+          const copy = TIER_COPY[key]
+          const n = tierCounts.get(key) ?? 0
+          return (
+            <button
+              key={key}
+              type="button"
+              className="dshtz-seg-btn"
+              aria-pressed={tier === key}
+              // 无障碍名与 title 都带上判据 —— 视觉上省掉的那一段不能连语义一起省掉。
+              aria-label={`${t(copy.hour)} ${t(copy.name)} · ${t(copy.basis)} · ${n}`}
+              title={`${t(copy.hour)} · ${t(copy.name)} · ${t(copy.basis)}`}
+              onClick={() => { setTier(current => (current === key ? undefined : key)) }}
+              style={{
+                display: 'inline-flex', alignItems: 'baseline', gap: 5,
+                border: `1px solid ${TOKEN.line}`, font: 'inherit', fontSize: 12,
+                padding: '4px 10px', cursor: 'pointer',
+              }}
+            >
+              {/* 时段排在最前：六枚 chip 从左到右读下来就是一天
+                * （晨起 → 午后 → 傍晚 → 深夜 → 凌晨 → 天亮），
+                * 于是这一排本身就在解释档与档的关系，不必另写说明。
+                * 判据（冷而浓…）退到 aria-label 与 title：把它也摆出来会让这一排
+                * 折成两行，而控件区已经有明暗分段和搜索占着行数了。 */}
+              <span style={{ fontSize: 10.5, color: TOKEN.fg3 }}>{t(copy.hour)}</span>
+              <span style={{ fontWeight: 600, letterSpacing: '.06em' }}>{t(copy.name)}</span>
+              <span style={{ fontSize: 10.5, color: TOKEN.fg3 }}>{n}</span>
+            </button>
+          )
+        })}
+      </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
         <div
@@ -288,6 +361,16 @@ export function ThemeSection({
                     <span style={{ fontSize: 13.5, fontWeight: 600, letterSpacing: '.03em' }}>{r.name}</span>
                     <span style={{ fontSize: 10.5, fontWeight: 400, color: TOKEN.fg3 }}>{r.nameEn}</span>
                   </span>
+                  {/* 档名。每套主题都有一个，所以这一列不会出现空洞 ——
+                    * 早先「五个模式各挑一套代表」的做法会让多数行空着，读起来像漏填。 */}
+                  {isTier(r.tier) && (
+                    <span style={{
+                      flexShrink: 0, fontSize: 10.5, letterSpacing: '.06em', padding: '1px 5px',
+                      color: TOKEN.fg3, border: `1px solid ${TOKEN.lineSoft}`,
+                    }}>
+                      {t(TIER_COPY[r.tier].name)}
+                    </span>
+                  )}
                   <Swatch hex={r.sealHex} size={9} />
                 </button>
               ))}
