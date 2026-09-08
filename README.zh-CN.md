@@ -180,7 +180,7 @@ dsh --profile web
 
 DSH 0.1 的客户端 boot manifest 不携带宿主插件配置，因此本包有意不公开无效的 `cordis.yml` 配置块。用户只通过选择面板或 `#theme=` 进入，选择保存在浏览器里。
 
-**闸门** —— `pnpm check`（3136 行对比度 + 不变量）与 `pnpm test`（60 个测试，含对 `lib/client.js` 的装载锁）。两者都不需要起 harness。
+**闸门** —— `pnpm check`（3136 行对比度 + 不变量）与 `pnpm test`（68 个测试，含对 `lib/client.js` 的装载锁）。两者都不需要起 harness。
 
 **重新生成主题** —— `pnpm generate` 要从[中国传统色](https://github.com/nevertoday/zhongguo-traditional-colors)仓库读色卡数据与 OKLab 色彩数学，用环境变量指过去：
 

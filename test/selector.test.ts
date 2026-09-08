@@ -27,7 +27,6 @@ function makeWorld(opts: { paintSticks?: boolean } = {}) {
   const timers = new Map<number, { at: number; fn: () => void }>()
   const calls: string[] = []
   const warnings: string[] = []
-  let userActive = false
 
   /** 直写 DOM。paintSticks=false 时模拟"外部总在撤掉我们写的令牌"。 */
   const paint = (id: string | undefined): void => {
@@ -46,7 +45,6 @@ function makeWorld(opts: { paintSticks?: boolean } = {}) {
     // 锁的就是"任务结束时 DOM 必须是我们的"。
     repaint: paint,
     retract: () => { paint(undefined) },
-    userActiveWithin: () => userActive,
     now: () => clock,
     setTimer: (fn, ms) => { const id = nextTimer++; timers.set(id, { at: clock + ms, fn }); return id },
     clearTimer: handle => { timers.delete(handle as number) },
@@ -59,8 +57,6 @@ function makeWorld(opts: { paintSticks?: boolean } = {}) {
     callsFor(id: string): number { return calls.filter(c => c === id).length },
     /** 还挂着的定时器数量 —— 重叠重试链与卸载泄漏都靠它取证。 */
     get pending(): number { return timers.size },
-    /** 模拟用户刚刚点过 / 按过键。 */
-    setUserActive(v: boolean): void { userActive = v },
     /** 模拟 presenter 又画了一次（覆盖我们直写的 DOM）。 */
     present(id: string): void { applied = GROUNDS[id] },
     /** 模拟 presenter 把 body 画成了内置主题（撤掉我们的令牌）。 */
@@ -152,27 +148,15 @@ test('dispose 之后没有定时器活着，也不会再调 setTheme', () => {
   assert.equal(world.calls.length, after)
 })
 
-test('启动窗口内被覆盖：重新断言（这才是竞态防护该做的）', () => {
-  const world = makeWorld()
-  const selector = selectorFor(world, { maxAttempts: 1 })
-
-  selector.choose('zhuqing-light')
-  assert.equal(world.callsFor('zhuqing-light'), 1)
-
-  selector.onPreference('dark')                          // settings 读回持久化偏好，盖掉我们
-  assert.equal(selector.desired, 'zhuqing-light')
-  assert.equal(world.callsFor('zhuqing-light'), 2, '启动窗口内没有重新断言')
-})
-
 test('迟到的 adopt()（还没生效过）仍然重新断言 —— "选完刷新就复原"的回归锁', () => {
   const world = makeWorld()
-  const selector = selectorFor(world, { maxAttempts: 1, bootRaceMs: 15_000 })
+  const selector = selectorFor(world, { maxAttempts: 1 })
 
   selector.choose('zhuqing-light')                       // 刷新后从 localStorage 读回
   assert.equal(world.calls.length, 1)
 
-  world.advance(8_000)                                   // adopt() 晚到 8 秒（早于旧的 5 秒窗口就会误判）
-  selector.onPreference('dark')
+  world.advance(8_000)                                   // adopt() 晚到 8 秒（旧的时间窗判据在这里就开始误判）
+  selector.onPreference('dark', false)
 
   assert.equal(selector.desired, 'zhuqing-light', '还没生效过就让位了 —— 用户会看到刷新后复原')
   assert.equal(selector.yieldedToUser, false, '这不是用户意图，不该清掉记住的选择')
@@ -189,7 +173,7 @@ test('偏好被改走时不看瞬时 DOM —— presenter 重绘是异步的', (
   const before = world.calls.length
 
   // adopt() 把偏好改走，但 presenter 还没重绘 —— 此刻 DOM 仍然显示我们的底色。
-  selector.onPreference('system')
+  selector.onPreference('system', false)
 
   assert.ok(world.calls.length > before,
     '因为瞬时 DOM 还是我们的就没有重新断言 —— 重绘落地后主题会静默消失')
@@ -198,80 +182,73 @@ test('偏好被改走时不看瞬时 DOM —— presenter 重绘是异步的', (
 
 test('adopt 把 DOM 画成内置色后，onPreference 同一次调用里就画回我们的主题', () => {
   const world = makeWorld()
-  const selector = selectorFor(world, { settleGraceMs: 3_000 })
+  const selector = selectorFor(world)
 
   selector.choose('zhuqing-light')
   world.advance(200)                                     // 生效
 
   world.presentBuiltin()                                 // presenter 先于我们的监听器画了内置浅色
-  selector.onPreference('system')                        // 紧跟着的 adopt()
+  selector.onPreference('system', false)                 // 紧跟着的 adopt()
 
   assert.equal(world.applied, GROUNDS['zhuqing-light'],
     '让页面停在中间态 —— 刷新后就是那几下可见的闪动')
   assert.equal(selector.desired, 'zhuqing-light')
 })
 
-test('生效过、且过了宽限期，才认定是用户意图（可以清记忆）', () => {
+test('其他插件写设置触发 adopt()（explicit=false）：不让位、不清记忆、重新断言 —— issue #1 回归锁', () => {
   const world = makeWorld()
-  const selector = selectorFor(world, { settleGraceMs: 3_000 })
-
-  selector.choose('zhuqing-light')
-  world.present('zhuqing-light')
-  world.advance(200)                                     // 让重试链自检到"已生效"
-  world.advance(10_000)                                  // 宽限期过
-
-  world.setUserActive(true)                              // 用户真的点了内置 Appearance 行
-  selector.onPreference('light')
-  assert.equal(selector.desired, undefined)
-  assert.equal(selector.yieldedToUser, true)
-})
-
-test('宽限期外、但用户没动过手：那是框架又 adopt 了一次 —— 不让位、不清记忆', () => {
-  const world = makeWorld()
-  const selector = selectorFor(world, { settleGraceMs: 3_000, maxAttempts: 1 })
+  const selector = selectorFor(world, { maxAttempts: 1 })
 
   selector.choose('zhuqing-light')
   world.present('zhuqing-light')
   world.advance(200)                                     // 生效
-  world.advance(60_000)                                  // 很久以后（重连 / 设置同步都会再 adopt 一次）
-  const before = world.callsFor('zhuqing-light')
+  world.advance(60_000)                                  // 很久以后：用户去调字号，别的插件写了设置
 
-  selector.onPreference('system')                        // userActive 默认 false
+  // 宿主重载 settings 快照 → adopt() → theme/change。旧的时间窗判据会因为
+  // "用户刚点过东西"把这一次误判成用户放弃了主题（issue #1）。
+  for (let i = 0; i < 3; i++) {
+    world.presentBuiltin()                               // presenter 先画成内置色
+    selector.onPreference('system', false)
+  }
 
-  assert.equal(selector.desired, 'zhuqing-light', '把框架的 adopt 当成用户意图了')
+  assert.equal(selector.desired, 'zhuqing-light', '把别的插件触发的 adopt 当成用户意图了')
   assert.equal(selector.yieldedToUser, false, '这会顺手清掉用户记住的选择')
-  assert.ok(world.callsFor('zhuqing-light') > before, '没有重新断言')
+  assert.equal(world.applied, GROUNDS['zhuqing-light'], '连续几次 adopt 之后页面没回到我们的主题')
 })
 
-test('刚生效就被覆盖（宽限期内）：仍然算迟到的 adopt，不清记忆', () => {
+test('Appearance 行显式 setTheme（explicit=true）：让位、撤掉令牌、yieldedToUser=true', () => {
   const world = makeWorld()
-  const selector = selectorFor(world, { settleGraceMs: 3_000, maxAttempts: 1 })
+  const selector = selectorFor(world)
 
   selector.choose('zhuqing-light')
   world.present('zhuqing-light')
   world.advance(200)
-  selector.onPreference('dark')                          // 紧跟着一次 adopt
-
-  assert.equal(selector.desired, 'zhuqing-light')
-  assert.equal(selector.yieldedToUser, false)
-})
-
-test('启动窗口过后用户改偏好：让位，不再抢', () => {
-  const world = makeWorld()
-  const selector = selectorFor(world, { bootRaceMs: 5_000 })
-
-  selector.choose('zhuqing-light')
-  world.present('zhuqing-light')
-  world.advance(30_000)                                  // 启动窗口早过了
   const before = world.calls.length
 
-  world.setUserActive(true)                              // 关键：用户真的动过手
-  selector.onPreference('light')                         // 用户在内置 Appearance 行点了 Light
+  selector.onPreference('light', true)                   // 用户在内置 Appearance 行点了 Light
+
   assert.equal(selector.desired, undefined, '插件仍想抢回自己的主题')
+  assert.equal(selector.yieldedToUser, true)
+  assert.equal(world.applied, BUILTIN_GROUND, '让位了却没撤掉我们直写的令牌')
   assert.equal(world.pending, 0)
 
   world.advance(10_000)
   assert.equal(world.calls.length, before, '让位之后又把用户的选择顶回去了')
+})
+
+test('显式偏好恰好等于已知回退值时也要让位（持久化已是 light 时点 Light）', () => {
+  const world = makeWorld()
+  const selector = selectorFor(world, { initialPreference: 'light' })
+
+  selector.choose('zhuqing-light')
+  world.present('zhuqing-light')
+  world.advance(200)
+  assert.equal(selector.fallback, 'light')
+
+  selector.onPreference('light', true)                   // 值没变，但这是一次显式点击
+
+  assert.equal(selector.desired, undefined, '偏好值与回退值相同就没让位')
+  assert.equal(selector.yieldedToUser, true)
 })
 
 test('重新断言的额度不会随时间补满（抢夺不能长期驻留）', () => {
@@ -281,7 +258,7 @@ test('重新断言的额度不会随时间补满（抢夺不能长期驻留）',
   selector.choose('zhuqing-light')                       // 1 次
   // 不再有 forceSet 的 fallback 中间态，每轮 onPreference 都计数，
   // 所以额度 5 次就是 5 次，喂 20 轮也只有前 5 轮会动作。
-  for (let i = 0; i < 20; i++) selector.onPreference('dark')
+  for (let i = 0; i < 20; i++) selector.onPreference('dark', false)
 
   assert.equal(world.callsFor('zhuqing-light'), 6, '额度被补满了：1 次选择 + 最多 5 次重新断言')
   assert.equal(world.warnings.filter(w => /gave up re-asserting/.test(w)).length, 1)
@@ -292,7 +269,7 @@ test('reset 交还我们接手之前那个偏好，而不是硬写 system', () =
   const selector = selectorFor(world, { initialPreference: 'system' })
 
   selector.choose('zhuqing-light')
-  selector.onPreference('dark')                          // 从这次 adopt() 学到持久化偏好是 dark
+  selector.onPreference('dark', false)                   // 从这次 adopt() 学到持久化偏好是 dark
   assert.equal(selector.fallback, 'dark')
 
   selector.reset()
@@ -306,6 +283,6 @@ test('回退目标不会变成本插件自己的 id', () => {
   const selector = selectorFor(world)
 
   selector.choose('zhuqing-light')
-  selector.onPreference('qunqing-dark')                  // 另一套我们自己的主题
+  selector.onPreference('qunqing-dark', false)           // 另一套我们自己的主题
   assert.equal(selector.fallback, 'system')
 })

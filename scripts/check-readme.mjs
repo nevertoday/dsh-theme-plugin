@@ -54,7 +54,7 @@ check('对比度行数', '3136', rows, rows === '3136' && both.includes('3136'))
 const testFiles = readdirSync('test').filter(name => name.endsWith('.test.ts'));
 const testCount = testFiles.reduce((n, name) =>
   n + (readFileSync(`test/${name}`, 'utf8').match(/^test\(/gm) || []).length, 0);
-check('测试数', '60', testCount, testCount === 60 && both.includes(`${testCount} 个测试`) && both.includes(`${testCount} tests`));
+check('测试数', '68', testCount, testCount === 68 && both.includes(`${testCount} 个测试`) && both.includes(`${testCount} tests`));
 
 // 六档分布：README 里写的那一串必须与数据一致（顺序照「程序员的一天」）
 {
