@@ -4,6 +4,7 @@ import type {} from '@deepseek-ai/dsh-client-ui-theme/client'
 import { THEMES } from '../themes.generated.js'
 import { repairTokens } from '../repairs.ts'
 import { createThemeSelector } from './selector.ts'
+import { tapSetTheme, type SetThemeHost } from './intercept.ts'
 import { ThemeSection, type ThemeRow } from './ThemeSection.tsx'
 import { en, zh } from './locales.ts'
 
@@ -38,6 +39,15 @@ export function apply(ctx: ClientContext): void {
     warn('ctx.theme unavailable — no themes registered')
     return
   }
+  // 「这次 theme/change 是谁发的」的权威来源。
+  //
+  // 宿主的显式切换入口只有 ThemeRuntime.setTheme()（内置 Appearance 行的三个
+  // 方块就调它），而 adopt() —— 任何插件写任何设置都会触发的那一条 —— 不经过
+  // 它，却一样 emit theme/change。包一层 setTheme，事件到达时就能直接读出这次
+  // 变更是不是显式切换，不必再靠「2 秒内用户点过东西」去猜（issue #1：猜错了，
+  // 于是调一次字号主题就没了）。见 src/client/intercept.ts。
+  const tap = tapSetTheme(ctx.theme as unknown as SetThemeHost, warn)
+  ctx.effect(() => () => { tap.dispose() }, 'theme-zhongguo: setTheme tap')
   // 修补后的令牌，每套主题算一次。**注册与直写 DOM 的绘制路径共用这一份** ——
   // 只修其中一条，画出来的就是没修的那份（实机踩过：绘制层用原始 tokens，于是
   // body 上永远是 89 个令牌、阴影仍是中性灰）。见 src/repairs.ts。
@@ -124,20 +134,6 @@ export function apply(ctx: ClientContext): void {
     },
   }
 
-  // 用户最近一次真实交互的时刻。区分"用户在内置 Appearance 行点了 Light"和
-  // "框架又 adopt 了一次持久化偏好"只能靠这个 —— 两者的 theme/change 一模一样。
-  let lastInputAt = 0
-  const noteInput = (): void => { lastInputAt = Date.now() }
-  ctx.effect(() => {
-    const opts = { capture: true, passive: true } as const
-    addEventListener('pointerdown', noteInput, opts)
-    addEventListener('keydown', noteInput, opts)
-    return () => {
-      removeEventListener('pointerdown', noteInput, opts)
-      removeEventListener('keydown', noteInput, opts)
-    }
-  }, 'theme-zhongguo: user-activity probe')
-
   // 直接写 DOM 的令牌绘制 —— 不依赖 presenter 的重绘往返。
   //
   // 为什么需要它：settings scope 启动时会多次 adopt() 内置偏好，每次 emit
@@ -192,13 +188,16 @@ export function apply(ctx: ClientContext): void {
     // presenter 真正写入的地方就是这里 —— 服务快照会说谎（它记的是我们请求的值），
     // body 上的内联令牌不会。
     appliedGround: () => document.body.style.getPropertyValue('--dsw-alias-bg-base').trim(),
+    // 走 tap.own：我们自己发的 setTheme 不能被当成「用户显式切换」，
+    // 否则每次断言主题都会立刻把自己让位掉。
     setTheme: (id) => {
-      try { ctx.theme.setTheme(id) } catch (err) { warn(`setTheme(${id}) failed: ${String(err)}`) }
+      try {
+        tap.own(() => { ctx.theme.setTheme(id) })
+      } catch (err) { warn(`setTheme(${id}) failed: ${String(err)}`) }
     },
     paint: paintTheme,
     repaint: repaintTheme,
     retract: () => { paintTheme() },
-    userActiveWithin: ms => Date.now() - lastInputAt <= ms,
     now: () => Date.now(),
     setTimer: (fn, ms) => setTimeout(fn, ms),
     clearTimer: (handle) => { clearTimeout(handle as ReturnType<typeof setTimeout>) },
@@ -228,9 +227,16 @@ export function apply(ctx: ClientContext): void {
 
   ctx.on('theme/change', (snapshot: { preference: string }) => {
     const before = selector.desired
-    selector.onPreference(snapshot.preference)
-    // 只有"判定了用户意图"的让位才清记忆。启动竞态里放弃**绝不能清** ——
-    // 一次迟到的 adopt() 会顺手销毁用户记住的选择，表现就是"选完刷新永久复原"。
+    // theme/change 是在 setTheme 内部**同步**发出来的，所以此刻 tap.foreign 正是
+    // 那次显式调用的 id；adopt() 不经过 setTheme，foreign 就是 undefined。
+    // 补丁没挂上时（实例被冻结/被 Proxy 包住）退回比对持久化值：只有显式切换会
+    // 把内置偏好真的写成另一个值，这是剩下的最好代理信号。
+    const explicit = tap.active
+      ? tap.foreign === snapshot.preference
+      : snapshot.preference !== selector.fallback
+    selector.onPreference(snapshot.preference, explicit)
+    // 只有"判定了用户意图"的让位才清记忆。我们自己放弃时**绝不能清** ——
+    // 一次 adopt() 会顺手销毁用户记住的选择，表现就是"选完刷新永久复原"。
     if (before !== undefined && selector.desired === undefined && selector.yieldedToUser) {
       store.clear()
     }

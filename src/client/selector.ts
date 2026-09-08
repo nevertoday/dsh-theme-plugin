@@ -13,11 +13,19 @@
  *   重绘 —— forceSet 会把令牌**直接**写进 body（paint），同一任务内页面就是对的，
  *   再用任务末尾的 microtask 补画一次（repaint）赢过晚到的 presenter 监听器。
  *
- *   **用户主权** —— 启动窗口过去之后，偏好被改成别的值就是用户的明确意图（内置
- *   Appearance 行、另一个主题插件），必须让位；再抢回去就是插件在跟用户较劲。
+ *   **用户主权** —— 偏好被**显式**改成别的值就是用户的明确意图（内置 Appearance
+ *   行、另一个主题插件），必须让位；再抢回去就是插件在跟用户较劲。
  *
- * 判据是**时间窗**，不是「我们的主题曾经生效过」：adopt() 恰恰发生在我们生效
- * 之后，两者在事件层面无法区分，只能靠「距 apply() 多久」来分。
+ * 判据是 setTheme 拦截器（src/client/intercept.ts），不再是时间窗。
+ * `theme/change` 的两个来源在事件层面长得一模一样，但来路不同：显式切换必然经过
+ * `ThemeRuntime.setTheme()`，而 `adopt()` 不经过它 —— 于是把 setTheme 包一层，
+ * 调用方就能在事件到达时给出一个 explicit 布尔值，这里只需照它办事。
+ *
+ * 为什么换掉时间窗：旧判据是「过了宽限期 + 最近 2 秒内用户点过任何地方」。可是
+ * 用户点另一个插件的按钮（比如调字号）→ 那个插件写设置 → 宿主重载 settings 快照
+ * → adopt() → theme/change，恰好也落在点击后 2 秒内。于是我们误判成用户放弃了
+ * 主题，让位、撤令牌，index.ts 还顺手清掉了记住的选择 —— 这就是 issue #1
+ * 「操作别的插件面板，主题就退回内置」的成因。
  */
 
 /** 定时器句柄由宿主环境决定形状，这里只负责原样传回 clearTimer。 */
@@ -45,12 +53,6 @@ export interface SelectorDeps {
   repaint(id: string): void
   /** 撤掉本插件直接写进 DOM 的令牌，把 DOM 完全交还给 presenter（复位/让位时）。 */
   retract(): void
-  /**
-   * 最近 ms 毫秒内用户有没有真的动过手（点击/按键）。
-   * 这是区分「用户在内置 Appearance 行点了 Light」和「框架又 adopt 了一次持久化
-   * 偏好」的唯一可靠信号 —— 两者在事件层面长得一模一样，但前者必然紧跟一次点击。
-   */
-  userActiveWithin(ms: number): boolean
   now(): number
   setTimer(fn: () => void, ms: number): TimerHandle
   clearTimer(handle: TimerHandle): void
@@ -60,16 +62,6 @@ export interface SelectorDeps {
 export interface SelectorOptions {
   /** 接手之前页面的偏好 —— reset() 要交还的就是它。 */
   initialPreference?: string
-  /**
-   * 启动阶段的硬上限：我们的主题**一次都还没生效过**之前，偏好被改一律算竞态。
-   * 实机上 adopt() 可能晚到 5 秒以外，所以这个值要宽 —— 反正它只在"从没生效过"
-   * 的前提下有效，用户不可能在这个阶段放弃一个他没见过的主题。
-   */
-  bootRaceMs?: number
-  /** 刚生效 / 刚被选中之后的宽限期：这段时间内被覆盖仍算迟到的 adopt()。 */
-  settleGraceMs?: number
-  /** 偏好被改走前多久算「用户刚动过手」。 */
-  userIntentMs?: number
   /** 单次选择的 DOM 自验证重试上限。 */
   maxAttempts?: number
   /** 被覆盖后重新断言的次数上限（只有明确选择才补额度）。 */
@@ -83,29 +75,31 @@ export interface ThemeSelector {
   choose(id: string): boolean
   /** 交还给我们接手之前的那个偏好，并停止一切重新断言。 */
   reset(): void
-  /** 喂给它 ui-theme 的 `theme/change` 偏好值。 */
-  onPreference(preference: string): void
+  /**
+   * 喂给它 ui-theme 的 `theme/change` 偏好值。
+   *
+   * `explicit` 由调用方从 setTheme 拦截器读出来：true 表示这次变更来自一次**显式**
+   * 的 `setTheme()`（内置 Appearance 行、另一个主题插件），我们让位；false 表示它
+   * 来自 adopt() 或一次重新发布 —— 那不是用户在挑主题，重新断言我们的选择。
+   */
+  onPreference(preference: string, explicit: boolean): void
   /** 当前想要的主题 id；让位或复位后为 undefined。 */
   readonly desired: string | undefined
   /** 回退目标：最近一次观察到的、不属于本插件的偏好。 */
   readonly fallback: string
   /**
-   * 最近一次 desired 归零，是不是因为**判定了用户意图**（而不是启动竞态里放弃）。
-   * 调用方靠它决定要不要把"记住的选择"也清掉 —— 启动阶段的让位绝不能清，
-   * 否则一次迟到的 adopt() 会顺手销毁用户的记忆（刷新一次就永久复原）。
+   * 最近一次 desired 归零，是不是因为**判定了用户意图**（而不是我们自己放弃）。
+   * 调用方靠它决定要不要把"记住的选择"也清掉 —— 非用户意图的归零绝不能清，
+   * 否则一次 adopt() 会顺手销毁用户的记忆（刷新一次就永久复原）。
    */
   readonly yieldedToUser: boolean
   dispose(): void
 }
 
 export function createThemeSelector(deps: SelectorDeps, options: SelectorOptions = {}): ThemeSelector {
-  const bootRaceMs = options.bootRaceMs ?? 15_000
-  const settleGraceMs = options.settleGraceMs ?? 3_000
-  const userIntentMs = options.userIntentMs ?? 2_000
   const maxAttempts = options.maxAttempts ?? 8
   const maxReasserts = options.maxReasserts ?? 5
   const retryStepMs = options.retryStepMs ?? 150
-  const startedAt = deps.now()
 
   let desired: string | undefined
   let fallback = options.initialPreference ?? 'system'
@@ -113,21 +107,6 @@ export function createThemeSelector(deps: SelectorDeps, options: SelectorOptions
   let reasserts = 0
   let gaveUp = false
   let yieldedToUser = false
-  /** 我们的主题是否曾经真的出现在 DOM 里（不是"我们请求过"）。 */
-  let settled = false
-  let settledAt = 0
-  let chosenAt = startedAt
-
-  /**
-   * 现在被别人改掉偏好，还算不算"不是用户干的"。
-   * 三种情形都算：还没生效过且在启动上限内 / 刚刚被选中 / 刚刚生效。
-   */
-  function withinGrace(t: number): boolean {
-    if (!settled && t - startedAt <= bootRaceMs) return true
-    if (t - chosenAt <= settleGraceMs) return true
-    if (settled && t - settledAt <= settleGraceMs) return true
-    return false
-  }
 
   /**
    * 把 id 同时送到服务与 DOM。
@@ -159,7 +138,6 @@ export function createThemeSelector(deps: SelectorDeps, options: SelectorOptions
     const want = deps.expectedGround(desired)
     if (want === undefined) return
     if (deps.appliedGround() === want) {                // 已经是我们的了
-      if (!settled) { settled = true; settledAt = deps.now() }
       // 赢了一次就把额度还回来：长会话里 adopt 可能来很多轮（重连、设置同步），
       // 全局只给 5 次会被耗尽。settle 意味着 DOM 里就是我们的，不可能形成循环。
       reasserts = 0
@@ -205,8 +183,6 @@ export function createThemeSelector(deps: SelectorDeps, options: SelectorOptions
       reasserts = 0
       gaveUp = false
       yieldedToUser = false
-      settled = false                                   // 新主题还没生效过
-      chosenAt = deps.now()
       ensureApplied(0)
       return true
     },
@@ -214,19 +190,18 @@ export function createThemeSelector(deps: SelectorDeps, options: SelectorOptions
     reset(): void {
       desired = undefined
       yieldedToUser = true                             // 用户主动交还，记忆也该忘掉
-      settled = false
       cancel()
       deps.retract()                                   // 撤掉我们直写的令牌，DOM 交还 presenter
       deps.setTheme(fallback)
     },
 
-    onPreference(preference: string): void {
+    onPreference(preference: string, explicit: boolean): void {
       // 别人的偏好值就是我们的回退目标 —— 我们要对抗的那次 adopt()，
       // 恰好也是我们唯一能学到「持久化偏好到底是什么」的机会。
       if (!deps.isKnown(preference)) fallback = preference
       if (desired === undefined) return
       if (preference === desired) return
-      if (!withinGrace(deps.now()) && deps.userActiveWithin(userIntentMs)) {
+      if (explicit) {
         desired = undefined                            // 用户主权：让位，不再抢
         yieldedToUser = true
         cancel()

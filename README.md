@@ -180,7 +180,7 @@ dsh --profile web
 
 DSH 0.1's client boot manifest does not carry host plugin config, so this package intentionally exposes no `cordis.yml` config block. User choices enter through the picker or `#theme=` and persist in the browser.
 
-**Gates** — `pnpm check` (3136 contrast rows plus invariants) and `pnpm test` (60 tests, including a load-time lock on `lib/client.js`). Neither needs a running harness.
+**Gates** — `pnpm check` (3136 contrast rows plus invariants) and `pnpm test` (68 tests, including a load-time lock on `lib/client.js`). Neither needs a running harness.
 
 **Regenerating the themes** — `pnpm generate` reads the color data and OKLab math from the [中国传统色](https://github.com/nevertoday/zhongguo-traditional-colors) repository. Point it there:
 
