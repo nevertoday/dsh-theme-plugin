@@ -54,7 +54,7 @@ check('对比度行数', '3136', rows, rows === '3136' && both.includes('3136'))
 const testFiles = readdirSync('test').filter(name => name.endsWith('.test.ts'));
 const testCount = testFiles.reduce((n, name) =>
   n + (readFileSync(`test/${name}`, 'utf8').match(/^test\(/gm) || []).length, 0);
-check('测试数', '68', testCount, testCount === 68 && both.includes(`${testCount} 个测试`) && both.includes(`${testCount} tests`));
+check('测试数', '69', testCount, testCount === 69 && both.includes(`${testCount} 个测试`) && both.includes(`${testCount} tests`));
 
 // 六档分布：README 里写的那一串必须与数据一致（顺序照「程序员的一天」）
 {
@@ -118,13 +118,13 @@ for (const [name, md] of [['README.md', en], ['README.zh-CN.md', zh]]) {
   check(`${name} 名册行数`, '49', n, n === 49);
   const starred = new Set(
     md.split('\n')
-      .filter(line => line.startsWith('| ') && line.includes('⭐'))
+      .filter(line => line.startsWith('| ') && /\| \*\*[^*|]+\*\* \|/.test(line))
       .map(line => line.match(/`([a-z0-9-]+-light)`/)?.[1])
       .filter(Boolean),
   );
   const same = starred.size === curatedIds.size
     && [...curatedIds].every(id => starred.has(id));
-  check(`${name} 精选星标`, '与生成数据一致', starred.size, same);
+  check(`${name} 精选标记`, '与生成数据一致', starred.size, same);
 }
 
 // 不该再出现的旧数字

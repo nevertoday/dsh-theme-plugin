@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="dsh-theme-plugin">
+  <rect x="16" y="16" width="96" height="96" rx="20" fill="#171612"/>
+  <path d="M36 28h56v8H36zM40 36h48v56H40zM32 92h64v8H32z" fill="#F3F0EA"/>
+  <rect x="64" y="64" width="16" height="16" fill="#ED5126"/>
+</svg>

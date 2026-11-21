@@ -1,8 +1,9 @@
-# dsh-theme-plugin
+<p align="center"><img src="docs/img/icon.svg" width="96" height="96" alt=""></p>
+<h1 align="center">dsh-theme-plugin</h1>
 
 以中国传统色为锚色的 **DeepSeek Harness 主题包**。49 个锚色 × 亮/暗 = **98 套主题**，每套写满完整的令牌词表（98 个：89 个 `--dsw-*` + 9 个 `--shiki-token-*` 语法槽），3136 条对比度断言逐条通过 WCAG AA。其中 12 个锚色标为精选。
 
-📖 [English README](./README.md)
+[English README](./README.md)
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/theme-zhuqing-light.png" alt="竹青·亮：素绢纸，气泡是一层竹青罩染，发送键是锚色本人" width="49%">
@@ -44,16 +45,16 @@ http://127.0.0.1:3080/#theme=qunqing-dark       # 群青·暗
 
 <table>
 <tr>
-<td width="50%"><img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/use-browse.png" alt="面板的默认视图：亮色分支的 49 个锚色，按四个纸家族分组"></td>
-<td width="50%"><img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/use-tier.png" alt="按下「凌晨 夜航」：列表收到 8 套暗而静的主题，横跨四个纸家族"></td>
+<td width="50%"><img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/picker-browse.png" alt="面板的默认视图：亮色分支的 49 个锚色，按四个纸家族分组"></td>
+<td width="50%"><img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/picker-tier.png" alt="按下「凌晨 夜航」：列表收到 8 套暗而静的主题，横跨四个纸家族"></td>
 </tr>
 <tr>
 <td><b>翻</b> —— 默认摆开当前分支的 49 个锚色，按纸家族分组。每行的色卡就是这套主题实际交付的纸、帘、焦点，所以列表本身就是预览。</td>
 <td><b>按状态</b> —— 六枚 chip 从左到右是一天：晨起 → 天亮。点 <code>凌晨 夜航</code>，拿到的是 8 套「暗而静」，不论它们是什么颜色。</td>
 </tr>
 <tr>
-<td><img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/use-search.png" alt="在搜索框敲拼音 lv，列表收到 12 套绿色主题"></td>
-<td><img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/use-curated-dark.png" alt="暗色分支下的「仅精选」：12 套编辑推荐，面板自身也是竹青·暗"></td>
+<td><img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/picker-search.png" alt="在搜索框敲拼音 lv，列表收到 12 套绿色主题"></td>
+<td><img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/picker-curated-dark.png" alt="暗色分支下的「仅精选」：12 套编辑推荐，面板自身也是竹青·暗"></td>
 </tr>
 <tr>
 <td><b>搜</b> —— 色名、拼音、印色、档名都能命中。敲 <code>lv</code> 就能找出全部 12 套绿，不用切输入法。</td>
@@ -61,7 +62,7 @@ http://127.0.0.1:3080/#theme=qunqing-dark       # 群青·暗
 </tr>
 </table>
 
-面板只引用 `--dsw-*` 令牌 —— 这正是它随你的选择变色、本身就是预览的原因。
+面板只引用 `--dsw-*` 令牌 —— 这正是它随你的选择变色、本身就是预览的原因。样子按[小小东 UI Kit](https://github.com/nevertoday/xxd-ui-kit)：直角，选中的主题只加一圈 1px 墨色边，没有阴影，字重只用 400 / 500 / 600。
 
 ## 设计：纸 · 帘 · 印
 
@@ -103,15 +104,15 @@ C < 0.115 ──────────→ 禅定（淡而静）
 <details>
 <summary><b>49 锚色 × 亮/暗 = 98 主题</b> —— 点击展开</summary>
 
-⭐ 为面板置顶的 12 色精选。显示名为 `名·亮` / `名·暗`，如 `竹青·暗`。印色一列是上文说的那枚配伍关系色 —— 它是落款，不是按钮的颜色。
+粗体的 12 个是精选，「仅精选」收到的就是这一组。显示名为 `名·亮` / `名·暗`，如 `竹青·暗`。印色一列是上文说的那枚配伍关系色 —— 它是落款，不是按钮的颜色。
 
 | 传统色 | 锚色 hex | 纸家族 | 印色 | 亮色主题 id | 暗色主题 id |
 |---|---|---|---|---|---|
 | 竹青 | `#00A86B` | 素绢 | 茜红 | `zhuqing-light` | `zhuqing-dark` |
-| 朱红 ⭐ | `#ED5126` | 熟宣 | 赭石 | `zhuhong-light` | `zhuhong-dark` |
+| **朱红** | `#ED5126` | 熟宣 | 赭石 | `zhuhong-light` | `zhuhong-dark` |
 | 群青 | `#1772B4` | 雪青 | 枫叶红 | `qunqing-light` | `qunqing-dark` |
 | 藤黄 | `#FFD111` | 赭纸 | 瑶碧 | `tenghuang-light` | `tenghuang-dark` |
-| 绛紫 ⭐ | `#8E354A` | 熟宣 | 洋葱紫 | `jiangzi-light` | `jiangzi-dark` |
+| **绛紫** | `#8E354A` | 熟宣 | 洋葱紫 | `jiangzi-light` | `jiangzi-dark` |
 | 紫云 | `#A020F0` | 雪青 | 蜻蜓红 | `ziyun-light` | `ziyun-dark` |
 | 玫红色 | `#FF007F` | 熟宣 | 品红 | `meihongse-light` | `meihongse-dark` |
 | 淡曙红 | `#EE2746` | 熟宣 | 殷红 | `danshuhong-light` | `danshuhong-dark` |
@@ -119,9 +120,9 @@ C < 0.115 ──────────→ 禅定（淡而静）
 | 玫瑰紫 | `#BA2F7B` | 熟宣 | 高粱红 | `meiguizi-light` | `meiguizi-dark` |
 | 鹦鹉绿 | `#5BAE23` | 素绢 | 猩红 | `yingwulv-light` | `yingwulv-dark` |
 | 菠萝红 | `#FC7930` | 熟宣 | 芙蓉红 | `boluohong-light` | `boluohong-dark` |
-| 覆盆子红 ⭐ | `#AC1F18` | 熟宣 | 苋菜红 | `fupenzihong-light` | `fupenzihong-dark` |
+| **覆盆子红** | `#AC1F18` | 熟宣 | 苋菜红 | `fupenzihong-light` | `fupenzihong-dark` |
 | 苍碧 | `#2A52BE` | 雪青 | 猩红 | `cangbi-light` | `cangbi-dark` |
-| 雄黄 ⭐ | `#FF9900` | 赭纸 | 绀青 | `xionghuang-light` | `xionghuang-dark` |
+| **雄黄** | `#FF9900` | 赭纸 | 绀青 | `xionghuang-light` | `xionghuang-dark` |
 | 琥珀黄 | `#FEBA07` | 赭纸 | 绀青 | `hupohuang-light` | `hupohuang-dark` |
 | 魏紫 | `#7E1671` | 雪青 | 魏紫·深 | `weizi-light` | `weizi-dark` |
 | 橄榄黄绿 | `#BEC936` | 素绢 | 魏紫 | `ganlanhuanglv-light` | `ganlanhuanglv-dark` |
@@ -130,17 +131,17 @@ C < 0.115 ──────────→ 禅定（淡而静）
 | 烟萦紫 | `#8A4B9C` | 雪青 | 烟萦紫·深 | `yanyingzi-light` | `yanyingzi-dark` |
 | 韎韐 | `#A5441B` | 熟宣 | 蟹蝥红 | `meige-light` | `meige-dark` |
 | 綟绶 | `#6B8E23` | 素绢 | 暗紫苑红 | `lishou-light` | `lishou-dark` |
-| 紫藤萝 ⭐ | `#9B8AE8` | 雪青 | 淡罂粟红 | `zitengluo-light` | `zitengluo-dark` |
-| 汉绣绿 ⭐ | `#2E7D32` | 素绢 | 绛紫 | `hanxiulv-light` | `hanxiulv-dark` |
+| **紫藤萝** | `#9B8AE8` | 雪青 | 淡罂粟红 | `zitengluo-light` | `zitengluo-dark` |
+| **汉绣绿** | `#2E7D32` | 素绢 | 绛紫 | `hanxiulv-light` | `hanxiulv-dark` |
 | 暗紫苑红 | `#82202B` | 熟宣 | 殷红 | `anziyuanhong-light` | `anziyuanhong-dark` |
-| 新绿 ⭐ | `#6CC788` | 素绢 | 茜裙 | `xinlv-light` | `xinlv-dark` |
-| 菱锰红 ⭐ | `#D276A3` | 熟宣 | 苋菜紫 | `lingmenghong-light` | `lingmenghong-dark` |
-| 满天星紫 ⭐ | `#2E317C` | 雪青 | 栗紫 | `mantianxingzi-light` | `mantianxingzi-dark` |
+| **新绿** | `#6CC788` | 素绢 | 茜裙 | `xinlv-light` | `xinlv-dark` |
+| **菱锰红** | `#D276A3` | 熟宣 | 苋菜紫 | `lingmenghong-light` | `lingmenghong-dark` |
+| **满天星紫** | `#2E317C` | 雪青 | 栗紫 | `mantianxingzi-light` | `mantianxingzi-dark` |
 | 孔雀蓝 | `#0EB0C9` | 雪青 | 胭脂红 | `kongquelan-light` | `kongquelan-dark` |
-| 宝石蓝 ⭐ | `#2486B9` | 雪青 | 朱墙 | `baoshilan-light` | `baoshilan-dark` |
+| **宝石蓝** | `#2486B9` | 雪青 | 朱墙 | `baoshilan-light` | `baoshilan-dark` |
 | 美蝶绿 | `#12AA9C` | 素绢 | 枫叶红 | `meidielv-light` | `meidielv-dark` |
 | 扁豆紫 | `#A35C8F` | 雪青 | 扁豆紫·深 | `biandouzi-light` | `biandouzi-dark` |
-| 浅紫藤萝 ⭐ | `#D1B3FF` | 雪青 | 杏子 | `qianzitengluo-light` | `qianzitengluo-dark` |
+| **浅紫藤萝** | `#D1B3FF` | 雪青 | 杏子 | `qianzitengluo-light` | `qianzitengluo-dark` |
 | 青矾绿 | `#2C9678` | 素绢 | 汉绣红 | `qingfanlv-light` | `qingfanlv-dark` |
 | 碧螺春绿 | `#867018` | 赭纸 | 苍碧 | `biluochunlv-light` | `biluochunlv-dark` |
 | 橄榄石绿 | `#B2CF87` | 素绢 | 酢酱草红 | `ganlanshilv-light` | `ganlanshilv-dark` |
@@ -154,7 +155,7 @@ C < 0.115 ──────────→ 禅定（淡而静）
 | 粉绿 | `#83CBAC` | 素绢 | 梅红 | `fenlv-light` | `fenlv-dark` |
 | 玉鈫蓝 | `#126E82` | 雪青 | 赭石 | `yuqinlan-light` | `yuqinlan-dark` |
 | 皮弁 | `#8B5D33` | 赭纸 | 石青 | `pibian-light` | `pibian-dark` |
-| 橄榄绿 ⭐ | `#5E5314` | 赭纸 | 满天星紫 | `ganlanlv-light` | `ganlanlv-dark` |
+| **橄榄绿** | `#5E5314` | 赭纸 | 满天星紫 | `ganlanlv-light` | `ganlanlv-dark` |
 | 黛紫 | `#5D3A6F` | 雪青 | 黛紫·深 | `daizi-light` | `daizi-dark` |
 
 名册是生成器吐出来的，不手工维护。
@@ -180,7 +181,7 @@ dsh --profile web
 
 DSH 0.1 的客户端 boot manifest 不携带宿主插件配置，因此本包有意不公开无效的 `cordis.yml` 配置块。用户只通过选择面板或 `#theme=` 进入，选择保存在浏览器里。
 
-**闸门** —— `pnpm check`（3136 行对比度 + 不变量）与 `pnpm test`（68 个测试，含对 `lib/client.js` 的装载锁）。两者都不需要起 harness。
+**闸门** —— `pnpm check`（3136 行对比度 + 不变量）与 `pnpm test`（69 个测试，含对 `lib/client.js` 的装载锁）。两者都不需要起 harness。
 
 **重新生成主题** —— `pnpm generate` 要从[中国传统色](https://github.com/nevertoday/zhongguo-traditional-colors)仓库读色卡数据与 OKLab 色彩数学，用环境变量指过去：
 
