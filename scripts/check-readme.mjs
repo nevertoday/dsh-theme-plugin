@@ -118,13 +118,13 @@ for (const [name, md] of [['README.md', en], ['README.zh-CN.md', zh]]) {
   check(`${name} 名册行数`, '49', n, n === 49);
   const starred = new Set(
     md.split('\n')
-      .filter(line => line.startsWith('| ') && line.includes('⭐'))
+      .filter(line => line.startsWith('| ') && /\| \*\*[^*|]+\*\* \|/.test(line))
       .map(line => line.match(/`([a-z0-9-]+-light)`/)?.[1])
       .filter(Boolean),
   );
   const same = starred.size === curatedIds.size
     && [...curatedIds].every(id => starred.has(id));
-  check(`${name} 精选星标`, '与生成数据一致', starred.size, same);
+  check(`${name} 精选标记`, '与生成数据一致', starred.size, same);
 }
 
 // 不该再出现的旧数字

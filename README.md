@@ -1,8 +1,9 @@
-# dsh-theme-plugin
+<p align="center"><img src="docs/img/icon.svg" width="96" height="96" alt=""></p>
+<h1 align="center">dsh-theme-plugin</h1>
 
 Chinese traditional colors as a **DeepSeek Harness theme pack**. 49 anchor colors × light/dark = **98 themes**, each writing the full token vocabulary (98 tokens: 89 `--dsw-*` plus 9 `--shiki-token-*` syntax slots) and clearing WCAG AA on all 3136 contrast assertions. Twelve of the anchors are marked as a curated shortlist.
 
-📖 [中文文档](./README.zh-CN.md)
+[中文文档](./README.zh-CN.md)
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/theme-zhuqing-light.png" alt="竹青 light: raw-silk paper, a green wash on the bubble, and a send button in the anchor green itself" width="49%">
@@ -44,16 +45,16 @@ Changing the hash switches themes live. A deep link wins over your remembered pi
 
 <table>
 <tr>
-<td width="50%"><img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/use-browse.png" alt="The picker on its default view: all 49 anchors of the light branch, grouped into the four paper families"></td>
-<td width="50%"><img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/use-tier.png" alt="The 凌晨 夜航 chip pressed: the list narrows to the eight dark-and-quiet themes, spanning all four paper families"></td>
+<td width="50%"><img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/picker-browse.png" alt="The picker on its default view: all 49 anchors of the light branch, grouped into the four paper families"></td>
+<td width="50%"><img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/picker-tier.png" alt="The 凌晨 夜航 chip pressed: the list narrows to the eight dark-and-quiet themes, spanning all four paper families"></td>
 </tr>
 <tr>
 <td><b>Browse</b> — opens on all 49 anchors of the current branch, grouped by paper family. Each row's chip is the theme's real paper, veil and focus, so the list previews itself.</td>
 <td><b>By working mood</b> — six chips read left to right as one day: 晨起 morning → 天亮 dawn. Pick <code>凌晨 夜航</code> and you get the eight dark-and-quiet themes, whatever their color.</td>
 </tr>
 <tr>
-<td><img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/use-search.png" alt="Typing the pinyin lv into the search box narrows the list to the twelve green themes"></td>
-<td><img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/use-curated-dark.png" alt="Curated only on the dark branch: twelve edited picks, the panel itself rendered in 竹青 dark"></td>
+<td><img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/picker-search.png" alt="Typing the pinyin lv into the search box narrows the list to the twelve green themes"></td>
+<td><img src="https://raw.githubusercontent.com/nevertoday/dsh-theme-plugin/main/docs/img/picker-curated-dark.png" alt="Curated only on the dark branch: twelve edited picks, the panel itself rendered in 竹青 dark"></td>
 </tr>
 <tr>
 <td><b>Search</b> — matches the Chinese name, its pinyin, the seal's name and the mood. Typing <code>lv</code> finds all twelve greens without switching keyboards.</td>
@@ -61,7 +62,7 @@ Changing the hash switches themes live. A deep link wins over your remembered pi
 </tr>
 </table>
 
-The panel references nothing but `--dsw-*` tokens, which is why it changes color with your pick and doubles as a preview of whatever you are about to choose.
+The panel references nothing but `--dsw-*` tokens, which is why it changes color with your pick and doubles as a preview of whatever you are about to choose. Its shape follows the [小小东 UI Kit](https://github.com/nevertoday/xxd-ui-kit): square corners, a one-pixel ink frame for the selected theme, no shadows, and weights 400 / 500 / 600 only.
 
 ## Design: 纸 · 帘 · 印
 
@@ -103,15 +104,15 @@ Anchors per paper family: 素绢 12 · 熟宣 14 · 雪青 17 · 赭纸 6. Withi
 <details>
 <summary><b>49 anchors × light/dark = 98 themes</b> — click to expand</summary>
 
-⭐ marks the twelve curated anchors the picker shows first. Display names are `<name>·亮` / `<name>·暗`, e.g. `竹青·暗`. Paper families: 素绢 raw silk, 熟宣 sized xuan paper, 雪青 violet-tinted silk, 赭纸 ochre paper. The seal column is the curated relative described above — a signature mark, not the button color.
+Names in bold are the twelve curated anchors that **Curated only** narrows to. Display names are `<name>·亮` / `<name>·暗`, e.g. `竹青·暗`. Paper families: 素绢 raw silk, 熟宣 sized xuan paper, 雪青 violet-tinted silk, 赭纸 ochre paper. The seal column is the curated relative described above — a signature mark, not the button color.
 
 | Color | 中文 | Anchor | Paper | Seal | Theme ids (light / dark) |
 |---|---|---|---|---|---|
 | Zhu Qing | 竹青 | `#00A86B` | 素绢 | 茜红 | `zhuqing-light` / `zhuqing-dark` |
-| Zhu Hong | 朱红 ⭐ | `#ED5126` | 熟宣 | 赭石 | `zhuhong-light` / `zhuhong-dark` |
+| Zhu Hong | **朱红** | `#ED5126` | 熟宣 | 赭石 | `zhuhong-light` / `zhuhong-dark` |
 | Qun Qing | 群青 | `#1772B4` | 雪青 | 枫叶红 | `qunqing-light` / `qunqing-dark` |
 | Teng Huang | 藤黄 | `#FFD111` | 赭纸 | 瑶碧 | `tenghuang-light` / `tenghuang-dark` |
-| Jiang Zi | 绛紫 ⭐ | `#8E354A` | 熟宣 | 洋葱紫 | `jiangzi-light` / `jiangzi-dark` |
+| Jiang Zi | **绛紫** | `#8E354A` | 熟宣 | 洋葱紫 | `jiangzi-light` / `jiangzi-dark` |
 | Zi Yun | 紫云 | `#A020F0` | 雪青 | 蜻蜓红 | `ziyun-light` / `ziyun-dark` |
 | Mei Hong Se | 玫红色 | `#FF007F` | 熟宣 | 品红 | `meihongse-light` / `meihongse-dark` |
 | Dan Shu Hong | 淡曙红 | `#EE2746` | 熟宣 | 殷红 | `danshuhong-light` / `danshuhong-dark` |
@@ -119,9 +120,9 @@ Anchors per paper family: 素绢 12 · 熟宣 14 · 雪青 17 · 赭纸 6. Withi
 | Mei Gui Zi | 玫瑰紫 | `#BA2F7B` | 熟宣 | 高粱红 | `meiguizi-light` / `meiguizi-dark` |
 | Ying Wu Lü | 鹦鹉绿 | `#5BAE23` | 素绢 | 猩红 | `yingwulv-light` / `yingwulv-dark` |
 | Bo Luo Hong | 菠萝红 | `#FC7930` | 熟宣 | 芙蓉红 | `boluohong-light` / `boluohong-dark` |
-| Fu Pen Zi Hong | 覆盆子红 ⭐ | `#AC1F18` | 熟宣 | 苋菜红 | `fupenzihong-light` / `fupenzihong-dark` |
+| Fu Pen Zi Hong | **覆盆子红** | `#AC1F18` | 熟宣 | 苋菜红 | `fupenzihong-light` / `fupenzihong-dark` |
 | Cang Bi | 苍碧 | `#2A52BE` | 雪青 | 猩红 | `cangbi-light` / `cangbi-dark` |
-| Xiong Huang | 雄黄 ⭐ | `#FF9900` | 赭纸 | 绀青 | `xionghuang-light` / `xionghuang-dark` |
+| Xiong Huang | **雄黄** | `#FF9900` | 赭纸 | 绀青 | `xionghuang-light` / `xionghuang-dark` |
 | Hu Po Huang | 琥珀黄 | `#FEBA07` | 赭纸 | 绀青 | `hupohuang-light` / `hupohuang-dark` |
 | Wei Zi | 魏紫 | `#7E1671` | 雪青 | 魏紫·深 | `weizi-light` / `weizi-dark` |
 | Gan Lan Huang Lü | 橄榄黄绿 | `#BEC936` | 素绢 | 魏紫 | `ganlanhuanglv-light` / `ganlanhuanglv-dark` |
@@ -130,17 +131,17 @@ Anchors per paper family: 素绢 12 · 熟宣 14 · 雪青 17 · 赭纸 6. Withi
 | Yan Ying Zi | 烟萦紫 | `#8A4B9C` | 雪青 | 烟萦紫·深 | `yanyingzi-light` / `yanyingzi-dark` |
 | Mei Ge | 韎韐 | `#A5441B` | 熟宣 | 蟹蝥红 | `meige-light` / `meige-dark` |
 | Li Shou | 綟绶 | `#6B8E23` | 素绢 | 暗紫苑红 | `lishou-light` / `lishou-dark` |
-| Zi Teng Luo | 紫藤萝 ⭐ | `#9B8AE8` | 雪青 | 淡罂粟红 | `zitengluo-light` / `zitengluo-dark` |
-| Han Xiu Lü | 汉绣绿 ⭐ | `#2E7D32` | 素绢 | 绛紫 | `hanxiulv-light` / `hanxiulv-dark` |
+| Zi Teng Luo | **紫藤萝** | `#9B8AE8` | 雪青 | 淡罂粟红 | `zitengluo-light` / `zitengluo-dark` |
+| Han Xiu Lü | **汉绣绿** | `#2E7D32` | 素绢 | 绛紫 | `hanxiulv-light` / `hanxiulv-dark` |
 | An Zi Yuan Hong | 暗紫苑红 | `#82202B` | 熟宣 | 殷红 | `anziyuanhong-light` / `anziyuanhong-dark` |
-| Xin Lü | 新绿 ⭐ | `#6CC788` | 素绢 | 茜裙 | `xinlv-light` / `xinlv-dark` |
-| Ling Meng Hong | 菱锰红 ⭐ | `#D276A3` | 熟宣 | 苋菜紫 | `lingmenghong-light` / `lingmenghong-dark` |
-| Man Tian Xing Zi | 满天星紫 ⭐ | `#2E317C` | 雪青 | 栗紫 | `mantianxingzi-light` / `mantianxingzi-dark` |
+| Xin Lü | **新绿** | `#6CC788` | 素绢 | 茜裙 | `xinlv-light` / `xinlv-dark` |
+| Ling Meng Hong | **菱锰红** | `#D276A3` | 熟宣 | 苋菜紫 | `lingmenghong-light` / `lingmenghong-dark` |
+| Man Tian Xing Zi | **满天星紫** | `#2E317C` | 雪青 | 栗紫 | `mantianxingzi-light` / `mantianxingzi-dark` |
 | Kong Que Lan | 孔雀蓝 | `#0EB0C9` | 雪青 | 胭脂红 | `kongquelan-light` / `kongquelan-dark` |
-| Bao Shi Lan | 宝石蓝 ⭐ | `#2486B9` | 雪青 | 朱墙 | `baoshilan-light` / `baoshilan-dark` |
+| Bao Shi Lan | **宝石蓝** | `#2486B9` | 雪青 | 朱墙 | `baoshilan-light` / `baoshilan-dark` |
 | Mei Die Lü | 美蝶绿 | `#12AA9C` | 素绢 | 枫叶红 | `meidielv-light` / `meidielv-dark` |
 | Bian Dou Zi | 扁豆紫 | `#A35C8F` | 雪青 | 扁豆紫·深 | `biandouzi-light` / `biandouzi-dark` |
-| Qian Zi Teng Luo | 浅紫藤萝 ⭐ | `#D1B3FF` | 雪青 | 杏子 | `qianzitengluo-light` / `qianzitengluo-dark` |
+| Qian Zi Teng Luo | **浅紫藤萝** | `#D1B3FF` | 雪青 | 杏子 | `qianzitengluo-light` / `qianzitengluo-dark` |
 | Qing Fan Lü | 青矾绿 | `#2C9678` | 素绢 | 汉绣红 | `qingfanlv-light` / `qingfanlv-dark` |
 | Bi Luo Chun Lü | 碧螺春绿 | `#867018` | 赭纸 | 苍碧 | `biluochunlv-light` / `biluochunlv-dark` |
 | Gan Lan Shi Lü | 橄榄石绿 | `#B2CF87` | 素绢 | 酢酱草红 | `ganlanshilv-light` / `ganlanshilv-dark` |
@@ -154,7 +155,7 @@ Anchors per paper family: 素绢 12 · 熟宣 14 · 雪青 17 · 赭纸 6. Withi
 | Fen Lü | 粉绿 | `#83CBAC` | 素绢 | 梅红 | `fenlv-light` / `fenlv-dark` |
 | Yu Qin Lan | 玉鈫蓝 | `#126E82` | 雪青 | 赭石 | `yuqinlan-light` / `yuqinlan-dark` |
 | Pi Bian | 皮弁 | `#8B5D33` | 赭纸 | 石青 | `pibian-light` / `pibian-dark` |
-| Gan Lan Lü | 橄榄绿 ⭐ | `#5E5314` | 赭纸 | 满天星紫 | `ganlanlv-light` / `ganlanlv-dark` |
+| Gan Lan Lü | **橄榄绿** | `#5E5314` | 赭纸 | 满天星紫 | `ganlanlv-light` / `ganlanlv-dark` |
 | Dai Zi | 黛紫 | `#5D3A6F` | 雪青 | 黛紫·深 | `daizi-light` / `daizi-dark` |
 
 The roster is whatever the generator emits; it is not maintained by hand.
